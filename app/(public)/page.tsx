@@ -1,7 +1,21 @@
+import HeroSection from '@/components/home/HeroSection';
+import CityGrid from '@/components/home/CityGrid';
+import FeaturedRooms from '@/components/home/FeaturedRooms';
+import HowItWorks from '@/components/home/HowItWorks';
+import StatsSection from '@/components/home/StatsSection';
+import WhyMeraRoom from '@/components/home/WhyMeraRoom';
+import CTABanner from '@/components/home/CTABanner';
+
 export default function HomePage() {
   return (
-    <div className="min-h-[60vh] flex items-center justify-center bg-brand-cream">
-      <p className="text-brand-gray">Home page — UI coming soon</p>
-    </div>
+    <>
+      <HeroSection />
+      <CityGrid />
+      <FeaturedRooms />
+      <HowItWorks />
+      <StatsSection />
+      <WhyMeraRoom />
+      <CTABanner />
+    </>
   );
 }

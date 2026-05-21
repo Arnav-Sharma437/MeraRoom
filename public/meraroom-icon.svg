@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16A34A"/>
+      <stop offset="100%" style="stop-color:#0F2E1E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100" height="100" rx="22" fill="url(#bgGrad)"/>
+
+  <!-- House Icon centered -->
+  <!-- Roof -->
+  <polyline points="15,52 50,18 85,52"
+    fill="none" stroke="#D4AF37" stroke-width="5"
+    stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Chimney -->
+  <rect x="61" y="22" width="10" height="14" rx="2" fill="#D4AF37"/>
+  <!-- Body -->
+  <rect x="20" y="51" width="60" height="34" rx="3" fill="none" stroke="white" stroke-width="3.5"/>
+  <!-- Door -->
+  <rect x="39" y="61" width="16" height="24" rx="2.5" fill="#D4AF37"/>
+  <!-- Door knob -->
+  <circle cx="52" cy="73" r="1.8" fill="#0F2E1E"/>
+  <!-- Window Left -->
+  <rect x="24" y="57" width="11" height="9" rx="1.8" fill="#D4AF37"/>
+  <line x1="29.5" y1="57" x2="29.5" y2="66" stroke="#0F2E1E" stroke-width="1"/>
+  <line x1="24" y1="61.5" x2="35" y2="61.5" stroke="#0F2E1E" stroke-width="1"/>
+  <!-- Window Right -->
+  <rect x="65" y="57" width="11" height="9" rx="1.8" fill="#D4AF37"/>
+  <line x1="70.5" y1="57" x2="70.5" y2="66" stroke="#0F2E1E" stroke-width="1"/>
+  <line x1="65" y1="61.5" x2="76" y2="61.5" stroke="#0F2E1E" stroke-width="1"/>
+</svg>

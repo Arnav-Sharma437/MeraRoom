@@ -52,6 +52,10 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: '/meraroom-icon.svg',
+    apple: '/meraroom-icon.svg',
+  },
 };
 
 export const viewport: Viewport = {

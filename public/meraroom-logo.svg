@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" width="280" height="80">
+  <defs>
+    <style>
+      .logo-house-stroke { fill: none; stroke: #0F2E1E; stroke-width: 2.8; stroke-linejoin: round; stroke-linecap: round; }
+      .logo-house-fill   { fill: #0F2E1E; }
+      .logo-gold-fill    { fill: #D4AF37; }
+      .logo-text-dark    { font-family: 'Poppins', sans-serif; font-weight: 700; fill: #0F2E1E; }
+      .logo-text-gold    { font-family: 'Poppins', sans-serif; font-weight: 700; fill: #D4AF37; }
+      .logo-tagline      { font-family: 'Poppins', sans-serif; font-weight: 400; fill: #D4AF37; font-size: 9px; letter-spacing: 1.5px; }
+    </style>
+  </defs>
+
+  <!-- HOUSE ICON -->
+  <!-- Roof -->
+  <polyline class="logo-house-stroke" points="8,38 34,14 60,38" stroke-width="3.2"/>
+  <!-- Chimney -->
+  <rect x="42" y="17" width="7" height="10" rx="1" class="logo-gold-fill"/>
+  <!-- House body -->
+  <rect x="14" y="37" width="40" height="28" rx="2" class="logo-house-stroke"/>
+  <!-- Door -->
+  <rect x="27" y="47" width="11" height="18" rx="2" class="logo-gold-fill"/>
+  <!-- Door knob -->
+  <circle cx="35.5" cy="56.5" r="1.2" fill="#0F2E1E"/>
+  <!-- Window left -->
+  <rect x="17" y="42" width="8" height="7" rx="1.2" class="logo-gold-fill"/>
+  <!-- Window right -->
+  <rect x="43" y="42" width="8" height="7" rx="1.2" class="logo-gold-fill"/>
+  <!-- Window cross lines -->
+  <line x1="21" y1="42" x2="21" y2="49" stroke="#0F2E1E" stroke-width="0.8"/>
+  <line x1="17" y1="45.5" x2="25" y2="45.5" stroke="#0F2E1E" stroke-width="0.8"/>
+  <line x1="47" y1="42" x2="47" y2="49" stroke="#0F2E1E" stroke-width="0.8"/>
+  <line x1="43" y1="45.5" x2="51" y2="45.5" stroke="#0F2E1E" stroke-width="0.8"/>
+
+  <!-- DIVIDER LINE -->
+  <line x1="72" y1="18" x2="72" y2="62" stroke="#D4AF37" stroke-width="1.2" opacity="0.5"/>
+
+  <!-- TEXT: MeraRoom -->
+  <text x="82" y="44" class="logo-text-dark" font-size="28">Mera</text>
+  <text x="162" y="44" class="logo-text-gold" font-size="28">Room</text>
+
+  <!-- TAGLINE: — Find Your Space — -->
+  <line x1="82" y1="55" x2="96" y2="55" stroke="#D4AF37" stroke-width="1.2"/>
+  <text x="100" y="58" class="logo-tagline">Find Your Space</text>
+  <line x1="210" y1="55" x2="224" y2="55" stroke="#D4AF37" stroke-width="1.2"/>
+</svg>

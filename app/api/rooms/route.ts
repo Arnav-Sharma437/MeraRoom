@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
       )
     );
     const city = searchParams.get('city');
+    const isFeatured = searchParams.get('isFeatured');
     const status = searchParams.get('status') ?? 'approved';
 
     const filter: Record<string, unknown> = {
@@ -31,6 +32,7 @@ export async function GET(request: NextRequest) {
     };
 
     if (city) filter.city = city;
+    if (isFeatured === 'true') filter.isFeatured = true;
 
     const skip = (page - 1) * limit;
 
@@ -53,8 +55,7 @@ export async function GET(request: NextRequest) {
       limit,
       totalPages: Math.ceil(total / limit),
     });
-  } catch (error) {
-    console.error('GET /api/rooms error:', error);
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Failed to fetch rooms' },
       { status: 500 }
@@ -72,8 +73,7 @@ export async function POST(request: NextRequest) {
       { success: true, data: room },
       { status: 201 }
     );
-  } catch (error) {
-    console.error('POST /api/rooms error:', error);
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Failed to create room' },
       { status: 500 }

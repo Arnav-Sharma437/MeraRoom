@@ -2,6 +2,10 @@ export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');
 }
 
+export function formatRent(amount: number): string {
+  return `₹${amount.toLocaleString('en-IN')}`;
+}
+
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
