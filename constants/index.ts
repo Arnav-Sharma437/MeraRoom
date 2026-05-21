@@ -2,8 +2,49 @@ import type { AmenityItem } from '@/types';
 import type { IRoomAmenities } from '@/models/Room';
 
 export const APP_NAME = 'MeraRoom';
-export const APP_TAGLINE = 'Find Your Perfect Room in India';
+export const APP_TAGLINE = 'Find Your Perfect Room in Dharamshala';
 export const APP_URL = process.env.NEXTAUTH_URL ?? 'http://localhost:3000';
+
+export const CITY = {
+  name: 'Dharamshala',
+  slug: 'dharamshala',
+  state: 'Himachal Pradesh',
+} as const;
+
+export const DHARAMSHALA_AREAS = [
+  { name: 'McLeod Ganj', slug: 'mcleod-ganj' },
+  { name: 'Shyam Nagar', slug: 'shyam-nagar' },
+  { name: 'Dari', slug: 'dari' },
+  { name: 'Sakoh', slug: 'sakoh' },
+  { name: 'Kotwali Bazaar', slug: 'kotwali-bazaar' },
+  { name: 'Sidhpur', slug: 'sidhpur' },
+  { name: 'Ramnagar', slug: 'ramnagar' },
+  { name: 'Khanyara', slug: 'khanyara' },
+  { name: 'Forsyth Ganj', slug: 'forsyth-ganj' },
+  { name: 'Jogiwara Road', slug: 'jogiwara-road' },
+  { name: 'Bhagsu', slug: 'bhagsu' },
+  { name: 'Naddi', slug: 'naddi' },
+  { name: 'Upper Dharamshala', slug: 'upper-dharamshala' },
+  { name: 'Lower Dharamshala', slug: 'lower-dharamshala' },
+  { name: 'Chamunda', slug: 'chamunda' },
+  { name: 'Dharamkot', slug: 'dharamkot' },
+  { name: 'Palampur Road', slug: 'palampur-road' },
+] as const;
+
+export const CONTACTS = [
+  {
+    name: 'Arnav',
+    phone: '+91 7876650437',
+    whatsapp: '917876650437',
+    href: 'https://wa.me/917876650437',
+  },
+  {
+    name: 'Varun',
+    phone: '+91 9418100803',
+    whatsapp: '919418100803',
+    href: 'https://wa.me/919418100803',
+  },
+] as const;
 
 export const ROOM_TYPES = [
   { value: 'single', label: 'Single Room' },
@@ -12,6 +53,16 @@ export const ROOM_TYPES = [
   { value: 'pg', label: 'PG' },
   { value: '1bhk', label: '1 BHK' },
   { value: '2bhk', label: '2 BHK' },
+] as const;
+
+export const SEARCH_FILTER_CHIPS = [
+  { id: 'all', label: 'All' },
+  { id: 'single', label: 'Single' },
+  { id: 'shared', label: 'Shared' },
+  { id: 'pg', label: 'PG' },
+  { id: 'furnished', label: 'Furnished' },
+  { id: 'ac', label: 'AC' },
+  { id: 'wifi', label: 'WiFi' },
 ] as const;
 
 export const FURNISHING_TYPES = [
@@ -71,81 +122,6 @@ export const ALLOWED_FOR_OPTIONS = [
   { key: 'bachelors', label: 'Bachelors' },
 ] as const;
 
-export const POPULAR_CITIES = [
-  {
-    name: 'Mumbai',
-    slug: 'mumbai',
-    state: 'Maharashtra',
-    image: '/images/cities/mumbai.jpg',
-  },
-  {
-    name: 'Delhi',
-    slug: 'delhi',
-    state: 'Delhi',
-    image: '/images/cities/delhi.jpg',
-  },
-  {
-    name: 'Bangalore',
-    slug: 'bangalore',
-    state: 'Karnataka',
-    image: '/images/cities/bangalore.jpg',
-  },
-  {
-    name: 'Hyderabad',
-    slug: 'hyderabad',
-    state: 'Telangana',
-    image: '/images/cities/hyderabad.jpg',
-  },
-  {
-    name: 'Pune',
-    slug: 'pune',
-    state: 'Maharashtra',
-    image: '/images/cities/pune.jpg',
-  },
-  {
-    name: 'Chennai',
-    slug: 'chennai',
-    state: 'Tamil Nadu',
-    image: '/images/cities/chennai.jpg',
-  },
-  {
-    name: 'Kolkata',
-    slug: 'kolkata',
-    state: 'West Bengal',
-    image: '/images/cities/kolkata.jpg',
-  },
-  {
-    name: 'Ahmedabad',
-    slug: 'ahmedabad',
-    state: 'Gujarat',
-    image: '/images/cities/ahmedabad.jpg',
-  },
-  {
-    name: 'Jaipur',
-    slug: 'jaipur',
-    state: 'Rajasthan',
-    image: '/images/cities/jaipur.jpg',
-  },
-  {
-    name: 'Lucknow',
-    slug: 'lucknow',
-    state: 'Uttar Pradesh',
-    image: '/images/cities/lucknow.jpg',
-  },
-  {
-    name: 'Indore',
-    slug: 'indore',
-    state: 'Madhya Pradesh',
-    image: '/images/cities/indore.jpg',
-  },
-  {
-    name: 'Chandigarh',
-    slug: 'chandigarh',
-    state: 'Chandigarh',
-    image: '/images/cities/chandigarh.jpg',
-  },
-] as const;
-
 export const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Search Rooms', href: '/search' },
@@ -154,30 +130,22 @@ export const NAV_LINKS = [
   { label: 'Contact', href: '/contact' },
 ] as const;
 
-export const HOME_CITIES = [
-  { name: 'Delhi', slug: 'delhi', roomCount: 420 },
-  { name: 'Mumbai', slug: 'mumbai', roomCount: 580 },
-  { name: 'Bangalore', slug: 'bangalore', roomCount: 510 },
-  { name: 'Pune', slug: 'pune', roomCount: 340 },
-  { name: 'Hyderabad', slug: 'hyderabad', roomCount: 290 },
-  { name: 'Chennai', slug: 'chennai', roomCount: 265 },
-  { name: 'Jaipur', slug: 'jaipur', roomCount: 180 },
-  { name: 'Chandigarh', slug: 'chandigarh', roomCount: 145 },
-  { name: 'Noida', slug: 'noida', roomCount: 220 },
-  { name: 'Dharamshala', slug: 'dharamshala', roomCount: 85 },
-] as const;
+export const HOME_AREAS = DHARAMSHALA_AREAS.map((area, i) => ({
+  ...area,
+  roomCount: [42, 28, 18, 15, 35, 22, 19, 12, 24, 31, 48, 20, 26, 38, 14, 45, 16][i] ?? 15,
+}));
 
 export const HERO_STATS = [
-  '2,500+ Rooms',
-  '50+ Cities',
+  '150+ Rooms',
+  '17 Areas',
   '100% Verified',
   'Free to Search',
 ] as const;
 
 export const HOME_STATS = [
-  { value: 2500, suffix: '+', label: 'Rooms Listed' },
-  { value: 50, suffix: '+', label: 'Cities Covered' },
-  { value: 10000, suffix: '+', label: 'Happy Users' },
+  { value: 150, suffix: '+', label: 'Rooms Listed' },
+  { value: 17, suffix: '', label: 'Areas in Dharamshala' },
+  { value: 800, suffix: '+', label: 'Happy Users' },
   { value: 4.8, suffix: '★', label: 'Average Rating', isDecimal: true },
 ] as const;
 
@@ -186,45 +154,40 @@ export const WHY_MERAROOM = [
     icon: '✓',
     title: 'Verified Listings',
     description:
-      'Every room is manually verified before listing goes live.',
+      'Every room in Dharamshala is manually verified before it goes live on MeraRoom.',
   },
   {
     icon: '💬',
     title: 'Direct WhatsApp Contact',
-    description: 'No forms. No waiting. Message owners instantly.',
+    description: 'No forms. No waiting. Message owners in McLeod, Bhagsu & more instantly.',
   },
   {
     icon: '🆓',
     title: 'Completely Free',
-    description: 'Searching and contacting owners is always 100% free.',
+    description: 'Searching and contacting owners across Dharamshala is always 100% free.',
   },
   {
     icon: '📍',
-    title: 'Location Based',
+    title: 'Dharamshala Localities',
     description:
-      'Find rooms near your office, college or preferred area.',
+      'Find rooms near Dharamkot, Kotwali Bazaar, Naddi, or your college and workplace.',
   },
 ] as const;
 
-export const FOOTER_CITIES = [
-  { label: 'Delhi', href: '/search?city=delhi' },
-  { label: 'Mumbai', href: '/search?city=mumbai' },
-  { label: 'Bangalore', href: '/search?city=bangalore' },
-  { label: 'Pune', href: '/search?city=pune' },
-  { label: 'Hyderabad', href: '/search?city=hyderabad' },
-  { label: 'Jaipur', href: '/search?city=jaipur' },
-] as const;
+export const FOOTER_AREAS = DHARAMSHALA_AREAS.slice(0, 6).map((a) => ({
+  label: a.name,
+  href: `/search?area=${a.slug}`,
+}));
 
 export const FOOTER_LINKS = {
   company: [
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' },
-    { label: 'Blog', href: '#' },
   ],
   explore: [
     { label: 'Search Rooms', href: '/search' },
     { label: 'List Your Room', href: '/dashboard/owner' },
-    { label: 'Popular Cities', href: '/search' },
+    { label: 'Popular Areas', href: '/search' },
   ],
   legal: [
     { label: 'Privacy Policy', href: '#' },
@@ -236,9 +199,9 @@ export const HOW_IT_WORKS_STEPS = [
   {
     step: '01',
     icon: 'Search',
-    title: 'Search Your City',
+    title: 'Search Your Area',
     description:
-      'Select your city and area to instantly see all available rooms near you.',
+      'Pick a locality in Dharamshala — McLeod Ganj, Bhagsu, Dharamkot — and see available rooms instantly.',
     direction: 'left' as const,
   },
   {
@@ -246,7 +209,7 @@ export const HOW_IT_WORKS_STEPS = [
     icon: 'Home',
     title: 'Choose Your Room',
     description:
-      'Browse listings with photos, amenities, pricing and location on Google Maps.',
+      'Browse listings with photos, mountain-view details, amenities, and pricing in ₹3,000–₹12,000 range.',
     direction: 'bottom' as const,
   },
   {
@@ -254,7 +217,7 @@ export const HOW_IT_WORKS_STEPS = [
     icon: 'MessageCircle',
     title: 'Contact on WhatsApp',
     description:
-      'Directly message the owner on WhatsApp — no middlemen, no delays.',
+      'Message the owner directly on WhatsApp — no brokers, no delays, perfect for students & travellers.',
     direction: 'right' as const,
   },
 ] as const;
@@ -262,83 +225,98 @@ export const HOW_IT_WORKS_STEPS = [
 export const MOCK_FEATURED_ROOMS = [
   {
     _id: 'mock-1',
-    title: 'Spacious PG Room near Metro',
-    rent: 8500,
-    area: 'Koramangala',
-    city: { name: 'Bangalore', slug: 'bangalore' },
+    title: 'Cozy PG Room with Dhauladhar View',
+    description: 'Warm furnished PG near Main Square with WiFi, geyser, and monthly housekeeping in McLeod Ganj.',
+    rent: 5500,
+    area: 'McLeod Ganj',
+    city: { name: 'Dharamshala', slug: 'dharamshala' },
     roomType: 'pg' as const,
     furnishing: 'furnished' as const,
     images: [],
     isFeatured: true,
-    whatsappNumber: '919876543210',
-    amenities: { wifi: true, ac: true, parking: false, attachedBath: true, kitchen: true, laundry: true, tv: false, powerBackup: true, security: true, gym: false },
+    whatsappNumber: '917876650437',
+    amenities: { wifi: true, ac: false, parking: false, attachedBath: true, kitchen: true, laundry: true, tv: false, powerBackup: true, security: true, gym: false },
   },
   {
     _id: 'mock-2',
-    title: '1 BHK Fully Furnished Flat',
-    rent: 18000,
-    area: 'Andheri West',
-    city: { name: 'Mumbai', slug: 'mumbai' },
-    roomType: '1bhk' as const,
+    title: 'Single Room Near Bhagsu Waterfall',
+    description: 'Quiet single room on Jogiwara Road — ideal for remote workers, 10 min walk to Bhagsu cafes.',
+    rent: 7500,
+    area: 'Bhagsu',
+    city: { name: 'Dharamshala', slug: 'dharamshala' },
+    roomType: 'single' as const,
     furnishing: 'furnished' as const,
     images: [],
     isFeatured: true,
-    whatsappNumber: '919876543211',
-    amenities: { wifi: true, ac: true, parking: true, attachedBath: true, kitchen: true, laundry: false, tv: true, powerBackup: true, security: true, gym: false },
-  },
-  {
-    _id: 'mock-3',
-    title: 'Single Room for Working Professionals',
-    rent: 12000,
-    area: 'Hauz Khas',
-    city: { name: 'Delhi', slug: 'delhi' },
-    roomType: 'single' as const,
-    furnishing: 'semi-furnished' as const,
-    images: [],
-    isFeatured: true,
-    whatsappNumber: '919876543212',
+    whatsappNumber: '919418100803',
     amenities: { wifi: true, ac: true, parking: false, attachedBath: true, kitchen: false, laundry: true, tv: false, powerBackup: true, security: true, gym: false },
   },
   {
-    _id: 'mock-4',
-    title: 'Girls PG with Food Included',
-    rent: 9500,
-    area: 'Kothrud',
-    city: { name: 'Pune', slug: 'pune' },
-    roomType: 'pg' as const,
-    furnishing: 'furnished' as const,
+    _id: 'mock-3',
+    title: 'Shared Room in Dharamkot',
+    description: 'Budget-friendly shared accommodation for yoga students and trekkers. Common kitchen & hot water.',
+    rent: 3500,
+    area: 'Dharamkot',
+    city: { name: 'Dharamshala', slug: 'dharamshala' },
+    roomType: 'shared' as const,
+    furnishing: 'semi-furnished' as const,
     images: [],
-    isFeatured: false,
-    whatsappNumber: '919876543213',
-    amenities: { wifi: true, ac: false, parking: false, attachedBath: true, kitchen: true, laundry: true, tv: true, powerBackup: false, security: true, gym: false },
+    isFeatured: true,
+    whatsappNumber: '917876650437',
+    amenities: { wifi: true, ac: false, parking: false, attachedBath: false, kitchen: true, laundry: false, tv: false, powerBackup: false, security: true, gym: false },
   },
   {
-    _id: 'mock-5',
-    title: 'Studio Apartment Near IT Park',
-    rent: 14000,
-    area: 'Gachibowli',
-    city: { name: 'Hyderabad', slug: 'hyderabad' },
+    _id: 'mock-4',
+    title: 'Studio Flat on Palampur Road',
+    description: 'Self-contained studio with attached bath, parking, and mountain-facing balcony in Sidhpur area.',
+    rent: 11000,
+    area: 'Palampur Road',
+    city: { name: 'Dharamshala', slug: 'dharamshala' },
     roomType: 'studio' as const,
     furnishing: 'furnished' as const,
     images: [],
     isFeatured: true,
-    whatsappNumber: '919876543214',
-    amenities: { wifi: true, ac: true, parking: true, attachedBath: true, kitchen: true, laundry: false, tv: true, powerBackup: true, security: true, gym: true },
+    whatsappNumber: '919418100803',
+    amenities: { wifi: true, ac: true, parking: true, attachedBath: true, kitchen: true, laundry: false, tv: true, powerBackup: true, security: true, gym: false },
+  },
+  {
+    _id: 'mock-5',
+    title: 'Girls PG near Kotwali Bazaar',
+    description: 'Safe girls PG with CCTV, home-style meals, and easy access to local buses and markets.',
+    rent: 4800,
+    area: 'Kotwali Bazaar',
+    city: { name: 'Dharamshala', slug: 'dharamshala' },
+    roomType: 'pg' as const,
+    furnishing: 'furnished' as const,
+    images: [],
+    isFeatured: false,
+    whatsappNumber: '917876650437',
+    amenities: { wifi: true, ac: false, parking: false, attachedBath: true, kitchen: true, laundry: true, tv: true, powerBackup: true, security: true, gym: false },
   },
   {
     _id: 'mock-6',
-    title: 'Shared Room Near Anna University',
-    rent: 6500,
-    area: 'Adyar',
-    city: { name: 'Chennai', slug: 'chennai' },
-    roomType: 'shared' as const,
+    title: '1 BHK in Lower Dharamshala',
+    description: 'Spacious 1 BHK for families or long-stay professionals — close to hospitals and schools.',
+    rent: 9500,
+    area: 'Lower Dharamshala',
+    city: { name: 'Dharamshala', slug: 'dharamshala' },
+    roomType: '1bhk' as const,
     furnishing: 'semi-furnished' as const,
     images: [],
-    isFeatured: false,
-    whatsappNumber: '919876543215',
-    amenities: { wifi: true, ac: false, parking: false, attachedBath: false, kitchen: true, laundry: true, tv: false, powerBackup: true, security: true, gym: false },
+    isFeatured: true,
+    whatsappNumber: '919418100803',
+    amenities: { wifi: true, ac: true, parking: true, attachedBath: true, kitchen: true, laundry: false, tv: true, powerBackup: true, security: true, gym: false },
   },
 ] as const;
+
+export const SEED_CITY = {
+  name: 'Dharamshala',
+  slug: 'dharamshala',
+  state: 'Himachal Pradesh',
+  image: '/images/cities/dharamshala.jpg',
+  isActive: true,
+  totalRooms: 150,
+};
 
 export const PAGINATION = {
   DEFAULT_PAGE: 1,

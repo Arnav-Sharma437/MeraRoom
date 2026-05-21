@@ -8,8 +8,9 @@
   }
 
   body {
-    @apply font-sans text-brand-black bg-brand-white antialiased;
-    transition: all 0.2s ease;
+    @apply font-sans text-brand-black bg-white antialiased;
+    @apply dark:bg-surface-dark dark:text-[#F9FAFB];
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   h1,
@@ -29,16 +30,15 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #f0fdf4;
+    @apply bg-brand-light dark:bg-[#1A2A1A];
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #16a34a;
-    border-radius: 4px;
+    @apply bg-brand-green rounded;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #0f2e1e;
+    @apply bg-brand-dark;
   }
 }
 
@@ -61,24 +61,49 @@
   }
 
   .skeleton-shimmer {
-    background: linear-gradient(
-      90deg,
-      #f0fdf4 25%,
-      #d1fae5 50%,
-      #f0fdf4 75%
-    );
+    background: linear-gradient(90deg, #f0fdf4 25%, #d1fae5 50%, #f0fdf4 75%);
     background-size: 200% 100%;
     @apply animate-shimmer rounded;
   }
 
+  .dark .skeleton-shimmer {
+    background: linear-gradient(90deg, #111a11 25%, #1a2a1a 50%, #111a11 75%);
+    background-size: 200% 100%;
+  }
+
   .whatsapp-pulse {
     animation: pulseWhatsApp 3s ease-in-out infinite;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section-cream {
+    @apply bg-brand-cream dark:bg-surface-section-dark;
+  }
+
+  .card-surface {
+    @apply bg-white dark:bg-surface-card-dark border-gray-200 dark:border-[#1F2E1F];
   }
 }
 
 @layer utilities {
   .transition-default {
     transition: all 0.2s ease;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
   }
 }
 

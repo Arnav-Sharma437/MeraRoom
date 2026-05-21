@@ -13,17 +13,25 @@ import {
   viewportOnce,
 } from '@/lib/animations';
 
-function RoomCardSkeleton() {
+function RoomCardSkeleton({ mobile }: { mobile?: boolean }) {
+  if (mobile) {
+    return (
+      <div className="flex gap-3 card-surface rounded-2xl p-3 shadow-md">
+        <div className="w-32 h-32 flex-shrink-0 skeleton-shimmer rounded-xl" />
+        <div className="flex-1 space-y-2 py-1">
+          <div className="h-5 skeleton-shimmer w-3/4" />
+          <div className="h-4 skeleton-shimmer w-1/2" />
+          <div className="h-8 skeleton-shimmer w-full mt-4" />
+        </div>
+      </div>
+    );
+  }
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-md">
+    <div className="card-surface rounded-2xl overflow-hidden shadow-md">
       <div className="h-52 skeleton-shimmer" />
       <div className="p-4 space-y-3">
         <div className="h-5 skeleton-shimmer w-3/4" />
         <div className="h-4 skeleton-shimmer w-1/2" />
-        <div className="flex gap-2">
-          <div className="h-6 skeleton-shimmer w-14 rounded-full" />
-          <div className="h-6 skeleton-shimmer w-14 rounded-full" />
-        </div>
         <div className="h-10 skeleton-shimmer w-full mt-4" />
       </div>
     </div>
@@ -55,17 +63,17 @@ export default function FeaturedRooms() {
   }, []);
 
   return (
-    <section className="bg-brand-cream py-20">
+    <section className="section-cream py-16 md:py-20">
       <div className="container mx-auto px-4">
         <motion.div
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12"
+          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10"
         >
-          <h2 className="font-display text-4xl text-brand-dark">
-            Featured Rooms
+          <h2 className="font-display text-3xl md:text-4xl text-brand-dark dark:text-[#F9FAFB]">
+            Featured Rooms in Dharamshala
           </h2>
           <Link
             href="/search"
@@ -80,11 +88,11 @@ export default function FeaturedRooms() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
         >
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (
-                <RoomCardSkeleton key={i} />
+                <RoomCardSkeleton key={i} mobile={i < 6} />
               ))
             : rooms.map((room, index) => (
                 <RoomCard key={room._id} room={room} index={index} />

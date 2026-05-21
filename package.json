@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
     "axios": "^1.16.1",
@@ -17,6 +18,7 @@
     "mongoose": "^9.6.2",
     "next": "^14.2.35",
     "next-auth": "^4.24.14",
+    "next-themes": "^0.4.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.76.0",
@@ -32,6 +34,7 @@
     "eslint-config-next": "^14.2.35",
     "postcss": "^8.5.15",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.22.3",
     "typescript": "^6.0.3"
   }
 }

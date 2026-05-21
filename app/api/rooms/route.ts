@@ -23,6 +23,9 @@ export async function GET(request: NextRequest) {
       )
     );
     const city = searchParams.get('city');
+    const area = searchParams.get('area');
+    const search = searchParams.get('q');
+    const roomType = searchParams.get('roomType');
     const isFeatured = searchParams.get('isFeatured');
     const status = searchParams.get('status') ?? 'approved';
 
@@ -32,6 +35,24 @@ export async function GET(request: NextRequest) {
     };
 
     if (city) filter.city = city;
+    if (area) {
+      const { DHARAMSHALA_AREAS } = await import('@/constants');
+      const match = DHARAMSHALA_AREAS.find((a) => a.slug === area);
+      if (match) filter.area = match.name;
+    }
+    if (search) {
+      filter.$or = [
+        { area: { $regex: search, $options: 'i' } },
+        { title: { $regex: search, $options: 'i' } },
+        { address: { $regex: search, $options: 'i' } },
+      ];
+    }
+    if (roomType && roomType !== 'all') {
+      if (roomType === 'furnished') filter.furnishing = 'furnished';
+      else if (roomType === 'ac') filter['amenities.ac'] = true;
+      else if (roomType === 'wifi') filter['amenities.wifi'] = true;
+      else filter.roomType = roomType;
+    }
     if (isFeatured === 'true') filter.isFeatured = true;
 
     const skip = (page - 1) * limit;

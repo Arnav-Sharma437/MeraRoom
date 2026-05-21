@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Poppins, DM_Serif_Display } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import ThemeProvider from '@/components/providers/ThemeProvider';
 import SessionProvider from '@/components/providers/SessionProvider';
+import AppShell from '@/components/layout/AppShell';
 import './globals.css';
 
 const poppins = Poppins({
@@ -21,22 +21,21 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'MeraRoom — Find Your Perfect Room in India',
+  title: 'MeraRoom — Find Your Perfect Room in Dharamshala',
   description:
-    'Discover verified rooms for rent across India. Search by city, connect via WhatsApp, and move in hassle-free.',
+    'Search verified rooms, PGs and hostels across Dharamshala, Himachal Pradesh. Connect directly with owners on WhatsApp.',
   keywords: [
-    'room rent',
-    'PG',
-    'flat rent',
-    'India',
+    'room rent Dharamshala',
+    'PG McLeod Ganj',
+    'Bhagsu rooms',
+    'Dharamkot accommodation',
     'MeraRoom',
-    'accommodation',
   ],
   authors: [{ name: 'MeraRoom' }],
   openGraph: {
-    title: 'MeraRoom — Find Your Perfect Room in India',
+    title: 'MeraRoom — Find Your Perfect Room in Dharamshala',
     description:
-      'Discover verified rooms for rent across India. Search by city, connect via WhatsApp, and move in hassle-free.',
+      'Verified rooms across Dharamshala — McLeod Ganj, Bhagsu, Dharamkot & more.',
     url: process.env.NEXTAUTH_URL ?? 'http://localhost:3000',
     siteName: 'MeraRoom',
     locale: 'en_IN',
@@ -44,14 +43,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MeraRoom — Find Your Perfect Room in India',
-    description:
-      'Discover verified rooms for rent across India.',
+    title: 'MeraRoom — Dharamshala Rooms',
+    description: 'Find verified rooms in Dharamshala on WhatsApp.',
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
   icons: {
     icon: '/meraroom-icon.svg',
     apple: '/meraroom-icon.svg',
@@ -66,39 +61,29 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${dmSerif.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${dmSerif.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <SessionProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </SessionProvider>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#0F2E1E',
-              color: '#FFFFFF',
-            },
-            success: {
-              iconTheme: {
-                primary: '#16A34A',
-                secondary: '#FFFFFF',
+        <ThemeProvider>
+          <SessionProvider>
+            <AppShell>{children}</AppShell>
+          </SessionProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              className: 'dark:!bg-brand-dark-deep dark:!text-white',
+              style: { background: '#0F2E1E', color: '#FFFFFF' },
+              success: {
+                iconTheme: { primary: '#16A34A', secondary: '#FFFFFF' },
               },
-            },
-            error: {
-              iconTheme: {
-                primary: '#D4AF37',
-                secondary: '#FFFFFF',
+              error: {
+                iconTheme: { primary: '#D4AF37', secondary: '#FFFFFF' },
               },
-            },
-          }}
-        />
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );
