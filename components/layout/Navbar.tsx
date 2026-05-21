@@ -31,22 +31,22 @@ export default function Navbar() {
       initial="hidden"
       animate="visible"
       className={cn(
-        'hidden md:block sticky top-0 z-50 transition-default',
+        'sticky top-0 z-50 h-[70px] transition-all duration-200',
         scrolled
-          ? 'bg-brand-dark/95 dark:bg-brand-dark-deep/95 backdrop-blur-md shadow-lg'
-          : 'bg-brand-dark dark:bg-brand-dark-deep'
+          ? 'bg-[#0F2E1E]/95 backdrop-blur-md shadow-lg'
+          : 'bg-[#0F2E1E]'
       )}
     >
-      <nav className="container mx-auto px-4 h-[70px] flex items-center justify-between gap-4">
+      <nav className="container mx-auto px-4 h-[70px] flex items-center justify-between gap-6">
         <Link href="/" className="flex-shrink-0">
           <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
             <Image
               src="/meraroom-logo-dark.svg"
               alt="MeraRoom"
-              width={160}
-              height={46}
+              width={150}
+              height={43}
               priority
-              className="h-11 w-auto"
+              className="h-[43px] w-auto"
             />
           </motion.div>
         </Link>
@@ -57,20 +57,13 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                'relative text-sm font-medium transition-default py-1',
+                'relative text-sm font-medium font-sans transition-colors duration-200 py-2',
                 isActive(link.href)
-                  ? 'text-brand-gold'
-                  : 'text-white/80 hover:text-brand-gold'
+                  ? 'text-[#D4AF37] border-b-2 border-[#D4AF37]'
+                  : 'text-white/70 hover:text-[#D4AF37]'
               )}
             >
               {link.label}
-              {isActive(link.href) && (
-                <motion.span
-                  layoutId="nav-underline"
-                  className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-brand-gold rounded-full"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
             </Link>
           ))}
         </div>
@@ -78,16 +71,16 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <ThemeToggle />
           <Link
-            href="/dashboard/owner"
-            className="bg-brand-gold text-brand-dark font-semibold rounded-lg px-4 py-2 text-sm transition-default hover:brightness-110 hover:scale-[1.03] active:scale-[0.97]"
-          >
-            List Room
-          </Link>
-          <Link
             href="/login"
-            className="border border-white/30 text-white rounded-lg px-4 py-2 text-sm font-medium transition-default hover:border-brand-gold hover:text-brand-gold"
+            className="border border-white/30 text-white text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center font-medium transition-colors duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37]"
           >
             Login
+          </Link>
+          <Link
+            href="/dashboard/owner"
+            className="bg-[#D4AF37] text-[#0F2E1E] font-semibold text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center transition-all duration-200 hover:brightness-110"
+          >
+            Post Room
           </Link>
         </div>
       </nav>

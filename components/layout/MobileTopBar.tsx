@@ -1,15 +1,71 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Bell } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import { NAV_LINKS } from '@/constants';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import { cn } from '@/lib/utils';
+
+const MOBILE_NAV_ITEMS = [
+  { href: '/', label: 'Home', emoji: '🏠' },
+  { href: '/search', label: 'Search Rooms', emoji: '🔍' },
+  { href: '/dashboard/owner', label: 'List Your Room', emoji: '🏡' },
+  { href: '/about', label: 'About', emoji: 'ℹ️' },
+  { href: '/contact', label: 'Contact', emoji: '📞' },
+] as const;
 
 export default function MobileTopBar() {
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (event: Event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  };
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 pt-safe bg-brand-dark dark:bg-brand-dark-deep">
-      <div className="flex items-center justify-between h-14 px-4">
-        <Link href="/" className="flex items-center gap-2 min-h-[44px]">
+    <div ref={menuRef} className="sticky top-0 z-50 bg-[#0F2E1E]">
+      <header className="h-14 px-4 flex items-center justify-between">
+        <Link
+          href="/"
+          onClick={closeMenu}
+          className="flex items-center gap-2 min-h-[44px] min-w-[44px]"
+        >
           <Image
             src="/meraroom-icon.svg"
             alt="MeraRoom"
@@ -17,21 +73,73 @@ export default function MobileTopBar() {
             height={32}
             className="w-8 h-8"
           />
-          <span className="font-display text-lg text-white">
-            Mera<span className="text-brand-gold">Room</span>
+          <span className="font-sans text-lg font-bold">
+            <span className="text-white">Mera</span>
+            <span className="text-[#D4AF37]">Room</span>
           </span>
         </Link>
+
         <div className="flex items-center gap-1">
+          <ThemeToggle />
           <button
             type="button"
-            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-white/80 hover:text-brand-gold transition-default"
-            aria-label="Notifications"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-white rounded-full transition-colors duration-200 hover:text-[#D4AF37]"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
           >
-            <Bell size={22} />
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <ThemeToggle />
         </div>
-      </div>
-    </header>
+      </header>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="overflow-hidden border-t border-white/10 bg-[#0F2E1E]"
+          >
+            <nav className="flex flex-col">
+              {MOBILE_NAV_ITEMS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMenu}
+                  className={cn(
+                    'py-3 px-4 font-medium text-white/80 border-b border-white/5 transition-colors duration-200 min-h-[44px] flex items-center gap-2',
+                    isActive(link.href)
+                      ? 'text-[#D4AF37] border-l-[3px] border-l-[#D4AF37] bg-white/5'
+                      : 'hover:text-[#D4AF37] hover:bg-white/5'
+                  )}
+                >
+                  <span>{link.emoji}</span>
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="flex gap-3 p-4 border-t border-white/10">
+              <Link
+                href="/login"
+                onClick={closeMenu}
+                className="flex-1 border border-white/30 text-white rounded-lg py-2.5 text-center text-sm font-medium min-h-[44px] flex items-center justify-center transition-colors duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37]"
+              >
+                Login
+              </Link>
+              <Link
+                href="/dashboard/owner"
+                onClick={closeMenu}
+                className="flex-1 bg-[#D4AF37] text-[#0F2E1E] font-semibold rounded-lg py-2.5 text-center text-sm min-h-[44px] flex items-center justify-center transition-all duration-200 hover:brightness-110"
+              >
+                Post Room Free
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
