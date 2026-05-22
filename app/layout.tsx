@@ -3,10 +3,7 @@ import { Poppins, DM_Serif_Display } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import SessionProvider from '@/components/providers/SessionProvider';
-import Navbar from '@/components/layout/Navbar';
-import MobileTopBar from '@/components/layout/MobileTopBar';
-import BottomNavBar from '@/components/layout/BottomNavBar';
-import Footer from '@/components/layout/Footer';
+import AppChrome from '@/components/layout/AppChrome';
 import './globals.css';
 
 const poppins = Poppins({
@@ -70,17 +67,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <ThemeProvider>
           <SessionProvider>
-            <div className="hidden md:block">
-              <Navbar />
-            </div>
-            <div className="block md:hidden">
-              <MobileTopBar />
-            </div>
-            <main className="flex-1 pb-20 md:pb-0">{children}</main>
-            <Footer />
-            <div className="block md:hidden">
-              <BottomNavBar />
-            </div>
+            <AppChrome>{children}</AppChrome>
           </SessionProvider>
           <Toaster
             position="top-right"

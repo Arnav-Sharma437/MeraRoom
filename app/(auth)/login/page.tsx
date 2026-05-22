@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, getSession, useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Phone } from 'lucide-react';
 import AuthBrandPanel from '@/components/auth/AuthBrandPanel';
@@ -34,7 +34,9 @@ export default function LoginPage() {
   useEffect(() => {
     if (session?.user) {
       const userRole = (session.user as { role?: string }).role;
-      router.replace(userRole === 'owner' ? '/dashboard/owner' : '/dashboard/user');
+      if (userRole === 'admin') router.replace('/admin');
+      else if (userRole === 'owner') router.replace('/dashboard/owner');
+      else router.replace('/dashboard/user');
     }
   }, [session, router]);
 
@@ -55,7 +57,11 @@ export default function LoginPage() {
       return;
     }
 
-    router.push('/dashboard');
+    const newSession = await getSession();
+    const userRole = (newSession?.user as { role?: string })?.role;
+    if (userRole === 'admin') router.push('/admin');
+    else if (userRole === 'owner') router.push('/dashboard/owner');
+    else router.push('/dashboard/user');
     router.refresh();
   };
 

@@ -18,7 +18,9 @@ export default function DashboardPage() {
     }
 
     const role = (session.user as { role?: string }).role;
-    router.replace(role === 'owner' ? '/dashboard/owner' : '/dashboard/user');
+    if (role === 'admin') router.replace('/admin');
+    else if (role === 'owner') router.replace('/dashboard/owner');
+    else router.replace('/dashboard/user');
   }, [session, status, router]);
 
   return (

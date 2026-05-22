@@ -46,6 +46,49 @@ export const CONTACTS = [
   },
 ] as const;
 
+export const POST_ROOM_TYPES = [
+  { value: 'single', label: 'Single Room', emoji: '🛏️' },
+  { value: 'shared', label: 'Shared Room', emoji: '🛏️🛏️' },
+  { value: 'pg', label: 'PG', emoji: '🏠' },
+  { value: 'studio', label: 'Studio', emoji: '🏢' },
+  { value: '1bhk', label: '1 BHK', emoji: '🏘️' },
+  { value: '2bhk', label: '2 BHK', emoji: '🏠' },
+] as const;
+
+export const POST_AMENITIES = [
+  { key: 'wifi', label: 'WiFi', emoji: '📶' },
+  { key: 'ac', label: 'AC', emoji: '❄️' },
+  { key: 'attachedBath', label: 'Attached Bathroom', emoji: '🚿' },
+  { key: 'parking', label: 'Parking', emoji: '🅿️' },
+  { key: 'kitchen', label: 'Kitchen', emoji: '🍳' },
+  { key: 'tv', label: 'TV', emoji: '📺' },
+  { key: 'powerBackup', label: 'Power Backup', emoji: '💡' },
+  { key: 'security', label: 'Security Guard', emoji: '🔒' },
+  { key: 'laundry', label: 'Laundry', emoji: '🧺' },
+  { key: 'gym', label: 'Gym', emoji: '🏋️' },
+] as const;
+
+export const POST_FURNISHING = [
+  { value: 'furnished', label: 'Furnished', emoji: '🪑' },
+  { value: 'semi-furnished', label: 'Semi-Furnished', emoji: '🪑' },
+  { value: 'unfurnished', label: 'Unfurnished', emoji: '📦' },
+] as const;
+
+export const ALLOWED_FOR_CHIPS = [
+  { key: 'students', label: 'Students' },
+  { key: 'working', label: 'Working' },
+  { key: 'family', label: 'Family' },
+  { key: 'bachelors', label: 'Bachelors' },
+] as const;
+
+export const OWNER_NAV = [
+  { href: '/dashboard/owner', label: 'Overview', icon: '📊' },
+  { href: '/dashboard/owner/listings', label: 'My Listings', icon: '🏠' },
+  { href: '/dashboard/owner/post', label: 'Post New Room', icon: '➕' },
+  { href: '/dashboard/owner/inquiries', label: 'Inquiries', icon: '📩' },
+  { href: '/dashboard/owner/profile', label: 'My Profile', icon: '👤' },
+] as const;
+
 export const ROOM_TYPES = [
   { value: 'single', label: 'Single Room' },
   { value: 'shared', label: 'Shared Room' },

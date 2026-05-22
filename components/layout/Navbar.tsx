@@ -4,14 +4,18 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { NAV_LINKS } from '@/constants';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import ProfileDropdown from '@/components/layout/ProfileDropdown';
 import { cn } from '@/lib/utils';
 import { slideDown } from '@/lib/animations';
+import type { UserRole } from '@/models/User';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -25,6 +29,10 @@ export default function Navbar() {
     return pathname.startsWith(href);
   };
 
+  const user = session?.user;
+  const role = (user as { role?: UserRole })?.role;
+  const isLoggedIn = status === 'authenticated' && !!user;
+
   return (
     <motion.header
       variants={slideDown}
@@ -32,9 +40,7 @@ export default function Navbar() {
       animate="visible"
       className={cn(
         'sticky top-0 z-50 h-[70px] transition-all duration-200',
-        scrolled
-          ? 'bg-[#0F2E1E]/95 backdrop-blur-md shadow-lg'
-          : 'bg-[#0F2E1E]'
+        scrolled ? 'bg-[#0F2E1E]/95 backdrop-blur-md shadow-lg' : 'bg-[#0F2E1E]'
       )}
     >
       <nav className="container mx-auto px-4 h-[70px] flex items-center justify-between gap-6">
@@ -70,18 +76,63 @@ export default function Navbar() {
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <Link
-            href="/login"
-            className="border border-white/30 text-white text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center font-medium transition-colors duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37]"
-          >
-            Login
-          </Link>
-          <Link
-            href="/dashboard/owner"
-            className="bg-[#D4AF37] text-[#0F2E1E] font-semibold text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center transition-all duration-200 hover:brightness-110"
-          >
-            Post Room
-          </Link>
+
+          {!isLoggedIn && (
+            <>
+              <Link
+                href="/login"
+                className="border border-white/30 text-white text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center font-medium transition-colors duration-200 hover:border-[#D4AF37] hover:text-[#D4AF37]"
+              >
+                Login
+              </Link>
+              <motion.div whileTap={{ scale: 0.96 }}>
+                <Link
+                  href="/register?role=owner"
+                  className="bg-[#D4AF37] text-[#0F2E1E] font-semibold text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center transition-all duration-200 hover:brightness-110"
+                >
+                  Post Room
+                </Link>
+              </motion.div>
+            </>
+          )}
+
+          {isLoggedIn && role === 'user' && (
+            <>
+              <Link
+                href="/dashboard/user#saved"
+                className="text-white/80 text-sm font-medium hover:text-[#D4AF37] transition-default"
+              >
+                My Saved
+              </Link>
+              <ProfileDropdown name={user.name ?? 'User'} role="user" />
+            </>
+          )}
+
+          {isLoggedIn && role === 'owner' && (
+            <>
+              <motion.div whileTap={{ scale: 0.96 }}>
+                <Link
+                  href="/dashboard/owner/post"
+                  className="bg-[#D4AF37] text-[#0F2E1E] font-semibold text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center hover:brightness-110"
+                >
+                  + Post Room
+                </Link>
+              </motion.div>
+              <ProfileDropdown name={user.name ?? 'Owner'} role="owner" />
+            </>
+          )}
+
+          {isLoggedIn && role === 'admin' && (
+            <>
+              <Link
+                href="/admin"
+                className="bg-[#D4AF37] text-[#0F2E1E] font-semibold text-sm rounded-lg px-4 py-2 min-h-[44px] flex items-center hover:brightness-110"
+              >
+                Admin Panel
+              </Link>
+              <ProfileDropdown name={user.name ?? 'Admin'} role="admin" />
+            </>
+          )}
         </div>
       </nav>
     </motion.header>

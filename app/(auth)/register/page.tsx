@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { motion } from 'framer-motion';
@@ -25,9 +25,11 @@ interface RegisterFormData {
   terms: boolean;
 }
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
-  const [role, setRole] = useState<RegisterRole>('user');
+  const searchParams = useSearchParams();
+  const defaultRole = searchParams.get('role') === 'owner' ? 'owner' : 'user';
+  const [role, setRole] = useState<RegisterRole>(defaultRole);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -268,5 +270,19 @@ export default function RegisterPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0A0F0A]">
+          <Loader />
+        </div>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }

@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Room from '@/models/Room';
-import { PAGINATION } from '@/constants';
+import City from '@/models/City';
+import { PAGINATION, CITY } from '@/constants';
+import { requireSession } from '@/lib/auth-server';
+import { normalizePhone } from '@/lib/utils';
 
 function getSortOption(sort: string | null): Record<string, 1 | -1> {
   switch (sort) {
@@ -38,9 +41,30 @@ export async function GET(request: NextRequest) {
     const exclude = searchParams.get('exclude');
     const isFeatured = searchParams.get('isFeatured');
     const sort = searchParams.get('sort');
-    const status = searchParams.get('status') ?? 'approved';
+    const ownerParam = searchParams.get('owner');
+    const statusParam = searchParams.get('status');
 
-    const filter: Record<string, unknown> = { status, isAvailable: true };
+    const filter: Record<string, unknown> = {};
+
+    if (ownerParam) {
+      const session = await requireSession();
+      if (!session?.user?.id) {
+        return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+      }
+      const ownerId =
+        ownerParam === 'me' ? session.user.id : ownerParam;
+      if (ownerParam === 'me' || ownerId === session.user.id || session.user.role === 'admin') {
+        filter.owner = ownerId;
+      } else {
+        return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
+      }
+      if (statusParam && statusParam !== 'all') {
+        filter.status = statusParam;
+      }
+    } else {
+      filter.status = statusParam ?? 'approved';
+      filter.isAvailable = true;
+    }
 
     if (exclude) filter._id = { $ne: exclude };
     if (area) {
@@ -109,11 +133,44 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await requireSession();
+    if (!session?.user?.id) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const role = session.user.role;
+    if (role !== 'owner' && role !== 'admin') {
+      return NextResponse.json({ success: false, error: 'Only owners can post rooms' }, { status: 403 });
+    }
+
     await connectDB();
     const body = await request.json();
-    const room = await Room.create(body);
+
+    let city = await City.findOne({ slug: CITY.slug });
+    if (!city) {
+      city = await City.create({
+        name: CITY.name,
+        slug: CITY.slug,
+        state: CITY.state,
+        image: '/images/cities/dharamshala.jpg',
+        isActive: true,
+        totalRooms: 0,
+      });
+    }
+
+    const room = await Room.create({
+      ...body,
+      owner: session.user.id,
+      city: city._id,
+      status: body.status ?? 'pending',
+      isAvailable: true,
+      views: 0,
+      whatsappNumber: normalizePhone(body.whatsappNumber ?? body.phone ?? ''),
+    });
+
     return NextResponse.json({ success: true, data: room }, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error('POST /api/rooms error:', error);
     return NextResponse.json({ success: false, error: 'Failed to create room' }, { status: 500 });
   }
 }
