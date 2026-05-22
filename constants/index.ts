@@ -345,3 +345,84 @@ export const PAGINATION = {
   DEFAULT_LIMIT: 12,
   MAX_LIMIT: 50,
 } as const;
+
+export const TEAM = [
+  {
+    name: 'Arnav',
+    role: 'Co-Founder & Developer',
+    phone: '+91 7876650437',
+    href: 'https://wa.me/917876650437',
+  },
+  {
+    name: 'Varun',
+    role: 'Co-Founder & Operations',
+    phone: '+91 9418100803',
+    href: 'https://wa.me/919418100803',
+  },
+] as const;
+
+export const ABOUT_STATS = [
+  { value: '100+', label: 'Rooms Listed' },
+  { value: '17', label: 'Areas Covered' },
+  { value: '500+', label: 'Happy Users' },
+  { value: 'Free', label: 'To Search & Contact' },
+] as const;
+
+export const ABOUT_VALUES = [
+  {
+    icon: '🔍',
+    title: 'Transparency',
+    description: 'Every listing is manually reviewed before going live.',
+  },
+  {
+    icon: '⚡',
+    title: 'Speed',
+    description: 'Find a room and contact the owner in under 2 minutes.',
+  },
+  {
+    icon: '🤝',
+    title: 'Trust',
+    description: 'Verified badges and real photos — no fake listings.',
+  },
+  {
+    icon: '🆓',
+    title: 'Free Forever',
+    description: 'Searching and contacting owners is always free.',
+  },
+] as const;
+
+export const CONTACT_SUBJECTS = [
+  { value: 'list-room', label: 'I want to list my room' },
+  { value: 'find-room', label: 'I need help finding a room' },
+  { value: 'featured', label: 'Featured listing inquiry' },
+  { value: 'report', label: 'Report a problem' },
+  { value: 'other', label: 'Other' },
+] as const;
+
+export const CONTACT_FAQ = [
+  {
+    question: 'Is MeraRoom free to use?',
+    answer:
+      'Yes! Searching rooms and contacting owners is completely free. We offer paid featured listings for property owners who want more visibility.',
+  },
+  {
+    question: 'How do I list my room?',
+    answer:
+      "Contact us on WhatsApp and we'll add your listing for free. We'll ask for photos, details and your contact number.",
+  },
+  {
+    question: 'Are all listings verified?',
+    answer:
+      'We manually review every listing before it goes live. Verified badge properties have been physically inspected by our team.',
+  },
+  {
+    question: 'Which areas does MeraRoom cover?',
+    answer:
+      'Currently we cover all major areas in Dharamshala including McLeod Ganj, Shyam Nagar, Dari, Sakoh, Bhagsu, Naddi and 11 more localities.',
+  },
+  {
+    question: 'How do I contact a room owner?',
+    answer:
+      "Every listing has a WhatsApp button. Just tap it and you'll be directly connected with the owner — no middlemen.",
+  },
+] as const;

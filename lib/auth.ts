@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { normalizePhone } from '@/lib/utils';
 import type { UserRole } from '@/models/User';
 
 export const authOptions: NextAuthOptions = {
@@ -10,26 +11,24 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        phone: { label: 'Phone', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        if (!credentials?.phone || !credentials?.password) {
           return null;
         }
 
         await connectDB();
 
-        const user = await User.findOne({ email: credentials.email });
+        const phone = normalizePhone(credentials.phone);
+        const user = await User.findOne({ phone });
 
         if (!user) {
           return null;
         }
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
+        const isValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isValid) {
           return null;
@@ -38,7 +37,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user._id.toString(),
           name: user.name,
-          email: user.email,
+          email: user.email ?? '',
           role: user.role,
           avatar: user.avatar,
         };

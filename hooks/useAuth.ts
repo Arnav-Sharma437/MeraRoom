@@ -9,7 +9,7 @@ interface UseAuthReturn {
   isAuthenticated: boolean;
   isOwner: boolean;
   isAdmin: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (phone: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
 }
 
@@ -26,9 +26,9 @@ export function useAuth(): UseAuthReturn {
       }
     : null;
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (phone: string, password: string): Promise<boolean> => {
     const result = await signIn('credentials', {
-      email,
+      phone,
       password,
       redirect: false,
     });

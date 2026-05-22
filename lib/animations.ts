@@ -54,3 +54,21 @@ export const viewportOnceTight = {
   once: true,
   margin: '-80px' as const,
 };
+
+export const slideInLeft: Variants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.5, ease: easeOut },
+  },
+};
+
+export const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.5, ease: easeOut },
+  },
+};

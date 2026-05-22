@@ -2,6 +2,19 @@ export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');
 }
 
+export function normalizePhone(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length === 10) return digits;
+  if (digits.length === 12 && digits.startsWith('91')) return digits.slice(2);
+  return digits;
+}
+
+export function formatPhoneDisplay(phone: string): string {
+  const d = normalizePhone(phone);
+  if (d.length === 10) return `+91 ${d.slice(0, 5)} ${d.slice(5)}`;
+  return phone;
+}
+
 export function formatRent(amount: number): string {
   return `₹${amount.toLocaleString('en-IN')}`;
 }

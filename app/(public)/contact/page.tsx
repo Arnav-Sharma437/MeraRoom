@@ -1,75 +1,245 @@
 'use client';
 
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
-import { CITY, CONTACTS } from '@/constants';
+import { CheckCircle } from 'lucide-react';
+import { CONTACTS, CONTACT_SUBJECTS, CITY } from '@/constants';
 import { fadeInUp, staggerContainer, viewportOnce } from '@/lib/animations';
+import { FormField, FormSelect, FormTextarea } from '@/components/ui/FormField';
+import Loader from '@/components/ui/Loader';
+import ContactFaq from '@/components/contact/ContactFaq';
+
+interface ContactFormData {
+  name: string;
+  phone: string;
+  subject: string;
+  message?: string;
+}
+
+function ContactCard({
+  name,
+  role,
+  phone,
+  href,
+  initial,
+}: {
+  name: string;
+  role: string;
+  phone: string;
+  href: string;
+  initial: string;
+}) {
+  const tel = phone.replace(/\s/g, '');
+
+  return (
+    <div className="bg-[#F9F6EF] dark:bg-[#111A11] rounded-2xl p-5 border border-gray-100 dark:border-[#1F2E1F] flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="w-14 h-14 shrink-0 bg-[#0F2E1E] rounded-full flex items-center justify-center">
+          <span className="font-display text-2xl text-[#D4AF37]">{initial}</span>
+        </div>
+        <div>
+          <p className="font-semibold text-[#0F2E1E] dark:text-white">{name}</p>
+          <p className="text-[#16A34A] text-sm">{role}</p>
+          <p className="text-gray-500 text-sm">{phone}</p>
+        </div>
+      </div>
+      <div className="flex gap-2 sm:flex-col sm:gap-2 shrink-0">
+        <motion.a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          whileTap={{ scale: 0.96 }}
+          className="flex-1 sm:flex-none text-center bg-[#25D366] text-white rounded-lg px-3 py-1.5 text-sm font-semibold"
+        >
+          💬 WhatsApp
+        </motion.a>
+        <motion.a
+          href={`tel:${tel}`}
+          whileTap={{ scale: 0.96 }}
+          className="flex-1 sm:flex-none text-center border border-[#0F2E1E] dark:border-white/20 text-[#0F2E1E] dark:text-white rounded-lg px-3 py-1.5 text-sm font-medium"
+        >
+          📞 Call
+        </motion.a>
+      </div>
+    </div>
+  );
+}
 
 export default function ContactPage() {
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [serverError, setServerError] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ContactFormData>({
+    defaultValues: { subject: CONTACT_SUBJECTS[0].value },
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    setSubmitting(true);
+    setServerError('');
+    setSuccess(false);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        setServerError(
+          json.error ?? 'Something went wrong. Please WhatsApp us directly.'
+        );
+        return;
+      }
+
+      setSuccess(true);
+      reset();
+    } catch {
+      setServerError('Something went wrong. Please WhatsApp us directly.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="bg-white dark:bg-surface-dark min-h-[60vh]">
-      <section className="bg-brand-dark dark:bg-brand-dark-deep py-14 md:py-16">
+    <div className="min-h-screen">
+      <section className="bg-[#0F2E1E] py-16 px-6 text-center">
         <motion.div
           variants={fadeInUp}
           initial="hidden"
           animate="visible"
-          className="container mx-auto px-4 text-center"
+          className="max-w-2xl mx-auto"
         >
-          <h1 className="font-display text-4xl md:text-5xl text-white mb-3">
-            Contact Us
-          </h1>
-          <p className="text-white/60 max-w-lg mx-auto">
-            Reach the MeraRoom team in {CITY.name} on WhatsApp — we typically
-            reply within a few hours.
+          <span className="inline-block text-[#D4AF37] text-sm mb-4">📞 We&apos;re here to help</span>
+          <h1 className="font-display text-4xl sm:text-5xl text-white">Get in Touch</h1>
+          <p className="text-white/60 mt-4 text-lg">
+            Have a question? Want to list your property? We&apos;re just a WhatsApp
+            message away.
           </p>
         </motion.div>
       </section>
 
-      <section className="container mx-auto px-4 py-12 md:py-16 max-w-2xl">
-        <motion.div
-          variants={staggerContainer(0.12)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-6"
-        >
-          {CONTACTS.map((contact) => (
-            <motion.div
-              key={contact.name}
-              variants={fadeInUp}
-              whileTap={{ scale: 0.98 }}
-              className="card-surface rounded-2xl p-6 shadow-md dark:shadow-card-dark text-center"
-            >
-              <div className="w-16 h-16 bg-brand-dark dark:bg-brand-dark-deep rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="text-brand-gold" size={32} />
-              </div>
-              <h2 className="font-semibold text-xl text-brand-dark dark:text-[#F9FAFB] mb-1">
-                {contact.name}
+      <section className="bg-white dark:bg-[#0A0F0A] py-16 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            variants={staggerContainer(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+          >
+            <motion.div variants={fadeInUp} className="space-y-6">
+              <h2 className="font-display text-2xl text-[#0F2E1E] dark:text-white">
+                Reach Us Directly
               </h2>
-              <p className="text-brand-gray dark:text-gray-400 mb-6">{contact.phone}</p>
-              <motion.a
-                href={contact.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center justify-center gap-2 w-full bg-[#25D366] text-white font-semibold rounded-xl py-3 min-h-[44px] transition-default hover:brightness-110"
-              >
-                Chat on WhatsApp →
-              </motion.a>
-            </motion.div>
-          ))}
-        </motion.div>
 
-        <motion.p
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="text-center text-brand-gray dark:text-gray-400 text-sm mt-10"
-        >
-          Based in {CITY.name}, {CITY.state} · Serving all 17 localities
-        </motion.p>
+              <ContactCard
+                name="Arnav"
+                role="Co-Founder"
+                phone={CONTACTS[0].phone}
+                href={CONTACTS[0].href}
+                initial="A"
+              />
+              <ContactCard
+                name="Varun"
+                role="Co-Founder"
+                phone={CONTACTS[1].phone}
+                href={CONTACTS[1].href}
+                initial="V"
+              />
+
+              <div className="bg-[#0F2E1E] rounded-2xl p-5 space-y-3 text-sm">
+                <p className="text-white/70">📍 {CITY.name}, {CITY.state}</p>
+                <p className="text-white/70">⏰ Mon - Sat: 9AM to 7PM</p>
+                <p className="text-[#D4AF37]">💬 Fastest reply: WhatsApp</p>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeInUp}>
+              <h2 className="font-display text-2xl text-[#0F2E1E] dark:text-white mb-4">
+                Send a Message
+              </h2>
+              <p className="text-amber-600 dark:text-amber-400 text-sm bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2 mb-6">
+                💡 For fastest response, use WhatsApp above
+              </p>
+
+              {success ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center text-center py-12"
+                >
+                  <CheckCircle className="text-[#16A34A] w-16 h-16 mb-4" />
+                  <p className="font-semibold text-[#0F2E1E] dark:text-white text-lg">
+                    Message sent! We&apos;ll reply soon.
+                  </p>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                  <FormField
+                    label="Your Name"
+                    placeholder="Rahul Sharma"
+                    {...register('name', { required: 'Name is required' })}
+                    error={errors.name?.message}
+                  />
+                  <FormField
+                    label="Phone Number"
+                    type="tel"
+                    placeholder="+91 98765 43210"
+                    {...register('phone', { required: 'Phone is required' })}
+                    error={errors.phone?.message}
+                  />
+                  <FormSelect
+                    label="What's this about?"
+                    options={CONTACT_SUBJECTS.map((s) => ({
+                      value: s.value,
+                      label: s.label,
+                    }))}
+                    {...register('subject', { required: true })}
+                    error={errors.subject?.message}
+                  />
+                  <FormTextarea
+                    label="Message"
+                    rows={4}
+                    placeholder="Tell us more..."
+                    {...register('message')}
+                  />
+
+                  {serverError && (
+                    <p className="text-red-500 text-sm mb-4">{serverError}</p>
+                  )}
+
+                  <motion.button
+                    type="submit"
+                    disabled={submitting}
+                    whileTap={{ scale: 0.96 }}
+                    className="w-full bg-[#16A34A] text-white rounded-xl py-3.5 font-semibold hover:bg-[#D4AF37] hover:text-[#0F2E1E] transition-default disabled:opacity-70 flex items-center justify-center gap-2 min-h-[48px]"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader size="sm" className="!w-5 !h-5 border-2 border-white border-t-transparent" />
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
+                  </motion.button>
+                </form>
+              )}
+            </motion.div>
+          </motion.div>
+        </div>
       </section>
+
+      <ContactFaq />
     </div>
   );
 }
