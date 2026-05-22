@@ -28,8 +28,7 @@ export async function GET(
     await Room.findByIdAndUpdate(params.id, { $inc: { views: 1 } });
 
     return NextResponse.json({ success: true, data: room });
-  } catch (error) {
-    console.error('GET /api/rooms/[id] error:', error);
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Failed to fetch room' },
       { status: 500 }

@@ -63,6 +63,8 @@ export const SEARCH_FILTER_CHIPS = [
   { id: 'furnished', label: 'Furnished' },
   { id: 'ac', label: 'AC' },
   { id: 'wifi', label: 'WiFi' },
+  { id: 'under-5k', label: 'Under ₹5K' },
+  { id: 'under-8k', label: 'Under ₹8K' },
 ] as const;
 
 export const FURNISHING_TYPES = [
@@ -308,6 +310,26 @@ export const MOCK_FEATURED_ROOMS = [
     amenities: { wifi: true, ac: true, parking: true, attachedBath: true, kitchen: true, laundry: false, tv: true, powerBackup: true, security: true, gym: false },
   },
 ] as const;
+
+export function getMockSearchRooms() {
+  const extras = [
+    { _id: 'mock-7', title: 'Budget Room in Shyam Nagar', rent: 4200, area: 'Shyam Nagar', roomType: 'single' as const, furnishing: 'semi-furnished' as const, isFeatured: false },
+    { _id: 'mock-8', title: 'PG near Dari Bridge', rent: 3800, area: 'Dari', roomType: 'pg' as const, furnishing: 'furnished' as const, isFeatured: false },
+    { _id: 'mock-9', title: '2 BHK in Ramnagar', rent: 12000, area: 'Ramnagar', roomType: '2bhk' as const, furnishing: 'furnished' as const, isFeatured: true },
+    { _id: 'mock-10', title: 'Room on Jogiwara Road', rent: 6200, area: 'Jogiwara Road', roomType: 'single' as const, furnishing: 'furnished' as const, isFeatured: false },
+    { _id: 'mock-11', title: 'Naddi Valley View PG', rent: 5200, area: 'Naddi', roomType: 'pg' as const, furnishing: 'furnished' as const, isFeatured: true },
+    { _id: 'mock-12', title: 'Upper Dharamshala Flat Share', rent: 4500, area: 'Upper Dharamshala', roomType: 'shared' as const, furnishing: 'semi-furnished' as const, isFeatured: false },
+  ];
+  return [...MOCK_FEATURED_ROOMS, ...extras.map((e, i) => ({
+    ...MOCK_FEATURED_ROOMS[i % 6],
+    ...e,
+    description: `Comfortable stay in ${e.area}, Dharamshala with mountain air and local markets nearby.`,
+    whatsappNumber: i % 2 === 0 ? '917876650437' : '919418100803',
+    images: [] as string[],
+    amenities: MOCK_FEATURED_ROOMS[i % 6].amenities,
+    city: { name: 'Dharamshala', slug: 'dharamshala' },
+  }))];
+}
 
 export const SEED_CITY = {
   name: 'Dharamshala',
