@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Phone, User } from 'lucide-react';
+import { Eye, EyeOff, Lock, Phone, User, Search, Home } from 'lucide-react';
 import AuthBrandPanel from '@/components/auth/AuthBrandPanel';
 import { FormField } from '@/components/ui/FormField';
 import Loader from '@/components/ui/Loader';
@@ -123,10 +123,12 @@ function RegisterForm() {
           <div className="flex gap-3 mb-6">
             {(
               [
-                { id: 'user' as const, icon: '🔍', label: 'Room Seeker' },
-                { id: 'owner' as const, icon: '🏠', label: 'Property Owner' },
+                { id: 'user' as const, Icon: Search, label: 'Room Seeker' },
+                { id: 'owner' as const, Icon: Home, label: 'Property Owner' },
               ] as const
-            ).map((option) => (
+            ).map((option) => {
+              const RoleIcon = option.Icon;
+              return (
               <motion.button
                 key={option.id}
                 type="button"
@@ -139,14 +141,13 @@ function RegisterForm() {
                     : 'border-gray-200 dark:border-[#1F2E1F] bg-white dark:bg-[#111A11]'
                 )}
               >
-                <span className="text-3xl block mb-1" aria-hidden>
-                  {option.icon}
-                </span>
+                <RoleIcon className="w-8 h-8 mx-auto mb-1 text-[#16A34A]" aria-hidden />
                 <span className="font-semibold text-sm text-[#0F2E1E] dark:text-white">
                   {option.label}
                 </span>
               </motion.button>
-            ))}
+            );
+            })}
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate>

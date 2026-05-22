@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, X, ArrowLeft, Share2, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ArrowLeft, Share2, Heart, Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 interface RoomImageGalleryProps {
   images: string[];
@@ -27,6 +28,10 @@ export default function RoomImageGallery({
   const [touchStart, setTouchStart] = useState(0);
 
   useEffect(() => {
+    setSaved(isSaved);
+  }, [isSaved]);
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setLightbox(false);
       if (lightbox && e.key === 'ArrowRight') setIndex((i) => (i + 1) % Math.max(gallery.length, 1));
@@ -41,15 +46,36 @@ export default function RoomImageGallery({
     setIndex((i) => (i + dir + gallery.length) % gallery.length);
   };
 
+  const handleSaveClick = () => {
+    onToggleSave?.();
+  };
+
   const fallback = (
-    <div className="absolute inset-0 bg-gradient-to-br from-[#0F2E1E] to-[#16A34A] flex items-center justify-center text-6xl">
-      🏠
+    <div className="absolute inset-0 bg-gradient-to-br from-[#0F2E1E] to-[#16A34A] flex items-center justify-center text-[#D4AF37]/30">
+      <Home size={64} />
     </div>
+  );
+
+  const heartBtn = (
+    <motion.button
+      type="button"
+      whileTap={{ scale: 0.8 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      onClick={handleSaveClick}
+      className={cn(
+        'rounded-full p-2 min-w-[44px] min-h-[44px] flex items-center justify-center',
+        saved
+          ? 'bg-red-500 text-white'
+          : 'bg-white/80 backdrop-blur text-gray-600'
+      )}
+      aria-label="Save room"
+    >
+      <Heart size={20} className={cn(saved && 'fill-current')} />
+    </motion.button>
   );
 
   return (
     <>
-      {/* Mobile */}
       <div
         className="md:hidden relative h-[280px] w-full overflow-hidden"
         onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
@@ -82,14 +108,7 @@ export default function RoomImageGallery({
             >
               <Share2 size={20} />
             </motion.button>
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.9 }}
-              onClick={() => { setSaved(!saved); onToggleSave?.(); }}
-              className="bg-black/30 backdrop-blur rounded-full p-2 text-white min-w-[44px] min-h-[44px] flex items-center justify-center"
-            >
-              <Heart size={20} className={saved ? 'fill-red-500 text-red-500' : ''} />
-            </motion.button>
+            {heartBtn}
           </div>
         </div>
         {gallery.length > 1 && (
@@ -110,7 +129,6 @@ export default function RoomImageGallery({
         <button type="button" className="absolute inset-0 z-0" onClick={() => gallery.length && setLightbox(true)} aria-label="View fullscreen" />
       </div>
 
-      {/* Desktop grid */}
       <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-96 rounded-2xl overflow-hidden">
         <button
           type="button"

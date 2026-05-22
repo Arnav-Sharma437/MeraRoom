@@ -4,31 +4,33 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Share2, Heart } from 'lucide-react';
+import {
+  MapPin,
+  Phone,
+  Share2,
+  Heart,
+  Home,
+  Users,
+  LayoutGrid,
+  User as UserIcon,
+  CircleDot,
+  AlertTriangle,
+  CheckCircle,
+} from 'lucide-react';
+import { LucideByName } from '@/components/ui/LucideByName';
+import { POST_AMENITIES } from '@/constants';
+import { useSavedRooms } from '@/hooks/useSavedRooms';
 import RoomImageGallery from '@/components/rooms/RoomImageGallery';
 import RoomCard from '@/components/rooms/RoomCard';
 import WhatsAppButton from '@/components/rooms/WhatsAppButton';
 import type { Room, ApiResponse, User } from '@/types';
 import { MOCK_FEATURED_ROOMS, ROOM_TYPES, FURNISHING_TYPES, GENDER_OPTIONS, CITY, getMockSearchRooms } from '@/constants';
-import { formatRent, getWhatsAppLink } from '@/lib/utils';
+import { cn, formatRent, getWhatsAppLink } from '@/lib/utils';
 import { filterMockRooms, DEFAULT_FILTERS, enrichMockRoom } from '@/lib/filter-rooms';
 
 interface RoomDetailClientProps {
   id: string;
 }
-
-const AMENITY_DISPLAY = [
-  { key: 'wifi', label: 'WiFi', emoji: '📶' },
-  { key: 'ac', label: 'AC', emoji: '❄️' },
-  { key: 'attachedBath', label: 'Attached Bath', emoji: '🚿' },
-  { key: 'parking', label: 'Parking', emoji: '🅿️' },
-  { key: 'kitchen', label: 'Kitchen', emoji: '🍳' },
-  { key: 'laundry', label: 'Laundry', emoji: '👕' },
-  { key: 'tv', label: 'TV', emoji: '📺' },
-  { key: 'powerBackup', label: 'Power Backup', emoji: '💡' },
-  { key: 'security', label: 'Security', emoji: '🔒' },
-  { key: 'gym', label: 'Gym', emoji: '🏋️' },
-] as const;
 
 const NEARBY_LANDMARKS: Record<string, string[]> = {
   'McLeod Ganj': ['McLeod Ganj Market — 0.3km', 'Tsuglagkhang Complex — 0.5km', 'HRTC Bus Stand — 1.2km'],
@@ -56,6 +58,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
   const [similar, setSimilar] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const { isSaved, toggleSave } = useSavedRooms();
 
   useEffect(() => {
     const load = async () => {
@@ -107,7 +110,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
   if (!room) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
-        <span className="text-5xl mb-4">🏠</span>
+        <Home className="w-16 h-16 mb-4 text-[#16A34A]/40" />
         <h1 className="font-display text-2xl text-[#0F2E1E] dark:text-white mb-2">Room not found</h1>
         <p className="text-gray-500 mb-6">This listing is no longer available in Dharamshala.</p>
         <Link href="/search" className="bg-[#16A34A] text-white font-semibold rounded-xl px-6 py-3">
@@ -143,7 +146,8 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
         <p className="hidden md:block text-sm text-gray-400 mt-1">+{formatRent(room.deposit)} deposit</p>
       )}
       <span className="inline-flex items-center gap-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full px-3 py-1 text-sm mt-4 mb-4">
-        🟢 Available Now
+        <CircleDot size={14} className="inline mr-1" />
+        Available Now
       </span>
       <div className="hidden md:flex items-center gap-3 mb-6 pb-6 border-b border-gray-100 dark:border-[#1F2E1F]">
         <div className="w-12 h-12 rounded-full bg-[#0F2E1E] text-[#D4AF37] flex items-center justify-center font-bold text-lg">
@@ -164,7 +168,8 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
         <Phone size={20} /> Call Owner
       </motion.a>
       <p className="hidden md:block bg-amber-50 dark:bg-amber-900/20 rounded-xl p-3 mt-4 text-xs text-amber-700 dark:text-amber-300">
-        ⚠️ Always visit the property before making any payment.
+        <AlertTriangle size={14} className="inline mr-1 shrink-0" />
+        Always visit the property before making any payment.
       </p>
     </div>
   );
@@ -172,7 +177,12 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
   return (
     <div className="bg-white dark:bg-[#0A0F0A] min-h-screen pb-36 md:pb-12">
       <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
-        <RoomImageGallery images={room.images ?? []} title={room.title} />
+        <RoomImageGallery
+          images={room.images ?? []}
+          title={room.title}
+          isSaved={isSaved(room._id)}
+          onToggleSave={() => toggleSave(room._id)}
+        />
       </motion.div>
 
       <div className="container mx-auto px-4 py-6 max-w-6xl">
@@ -194,8 +204,16 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                   <motion.button type="button" whileTap={{ scale: 0.96 }} onClick={() => navigator.share?.({ title: room.title, url: window.location.href })} className="p-2 border rounded-lg">
                     <Share2 size={18} />
                   </motion.button>
-                  <motion.button type="button" whileTap={{ scale: 0.96 }} className="p-2 border rounded-lg">
-                    <Heart size={18} />
+                  <motion.button
+                    type="button"
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => toggleSave(room._id)}
+                    className={cn(
+                      'p-2 border rounded-lg',
+                      isSaved(room._id) && 'bg-red-50 border-red-200 text-red-500'
+                    )}
+                  >
+                    <Heart size={18} className={isSaved(room._id) ? 'fill-current' : ''} />
                   </motion.button>
                 </div>
               </div>
@@ -204,7 +222,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                 {room.area}, {CITY.name}, HP
               </p>
               <a href={`#map`} className="text-[#16A34A] text-sm underline hover:text-[#D4AF37] mt-1 inline-block">
-                📍 View on Map
+                View on Map
               </a>
               <div className="flex flex-wrap gap-2 mt-4">
                 <span className="text-xs bg-[#0F2E1E] text-white rounded-full px-3 py-1">{typeLabel}</span>
@@ -227,10 +245,10 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                 <p className="text-gray-400 text-sm">/month</p>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
-                <span>🏠 {typeLabel}</span>
-                <span>👥 {allowedLabels.join(', ') || 'All'}</span>
-                <span>🪑 {furnishLabel}</span>
-                <span>🧑 {genderLabel}</span>
+                <span className="inline-flex items-center gap-1"><Home size={14} /> {typeLabel}</span>
+                <span className="inline-flex items-center gap-1"><Users size={14} /> {allowedLabels.join(', ') || 'All'}</span>
+                <span className="inline-flex items-center gap-1"><LayoutGrid size={14} /> {furnishLabel}</span>
+                <span className="inline-flex items-center gap-1"><UserIcon size={14} /> {genderLabel}</span>
               </div>
             </motion.section>
 
@@ -249,7 +267,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
             <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
               <h2 className="font-display text-xl text-[#0F2E1E] dark:text-white mb-4">Amenities & Facilities</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {AMENITY_DISPLAY.map((a, i) => {
+                {POST_AMENITIES.map((a, i) => {
                   const available = room.amenities[a.key as keyof typeof room.amenities];
                   return (
                     <motion.div
@@ -259,7 +277,9 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                       transition={{ delay: 0.05 * i }}
                       className={`bg-white dark:bg-[#111A11] border border-gray-100 dark:border-[#1F2E1F] rounded-xl p-3 flex items-center gap-3 ${!available ? 'opacity-50' : ''}`}
                     >
-                      <span className="bg-[#F0FDF4] dark:bg-[#0F2E1E]/50 rounded-lg p-2 text-lg">{a.emoji}</span>
+                      <span className="bg-[#F0FDF4] dark:bg-[#0F2E1E]/50 rounded-lg p-2 text-[#16A34A]">
+                        <LucideByName name={a.icon} size={18} />
+                      </span>
                       <span className={`text-sm ${available ? 'text-[#0F2E1E] dark:text-white' : 'text-gray-300 line-through'}`}>{a.label}</span>
                     </motion.div>
                   );
@@ -275,7 +295,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
               <div className="flex flex-wrap gap-2 mb-4">
                 {landmarks.map((l) => (
                   <span key={l} className="bg-gray-100 dark:bg-[#1A2A1A] rounded-full text-xs px-3 py-1 text-gray-600 dark:text-gray-400">
-                    📍 {l}
+                    {l}
                   </span>
                 ))}
               </div>
@@ -306,10 +326,10 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
             <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
               <h2 className="font-display text-xl text-[#0F2E1E] dark:text-white mb-4">House Rules</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                <p>✅ Available For: {allowedLabels.join(', ') || 'Everyone'}</p>
-                <p>✅ Gender: {genderLabel}</p>
-                <p>✅ Pets: Contact owner</p>
-                <p>✅ ID proof required at move-in</p>
+                <p className="flex items-center gap-2"><CheckCircle size={14} className="text-[#16A34A]" /> Available For: {allowedLabels.join(', ') || 'Everyone'}</p>
+                <p className="flex items-center gap-2"><CheckCircle size={14} className="text-[#16A34A]" /> Gender: {genderLabel}</p>
+                <p className="flex items-center gap-2"><CheckCircle size={14} className="text-[#16A34A]" /> Pets: Contact owner</p>
+                <p className="flex items-center gap-2"><CheckCircle size={14} className="text-[#16A34A]" /> ID proof required at move-in</p>
               </div>
             </motion.section>
 

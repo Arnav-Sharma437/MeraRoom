@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { Home, CheckCircle, Gift, Zap } from 'lucide-react';
 import { slideInLeft } from '@/lib/animations';
 
 export default function AuthBrandPanel() {
@@ -24,9 +25,7 @@ export default function AuthBrandPanel() {
       </div>
 
       <div className="text-center">
-        <p className="text-9xl mb-6 select-none" aria-hidden>
-          🏠
-        </p>
+        <Home className="w-24 h-24 mx-auto mb-6 text-[#D4AF37]/30" strokeWidth={1} />
         <h2 className="font-display text-3xl text-white leading-tight">
           Find Your Perfect
           <br />
@@ -38,9 +37,15 @@ export default function AuthBrandPanel() {
       </div>
 
       <div className="flex justify-center gap-6 text-white/40 text-sm">
-        <span>✓ Verified</span>
-        <span>🆓 Free</span>
-        <span>⚡ Instant</span>
+        <span className="flex items-center gap-1">
+          <CheckCircle size={14} /> Verified
+        </span>
+        <span className="flex items-center gap-1">
+          <Gift size={14} /> Free
+        </span>
+        <span className="flex items-center gap-1">
+          <Zap size={14} /> Instant
+        </span>
       </div>
     </motion.aside>
   );

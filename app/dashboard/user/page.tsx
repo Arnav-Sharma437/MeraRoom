@@ -10,6 +10,8 @@ import { FormField } from '@/components/ui/FormField';
 import Loader from '@/components/ui/Loader';
 import Skeleton from '@/components/ui/Skeleton';
 import { cn } from '@/lib/utils';
+import DashboardTopBar from '@/components/dashboard/DashboardTopBar';
+import { Heart, User as UserIcon } from 'lucide-react';
 import type { Room } from '@/types';
 
 type Tab = 'saved' | 'profile';
@@ -101,15 +103,18 @@ export default function UserDashboardPage() {
 
   const initial = (name || session?.user?.name)?.charAt(0)?.toUpperCase() ?? 'U';
 
-  const TABS: { id: Tab; label: string; icon: string }[] = [
-    { id: 'saved', label: 'Saved Rooms', icon: '❤️' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
+  const TABS: { id: Tab; label: string; Icon: typeof Heart }[] = [
+    { id: 'saved', label: 'Saved Rooms', Icon: Heart },
+    { id: 'profile', label: 'Profile', Icon: UserIcon },
   ];
 
   return (
     <div className="min-h-screen bg-[#F9F6EF] dark:bg-[#0A0F0A] p-4 md:p-8 max-w-4xl mx-auto">
+      <DashboardTopBar />
       <div className="flex gap-2 overflow-x-auto mb-8 lg:hidden">
-        {TABS.map((t) => (
+        {TABS.map((t) => {
+          const TabIcon = t.Icon;
+          return (
           <button
             key={t.id}
             type="button"
@@ -119,27 +124,31 @@ export default function UserDashboardPage() {
               tab === t.id ? 'bg-[#16A34A] text-white' : 'bg-white dark:bg-[#111A11] text-gray-600 border border-gray-200 dark:border-[#1F2E1F]'
             )}
           >
-            {t.icon} {t.label}
+            <TabIcon size={14} /> {t.label}
           </button>
-        ))}
+        );
+        })}
       </div>
 
       <div className="hidden lg:flex gap-4 mb-8 border-b border-gray-200 dark:border-[#1F2E1F]">
-        {TABS.map((t) => (
+        {TABS.map((t) => {
+          const TabIcon = t.Icon;
+          return (
           <button
             key={t.id}
             type="button"
             onClick={() => setTab(t.id)}
             className={cn(
-              'pb-3 px-2 font-semibold text-sm border-b-2 -mb-px transition-default',
+              'pb-3 px-2 font-semibold text-sm border-b-2 -mb-px transition-default flex items-center gap-1',
               tab === t.id
                 ? 'border-[#16A34A] text-[#16A34A]'
                 : 'border-transparent text-gray-500'
             )}
           >
-            {t.icon} {t.label}
+            <TabIcon size={14} /> {t.label}
           </button>
-        ))}
+        );
+        })}
       </div>
 
       {tab === 'saved' && (
@@ -155,10 +164,10 @@ export default function UserDashboardPage() {
             </div>
           ) : rooms.length === 0 ? (
             <div className="text-center py-16 bg-white dark:bg-[#111A11] rounded-3xl border border-gray-100 dark:border-[#1F2E1F]">
-              <span className="text-6xl block mb-4">❤️</span>
+              <Heart className="w-16 h-16 mx-auto mb-4 text-[#16A34A]/40" />
               <p className="font-semibold text-lg text-[#0F2E1E] dark:text-white">No saved rooms yet</p>
               <p className="text-gray-500 text-sm mt-2 mb-6">
-                Browse rooms and tap ❤️ to save
+                Browse rooms and tap the heart icon to save
               </p>
               <Link
                 href="/search"

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, MessageCircle, Phone, MapPin, Clock, Lightbulb } from 'lucide-react';
 import { CONTACTS, CONTACT_SUBJECTS, CITY } from '@/constants';
 import { fadeInUp, staggerContainer, viewportOnce } from '@/lib/animations';
 import { FormField, FormSelect, FormTextarea } from '@/components/ui/FormField';
@@ -52,14 +52,16 @@ function ContactCard({
           whileTap={{ scale: 0.96 }}
           className="flex-1 sm:flex-none text-center bg-[#25D366] text-white rounded-lg px-3 py-1.5 text-sm font-semibold"
         >
-          💬 WhatsApp
+          <MessageCircle size={14} className="inline mr-1" />
+          WhatsApp
         </motion.a>
         <motion.a
           href={`tel:${tel}`}
           whileTap={{ scale: 0.96 }}
-          className="flex-1 sm:flex-none text-center border border-[#0F2E1E] dark:border-white/20 text-[#0F2E1E] dark:text-white rounded-lg px-3 py-1.5 text-sm font-medium"
+          className="flex-1 sm:flex-none text-center border border-[#0F2E1E] dark:border-white/20 text-[#0F2E1E] dark:text-white rounded-lg px-3 py-1.5 text-sm font-medium inline-flex items-center justify-center gap-1"
         >
-          📞 Call
+          <Phone size={14} />
+          Call
         </motion.a>
       </div>
     </div>
@@ -118,7 +120,10 @@ export default function ContactPage() {
           animate="visible"
           className="max-w-2xl mx-auto"
         >
-          <span className="inline-block text-[#D4AF37] text-sm mb-4">📞 We&apos;re here to help</span>
+          <span className="inline-flex items-center justify-center gap-2 text-[#D4AF37] text-sm mb-4">
+            <Phone size={16} />
+            We&apos;re here to help
+          </span>
           <h1 className="font-display text-4xl sm:text-5xl text-white">Get in Touch</h1>
           <p className="text-white/60 mt-4 text-lg">
             Have a question? Want to list your property? We&apos;re just a WhatsApp
@@ -157,9 +162,18 @@ export default function ContactPage() {
               />
 
               <div className="bg-[#0F2E1E] rounded-2xl p-5 space-y-3 text-sm">
-                <p className="text-white/70">📍 {CITY.name}, {CITY.state}</p>
-                <p className="text-white/70">⏰ Mon - Sat: 9AM to 7PM</p>
-                <p className="text-[#D4AF37]">💬 Fastest reply: WhatsApp</p>
+                <p className="text-white/70 flex items-center gap-2">
+                  <MapPin size={14} className="text-[#D4AF37] shrink-0" />
+                  {CITY.name}, {CITY.state}
+                </p>
+                <p className="text-white/70 flex items-center gap-2">
+                  <Clock size={14} className="text-[#D4AF37] shrink-0" />
+                  Mon - Sat: 9AM to 7PM
+                </p>
+                <p className="text-[#D4AF37] flex items-center gap-2">
+                  <MessageCircle size={14} className="shrink-0" />
+                  Fastest reply: WhatsApp
+                </p>
               </div>
             </motion.div>
 
@@ -168,7 +182,10 @@ export default function ContactPage() {
                 Send a Message
               </h2>
               <p className="text-amber-600 dark:text-amber-400 text-sm bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2 mb-6">
-                💡 For fastest response, use WhatsApp above
+                <span className="inline-flex items-center gap-1.5">
+                  <Lightbulb size={14} />
+                  For fastest response, use WhatsApp above
+                </span>
               </p>
 
               {success ? (

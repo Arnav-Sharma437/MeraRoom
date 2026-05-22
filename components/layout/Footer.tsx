@@ -102,7 +102,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-white/50">
           <p>© {year} MeraRoom. All rights reserved.</p>
-          <p>Made with ❤️ in Dharamshala 🇮🇳</p>
+          <p>Made in Dharamshala, Himachal Pradesh</p>
         </div>
       </div>
     </footer>

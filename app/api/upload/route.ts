@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
+
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
 
@@ -24,22 +25,22 @@ export async function POST(request: NextRequest) {
     const dataUri = `data:${file.type};base64,${base64}`;
 
     const result = await cloudinary.uploader.upload(dataUri, {
-      folder: 'meraroom',
+      folder: 'meraroom/rooms',
       resource_type: 'image',
+      transformation: [{ width: 1200, height: 800, crop: 'fill', quality: 'auto' }],
     });
 
     return NextResponse.json({
       success: true,
+      url: result.secure_url,
+      public_id: result.public_id,
       data: {
         url: result.secure_url,
         publicId: result.public_id,
       },
     });
   } catch (error) {
-    console.error('POST /api/upload error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to upload image' },
-      { status: 500 }
-    );
+    console.error('Upload error:', error);
+    return NextResponse.json({ success: false, error: 'Upload failed' }, { status: 500 });
   }
 }

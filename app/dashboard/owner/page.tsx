@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
-import { Home, CheckCircle, MessageCircle, Eye } from 'lucide-react';
+import { Home, CheckCircle, MessageCircle, Eye, Plus, List } from 'lucide-react';
 import { fadeInUp, staggerContainer, viewportOnce } from '@/lib/animations';
 import { getGreeting, getWhatsAppLink, timeAgo, formatPhoneDisplay } from '@/lib/utils';
 import Skeleton from '@/components/ui/Skeleton';
@@ -65,7 +65,7 @@ export default function OwnerOverviewPage() {
   return (
     <motion.div variants={staggerContainer(0.08)} initial="hidden" animate="visible">
       <motion.h1 variants={fadeInUp} className="font-display text-2xl text-[#0F2E1E] dark:text-white mb-6">
-        {getGreeting()}, {name}! 👋
+        {getGreeting()}, {name}!
       </motion.h1>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -123,7 +123,7 @@ export default function OwnerOverviewPage() {
                   rel="noopener noreferrer"
                   className="inline-flex justify-center bg-[#25D366] text-white text-sm font-semibold rounded-xl px-4 py-2 min-h-[40px] items-center"
                 >
-                  💬 WhatsApp
+                  WhatsApp
                 </a>
               </div>
             ))}
@@ -136,13 +136,15 @@ export default function OwnerOverviewPage() {
           href="/dashboard/owner/post"
           className="flex-1 text-center bg-[#16A34A] text-white font-semibold rounded-xl py-3.5 hover:bg-[#D4AF37] hover:text-[#0F2E1E] transition-default"
         >
-          ➕ Post New Room
+          <Plus size={16} className="inline mr-1" />
+          Post New Room
         </Link>
         <Link
           href="/dashboard/owner/listings"
-          className="flex-1 text-center border-2 border-[#0F2E1E] dark:border-[#D4AF37] text-[#0F2E1E] dark:text-[#D4AF37] font-semibold rounded-xl py-3.5 transition-default"
+          className="flex-1 text-center border-2 border-[#0F2E1E] dark:border-[#D4AF37] text-[#0F2E1E] dark:text-[#D4AF37] font-semibold rounded-xl py-3.5 transition-default inline-flex items-center justify-center gap-1"
         >
-          👁️ View My Listings
+          <List size={16} />
+          View My Listings
         </Link>
       </motion.div>
     </motion.div>

@@ -7,14 +7,15 @@ import type { SearchFilterState } from '@/lib/filter-rooms';
 import { DEFAULT_FILTERS } from '@/lib/filter-rooms';
 import { DHARAMSHALA_AREAS, ROOM_TYPES, FURNISHING_TYPES, GENDER_OPTIONS } from '@/constants';
 import { cn } from '@/lib/utils';
+import { LucideByName } from '@/components/ui/LucideByName';
 
 const AMENITY_OPTIONS = [
-  { key: 'wifi' as const, label: 'WiFi', emoji: '📶' },
-  { key: 'ac' as const, label: 'AC', emoji: '❄️' },
-  { key: 'attachedBath' as const, label: 'Attached Bath', emoji: '🚿' },
-  { key: 'parking' as const, label: 'Parking', emoji: '🅿️' },
-  { key: 'kitchen' as const, label: 'Kitchen', emoji: '🍳' },
-  { key: 'powerBackup' as const, label: 'Power Backup', emoji: '💡' },
+  { key: 'wifi' as const, label: 'WiFi', icon: 'Wifi' },
+  { key: 'ac' as const, label: 'AC', icon: 'Wind' },
+  { key: 'attachedBath' as const, label: 'Attached Bath', icon: 'Bath' },
+  { key: 'parking' as const, label: 'Parking', icon: 'Car' },
+  { key: 'kitchen' as const, label: 'Kitchen', icon: 'ChefHat' },
+  { key: 'powerBackup' as const, label: 'Power Backup', icon: 'Zap' },
 ];
 
 const ALLOWED_OPTIONS = [
@@ -190,7 +191,8 @@ export default function RoomFilters({
                 className="rounded text-[#16A34A]"
               />
               <span className="text-sm text-gray-600 dark:text-gray-300">
-                {a.emoji} {a.label}
+                <LucideByName name={a.icon} size={14} className="inline mr-1" />
+                {a.label}
               </span>
             </label>
           ))}

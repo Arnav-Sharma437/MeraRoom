@@ -4,7 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { LogOut, Globe } from 'lucide-react';
 import { OWNER_NAV } from '@/constants';
+import { LucideByName } from '@/components/ui/LucideByName';
 import { cn } from '@/lib/utils';
 
 export default function OwnerSidebar() {
@@ -51,21 +53,29 @@ export default function OwnerSidebar() {
                 : 'text-white/60 border-transparent hover:bg-white/5 hover:text-white'
             )}
           >
-            <span>{item.icon}</span>
+            <LucideByName name={item.icon} size={18} />
             {item.label}
           </Link>
         ))}
       </nav>
 
-      <div className="p-6 border-t border-white/10">
+      <div className="p-6 border-t border-white/10 space-y-3">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-white/40 hover:text-white text-sm transition-default"
+        >
+          <Globe size={16} />
+          Visit Website
+        </Link>
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: '/' })}
           className="flex items-center gap-2 text-red-400 text-sm font-medium hover:text-red-300 transition-default w-full"
         >
-          🚪 Logout
+          <LogOut size={16} />
+          Logout
         </button>
-        <p className="text-white/30 text-xs mt-4">MeraRoom v1.0</p>
+        <p className="text-white/30 text-xs">MeraRoom v1.0</p>
       </div>
     </aside>
   );

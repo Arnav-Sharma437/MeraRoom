@@ -5,7 +5,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
-import { Camera, X, CheckCircle } from 'lucide-react';
+import { Check, CheckCircle, Pencil } from 'lucide-react';
+import { LucideByName } from '@/components/ui/LucideByName';
+import PostRoomPhotoStep, { type PhotoItem } from '@/components/dashboard/owner/PostRoomPhotoStep';
 import toast from 'react-hot-toast';
 import {
   POST_ROOM_TYPES,
@@ -64,7 +66,7 @@ export default function PostRoomForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [photoItems, setPhotoItems] = useState<PhotoItem[]>([]);
 
   const inputCls =
     'w-full rounded-xl px-4 py-3 bg-gray-50 dark:bg-[#111A11] border border-gray-200 dark:border-[#1F2E1F] text-[#1A1A1A] dark:text-white focus:border-[#16A34A] focus:ring-2 focus:ring-[#16A34A]/20 focus:outline-none';
@@ -98,7 +100,9 @@ export default function PostRoomForm() {
       if (!form.whatsappNumber.trim()) e.whatsapp = 'WhatsApp number is required';
     }
     if (step === 3) {
-      if (form.images.length < 1) e.images = 'At least 1 photo is required';
+      const urls = photoItems.filter((i) => i.url).map((i) => i.url!);
+      if (urls.length < 1) e.images = 'At least 1 photo is required';
+      else update({ images: urls });
     }
     if (step === 4) {
       if (!form.terms) e.terms = 'Please confirm accuracy';
@@ -107,40 +111,13 @@ export default function PostRoomForm() {
     return Object.keys(e).length === 0;
   };
 
-  const handleUpload = async (files: FileList | null) => {
-    if (!files?.length) return;
-    if (form.images.length + files.length > 10) {
-      toast.error('Maximum 10 photos');
-      return;
-    }
-    setUploading(true);
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error(`${file.name} exceeds 5MB`);
-        continue;
-      }
-      const fd = new FormData();
-      fd.append('file', file);
-      try {
-        const res = await fetch('/api/upload', { method: 'POST', body: fd });
-        const json = await res.json();
-        if (json.success && json.data?.url) {
-          setForm((f) => ({ ...f, images: [...f.images, json.data.url] }));
-        }
-      } catch {
-        toast.error('Upload failed');
-      }
-    }
-    setUploading(false);
-  };
-
-  const removeImage = (index: number) => {
-    update({ images: form.images.filter((_, i) => i !== index) });
-  };
-
   const handleSubmit = async () => {
     if (!validateStep()) return;
+    const imageUrls = photoItems.filter((i) => i.url).map((i) => i.url!);
+    if (imageUrls.length < 1) {
+      setErrors({ images: 'At least 1 photo is required' });
+      return;
+    }
     setSubmitting(true);
     try {
       const res = await fetch('/api/rooms', {
@@ -159,13 +136,13 @@ export default function PostRoomForm() {
           gender: form.gender,
           amenities: form.amenities,
           allowedFor: form.allowedFor,
-          images: form.images,
+          images: imageUrls,
           status: 'pending',
         }),
       });
       const json = await res.json();
       if (json.success) {
-        toast.success('Room posted successfully!');
+        toast.success('Room posted successfully');
         setSuccess(true);
       } else {
         toast.error(json.error ?? 'Submit failed');
@@ -213,6 +190,7 @@ export default function PostRoomForm() {
               setSuccess(false);
               setStep(0);
               setForm(initialForm);
+              setPhotoItems([]);
             }}
             className="border border-[#0F2E1E] dark:border-[#D4AF37] text-[#0F2E1E] dark:text-[#D4AF37] rounded-xl py-3.5 font-semibold"
           >
@@ -248,7 +226,7 @@ export default function PostRoomForm() {
                 i > step && 'bg-gray-200 dark:bg-[#1F2E1F] text-gray-400'
               )}
             >
-              {i < step ? '✓' : i + 1}
+              {i < step ? <Check size={16} /> : i + 1}
             </span>
             <span className="text-[10px] text-gray-500 mt-1 text-center hidden sm:block">{label}</span>
           </div>
@@ -295,7 +273,7 @@ export default function PostRoomForm() {
                         : 'border-gray-200 dark:border-[#1F2E1F]'
                     )}
                   >
-                    <span className="text-2xl block">{t.emoji}</span>
+                    <LucideByName name={t.icon} size={24} className="mx-auto mb-1 text-[#16A34A]" />
                     {t.label}
                   </button>
                 ))}
@@ -434,7 +412,7 @@ export default function PostRoomForm() {
                         : 'border-gray-200 dark:border-[#1F2E1F]'
                     )}
                   >
-                    <span className="text-2xl block">{f.emoji}</span>
+                    <LucideByName name={f.icon} size={22} className="mx-auto mb-1 text-[#16A34A]" />
                     {f.label}
                   </button>
                 ))}
@@ -460,7 +438,7 @@ export default function PostRoomForm() {
                         : 'border-gray-200 dark:border-[#1F2E1F] bg-white dark:bg-[#111A11]'
                     )}
                   >
-                    <span className="mr-1">{a.emoji}</span>
+                    <LucideByName name={a.icon} size={16} className="inline mr-1.5" />
                     {a.label}
                   </button>
                 );
@@ -470,46 +448,11 @@ export default function PostRoomForm() {
         )}
 
         {step === 3 && (
-          <div>
-            <h3 className="font-semibold mb-1">Add Photos</h3>
-            <p className="text-gray-500 text-sm mb-4">Good photos get 3x more inquiries</p>
-            <label className="block border-2 border-dashed border-gray-300 dark:border-[#1F2E1F] rounded-2xl bg-[#F9F6EF] dark:bg-[#111A11] p-10 text-center cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={(e) => handleUpload(e.target.files)}
-                disabled={uploading}
-              />
-              <Camera className="mx-auto text-gray-400 mb-2" size={40} />
-              <p className="text-gray-500 font-medium">Upload Photos</p>
-              <p className="text-gray-400 text-xs mt-1">JPG, PNG up to 5MB each · Max 10</p>
-              {uploading && <Loader className="mt-4" size="sm" />}
-            </label>
-            {errors.images && <p className="text-red-500 text-xs mt-2">{errors.images}</p>}
-            {form.images.length > 0 && (
-              <div className="grid grid-cols-3 gap-2 mt-4">
-                {form.images.map((url, i) => (
-                  <div key={url} className="relative aspect-square rounded-xl overflow-hidden">
-                    <Image src={url} alt="" fill className="object-cover" />
-                    {i === 0 && (
-                      <span className="absolute bottom-1 left-1 bg-[#D4AF37] text-[#0F2E1E] text-[10px] font-bold px-1.5 rounded">
-                        Cover
-                      </span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => removeImage(i)}
-                      className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1"
-                    >
-                      <X size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <PostRoomPhotoStep
+            images={photoItems}
+            setImages={setPhotoItems}
+            error={errors.images}
+          />
         )}
 
         {step === 4 && (
@@ -527,8 +470,13 @@ export default function PostRoomForm() {
                 <p className="text-gray-500 text-sm mt-2 line-clamp-2">{form.description}</p>
               </div>
             </div>
-            <button type="button" onClick={() => setStep(0)} className="text-[#16A34A] text-sm">
-              ✏️ Edit Basic Info
+            <button
+              type="button"
+              onClick={() => setStep(0)}
+              className="inline-flex items-center gap-1 text-[#16A34A] text-sm"
+            >
+              <Pencil size={14} />
+              Edit Basic Info
             </button>
             <label className="flex items-start gap-3 cursor-pointer">
               <input

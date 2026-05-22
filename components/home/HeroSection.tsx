@@ -1,82 +1,40 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Home } from 'lucide-react';
 import SearchBar from '@/components/home/SearchBar';
-import { HERO_STATS, CITY } from '@/constants';
-import { fadeIn, fadeInUp } from '@/lib/animations';
+import { fadeInUp } from '@/lib/animations';
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[calc(100vh-3.5rem)] md:min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-dark via-brand-dark to-brand-green/20 dark:from-brand-dark-deep dark:via-brand-dark-deep" />
-
+    <section className="relative bg-brand-dark dark:bg-brand-dark-deep overflow-hidden">
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: `repeating-linear-gradient(135deg, transparent, transparent 10px, white 10px, white 11px)`,
+          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.5) 10px, rgba(212, 175, 55, 0.5) 20px)`,
         }}
       />
-
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-surface-dark to-transparent" />
-
-      <div className="relative z-10 container mx-auto px-4 py-20 md:py-24 text-center">
+      <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
         <motion.div
-          variants={fadeIn}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.1 }}
-          className="inline-flex items-center gap-2 bg-brand-gold/20 text-brand-gold border border-brand-gold/30 rounded-full px-4 py-1.5 text-sm font-medium mb-8"
-        >
-          🏠 Dharamshala&apos;s Trusted Room Finder
-        </motion.div>
-
-        <motion.h1
           variants={fadeInUp}
           initial="hidden"
           animate="visible"
-          transition={{ delay: 0.2 }}
-          className="font-display text-4xl sm:text-5xl md:text-7xl leading-tight text-white mb-2"
+          className="max-w-3xl mx-auto text-center"
         >
-          Find Your Perfect
-        </motion.h1>
-
-        <motion.h1
-          variants={fadeInUp}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.35 }}
-          className="font-display text-4xl sm:text-5xl md:text-7xl leading-tight mb-6"
-        >
-          <span className="text-brand-gold">Room</span>
-          <span className="text-white"> in Dharamshala</span>
-        </motion.h1>
-
-        <motion.p
-          variants={fadeIn}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.5 }}
-          className="text-white/60 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed px-2"
-        >
-          Search verified rooms, PGs &amp; hostels across {CITY.name} — Connect
-          directly with owners on WhatsApp, instantly.
-        </motion.p>
-
-        <SearchBar />
-
-        <motion.div
-          variants={fadeIn}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.8 }}
-          className="flex flex-wrap items-center justify-center gap-2 mt-8 text-white/50 text-sm"
-        >
-          {HERO_STATS.map((stat, i) => (
-            <span key={stat} className="flex items-center gap-2">
-              {i > 0 && <span className="hidden sm:inline">·</span>}
-              {stat}
-            </span>
-          ))}
+          <span className="inline-flex items-center gap-2 bg-brand-gold/20 text-brand-gold border border-brand-gold/30 rounded-full px-4 py-1.5 text-sm mb-6">
+            <Home size={16} />
+            Dharamshala&apos;s Trusted Room Finder
+          </span>
+          <h1 className="font-display text-4xl md:text-6xl text-white leading-tight mb-4">
+            Find Your Perfect
+            <br />
+            <span className="text-brand-gold">Room in Dharamshala</span>
+          </h1>
+          <p className="text-white/60 text-lg md:text-xl mb-8 max-w-xl mx-auto">
+            Verified PGs, single rooms & shared stays across 17 localities. Connect directly with
+            owners on WhatsApp.
+          </p>
+          <SearchBar />
         </motion.div>
       </div>
     </section>

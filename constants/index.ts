@@ -47,31 +47,31 @@ export const CONTACTS = [
 ] as const;
 
 export const POST_ROOM_TYPES = [
-  { value: 'single', label: 'Single Room', emoji: '🛏️' },
-  { value: 'shared', label: 'Shared Room', emoji: '🛏️🛏️' },
-  { value: 'pg', label: 'PG', emoji: '🏠' },
-  { value: 'studio', label: 'Studio', emoji: '🏢' },
-  { value: '1bhk', label: '1 BHK', emoji: '🏘️' },
-  { value: '2bhk', label: '2 BHK', emoji: '🏠' },
+  { value: 'single', label: 'Single Room', icon: 'BedDouble' },
+  { value: 'shared', label: 'Shared Room', icon: 'Users' },
+  { value: 'pg', label: 'PG', icon: 'Home' },
+  { value: 'studio', label: 'Studio', icon: 'Building2' },
+  { value: '1bhk', label: '1 BHK', icon: 'LayoutGrid' },
+  { value: '2bhk', label: '2 BHK', icon: 'Home' },
 ] as const;
 
 export const POST_AMENITIES = [
-  { key: 'wifi', label: 'WiFi', emoji: '📶' },
-  { key: 'ac', label: 'AC', emoji: '❄️' },
-  { key: 'attachedBath', label: 'Attached Bathroom', emoji: '🚿' },
-  { key: 'parking', label: 'Parking', emoji: '🅿️' },
-  { key: 'kitchen', label: 'Kitchen', emoji: '🍳' },
-  { key: 'tv', label: 'TV', emoji: '📺' },
-  { key: 'powerBackup', label: 'Power Backup', emoji: '💡' },
-  { key: 'security', label: 'Security Guard', emoji: '🔒' },
-  { key: 'laundry', label: 'Laundry', emoji: '🧺' },
-  { key: 'gym', label: 'Gym', emoji: '🏋️' },
+  { key: 'wifi', label: 'WiFi', icon: 'Wifi' },
+  { key: 'ac', label: 'AC', icon: 'Wind' },
+  { key: 'attachedBath', label: 'Attached Bathroom', icon: 'Bath' },
+  { key: 'parking', label: 'Parking', icon: 'Car' },
+  { key: 'kitchen', label: 'Kitchen', icon: 'ChefHat' },
+  { key: 'tv', label: 'TV', icon: 'Tv' },
+  { key: 'powerBackup', label: 'Power Backup', icon: 'Zap' },
+  { key: 'security', label: 'Security Guard', icon: 'Shield' },
+  { key: 'laundry', label: 'Laundry', icon: 'Shirt' },
+  { key: 'gym', label: 'Gym', icon: 'Dumbbell' },
 ] as const;
 
 export const POST_FURNISHING = [
-  { value: 'furnished', label: 'Furnished', emoji: '🪑' },
-  { value: 'semi-furnished', label: 'Semi-Furnished', emoji: '🪑' },
-  { value: 'unfurnished', label: 'Unfurnished', emoji: '📦' },
+  { value: 'furnished', label: 'Furnished', icon: 'Home' },
+  { value: 'semi-furnished', label: 'Semi-Furnished', icon: 'LayoutGrid' },
+  { value: 'unfurnished', label: 'Unfurnished', icon: 'Building2' },
 ] as const;
 
 export const ALLOWED_FOR_CHIPS = [
@@ -82,12 +82,29 @@ export const ALLOWED_FOR_CHIPS = [
 ] as const;
 
 export const OWNER_NAV = [
-  { href: '/dashboard/owner', label: 'Overview', icon: '📊' },
-  { href: '/dashboard/owner/listings', label: 'My Listings', icon: '🏠' },
-  { href: '/dashboard/owner/post', label: 'Post New Room', icon: '➕' },
-  { href: '/dashboard/owner/inquiries', label: 'Inquiries', icon: '📩' },
-  { href: '/dashboard/owner/profile', label: 'My Profile', icon: '👤' },
+  { href: '/dashboard/owner', label: 'Overview', icon: 'BarChart2' },
+  { href: '/dashboard/owner/listings', label: 'My Listings', icon: 'Home' },
+  { href: '/dashboard/owner/post', label: 'Post New Room', icon: 'Plus' },
+  { href: '/dashboard/owner/inquiries', label: 'Inquiries', icon: 'Mail' },
+  { href: '/dashboard/owner/profile', label: 'My Profile', icon: 'User' },
 ] as const;
+
+/** Unsplash images for home area cards (slug → url) */
+export const AREA_IMAGES: Record<string, string> = {
+  'mcleod-ganj': 'https://images.unsplash.com/photo-1597074866923-dc0589150358?w=400&q=80',
+  dharamshala: 'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=400&q=80',
+  bhagsu: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
+  naddi: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80',
+  dharamkot: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80',
+  'shyam-nagar': 'https://images.unsplash.com/photo-1502003148287-a82ef80a6abc?w=400&q=80',
+  dari: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80',
+  sakoh: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=400&q=80',
+  'kotwali-bazaar': 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=80',
+  sidhpur: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=80',
+};
+
+export const DEFAULT_AREA_IMAGE =
+  'https://images.unsplash.com/photo-1588286840104-8957b019727f?w=400&q=80';
 
 export const ROOM_TYPES = [
   { value: 'single', label: 'Single Room' },
@@ -191,28 +208,28 @@ export const HOME_STATS = [
   { value: 150, suffix: '+', label: 'Rooms Listed' },
   { value: 17, suffix: '', label: 'Areas in Dharamshala' },
   { value: 800, suffix: '+', label: 'Happy Users' },
-  { value: 4.8, suffix: '★', label: 'Average Rating', isDecimal: true },
+  { value: 4.8, suffix: '', label: 'Average Rating', isDecimal: true },
 ] as const;
 
 export const WHY_MERAROOM = [
   {
-    icon: '✓',
+    icon: 'CheckCircle',
     title: 'Verified Listings',
     description:
       'Every room in Dharamshala is manually verified before it goes live on MeraRoom.',
   },
   {
-    icon: '💬',
+    icon: 'MessageCircle',
     title: 'Direct WhatsApp Contact',
     description: 'No forms. No waiting. Message owners in McLeod, Bhagsu & more instantly.',
   },
   {
-    icon: '🆓',
+    icon: 'Gift',
     title: 'Completely Free',
     description: 'Searching and contacting owners across Dharamshala is always 100% free.',
   },
   {
-    icon: '📍',
+    icon: 'MapPin',
     title: 'Dharamshala Localities',
     description:
       'Find rooms near Dharamkot, Kotwali Bazaar, Naddi, or your college and workplace.',
@@ -413,22 +430,22 @@ export const ABOUT_STATS = [
 
 export const ABOUT_VALUES = [
   {
-    icon: '🔍',
+    icon: 'Search',
     title: 'Transparency',
     description: 'Every listing is manually reviewed before going live.',
   },
   {
-    icon: '⚡',
+    icon: 'Zap',
     title: 'Speed',
     description: 'Find a room and contact the owner in under 2 minutes.',
   },
   {
-    icon: '🤝',
+    icon: 'Handshake',
     title: 'Trust',
     description: 'Verified badges and real photos — no fake listings.',
   },
   {
-    icon: '🆓',
+    icon: 'Gift',
     title: 'Free Forever',
     description: 'Searching and contacting owners is always free.',
   },

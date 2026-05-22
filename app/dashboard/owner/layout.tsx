@@ -2,6 +2,7 @@
 
 import OwnerSidebar from '@/components/dashboard/owner/OwnerSidebar';
 import OwnerMobileTabs from '@/components/dashboard/owner/OwnerMobileTabs';
+import DashboardTopBar from '@/components/dashboard/DashboardTopBar';
 
 export default function OwnerDashboardLayout({
   children,
@@ -13,7 +14,10 @@ export default function OwnerDashboardLayout({
       <OwnerSidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <OwnerMobileTabs />
-        <div className="flex-1 p-4 md:p-8">{children}</div>
+        <div className="flex-1 p-4 md:p-8">
+          <DashboardTopBar />
+          {children}
+        </div>
       </div>
     </div>
   );

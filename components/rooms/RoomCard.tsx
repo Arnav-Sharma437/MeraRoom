@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { MapPin, MessageCircle, ArrowRight, Heart } from 'lucide-react';
+import { MapPin, MessageCircle, ArrowRight, Heart, Home, Star } from 'lucide-react';
 import type { Room } from '@/types';
 import type { IRoomAmenities } from '@/models/Room';
 import { ROOM_TYPES, CITY } from '@/constants';
 import { cn, formatRent, getWhatsAppLink } from '@/lib/utils';
+import { useSavedRooms } from '@/hooks/useSavedRooms';
 
 interface RoomCardProps {
   room: Room;
@@ -33,10 +34,20 @@ export default function RoomCard({
   room,
   index = 0,
   view = 'grid',
-  saved = false,
+  saved: savedProp,
   onToggleSave,
 }: RoomCardProps) {
-  const [isSaved, setIsSaved] = useState(saved);
+  const { isSaved: checkSaved, toggleSave, loaded } = useSavedRooms();
+  const [isSaved, setIsSaved] = useState(savedProp ?? false);
+
+  useEffect(() => {
+    if (savedProp !== undefined) {
+      setIsSaved(savedProp);
+    } else if (loaded) {
+      setIsSaved(checkSaved(room._id));
+    }
+  }, [savedProp, loaded, checkSaved, room._id]);
+
   const roomTypeLabel = ROOM_TYPES.find((t) => t.value === room.roomType)?.label ?? room.roomType;
   const chips = getAmenityChips(room.amenities, room.furnishing, view === 'list' ? 4 : 3);
   const imageUrl = room.images?.[0];
@@ -45,12 +56,30 @@ export default function RoomCard({
     `Hi, I saw your room "${room.title}" on MeraRoom. Is it still available?`
   );
 
-  const handleSave = (e: React.MouseEvent) => {
+  const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsSaved(!isSaved);
+    await toggleSave(room._id);
     onToggleSave?.(room._id);
   };
+
+  const heartButton = (
+    <motion.button
+      type="button"
+      whileTap={{ scale: 0.8 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      onClick={handleSave}
+      className={cn(
+        'absolute top-2 right-2 rounded-full p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center transition-colors',
+        isSaved
+          ? 'bg-red-500 text-white'
+          : 'bg-white/80 backdrop-blur text-gray-600 dark:bg-[#111A11]/80 dark:text-gray-300'
+      )}
+      aria-label={isSaved ? 'Remove from saved' : 'Save room'}
+    >
+      <Heart size={18} className={cn(isSaved && 'fill-current')} />
+    </motion.button>
+  );
 
   const imageSection = (
     <div
@@ -69,25 +98,20 @@ export default function RoomCard({
           sizes={view === 'list' ? '224px' : '(max-width:768px) 100vw, 33vw'}
         />
       ) : (
-        <span className="absolute inset-0 flex items-center justify-center text-5xl">🏠</span>
+        <span className="absolute inset-0 flex items-center justify-center text-[#D4AF37]/40">
+          <Home size={48} />
+        </span>
       )}
       <span className="absolute top-2 left-2 bg-[#0F2E1E]/80 backdrop-blur text-white text-xs rounded-full px-2.5 py-1">
         {roomTypeLabel}
       </span>
       {room.isFeatured && (
-        <span className="absolute top-10 left-2 bg-[#D4AF37] text-[#0F2E1E] text-xs font-bold rounded-full px-2 py-0.5">
-          ⭐ Featured
+        <span className="absolute top-10 left-2 bg-[#D4AF37] text-[#0F2E1E] text-xs font-bold rounded-full px-2 py-0.5 flex items-center gap-1">
+          <Star size={12} fill="currentColor" />
+          Featured
         </span>
       )}
-      <motion.button
-        type="button"
-        whileTap={{ scale: 0.8 }}
-        onClick={handleSave}
-        className="absolute top-2 right-2 bg-white/20 backdrop-blur rounded-full p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center"
-        aria-label="Save room"
-      >
-        <Heart size={18} className={cn(isSaved ? 'fill-red-500 text-red-500' : 'text-white')} />
-      </motion.button>
+      {heartButton}
       <span className="absolute bottom-2 right-2 bg-black/70 backdrop-blur text-white font-bold text-sm px-2.5 py-1 rounded-lg">
         {formatRent(room.rent)}/mo
       </span>
@@ -168,9 +192,24 @@ export default function RoomCard({
           {imageUrl ? (
             <Image src={imageUrl} alt={room.title} fill className="object-cover" sizes="128px" />
           ) : (
-            <span className="absolute inset-0 flex items-center justify-center text-3xl">🏠</span>
+            <span className="absolute inset-0 flex items-center justify-center text-[#D4AF37]/40">
+              <Home size={32} />
+            </span>
           )}
-          <span className="absolute top-1 left-1 bg-[#0F2E1E]/80 text-white text-[10px] rounded px-1.5">{roomTypeLabel}</span>
+          <span className="absolute top-1 left-1 bg-[#0F2E1E]/80 text-white text-[10px] rounded px-1.5">
+            {roomTypeLabel}
+          </span>
+          <motion.button
+            type="button"
+            whileTap={{ scale: 0.8 }}
+            onClick={handleSave}
+            className={cn(
+              'absolute top-1 right-1 rounded-full p-1',
+              isSaved ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-600'
+            )}
+          >
+            <Heart size={14} className={cn(isSaved && 'fill-current')} />
+          </motion.button>
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-base text-[#0F2E1E] dark:text-white line-clamp-2">{room.title}</h3>
@@ -179,7 +218,10 @@ export default function RoomCard({
           </p>
           <div className="flex flex-wrap gap-1 mt-1.5">
             {chips.slice(0, 2).map((c) => (
-              <span key={c} className="text-[10px] bg-[#F0FDF4] dark:bg-[#0F2E1E] text-[#16A34A] rounded-full px-1.5 py-0.5">
+              <span
+                key={c}
+                className="text-[10px] bg-[#F0FDF4] dark:bg-[#0F2E1E] text-[#16A34A] rounded-full px-1.5 py-0.5"
+              >
                 {c}
               </span>
             ))}
@@ -188,10 +230,19 @@ export default function RoomCard({
         </div>
       </div>
       <div className="md:hidden flex gap-2 px-3 pb-3">
-        <motion.a href={whatsappHref} target="_blank" rel="noopener noreferrer" whileTap={{ scale: 0.96 }} className="flex-1 flex items-center justify-center gap-1 bg-[#25D366] text-white rounded-xl py-2.5 text-sm font-medium min-h-[44px] whatsapp-pulse">
+        <motion.a
+          href={whatsappHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          whileTap={{ scale: 0.96 }}
+          className="flex-1 flex items-center justify-center gap-1 bg-[#25D366] text-white rounded-xl py-2.5 text-sm font-medium min-h-[44px] whatsapp-pulse"
+        >
           <MessageCircle size={16} /> WhatsApp
         </motion.a>
-        <Link href={`/rooms/${room._id}`} className="flex-1 flex items-center justify-center bg-[#16A34A] text-white rounded-xl py-2.5 text-sm font-medium min-h-[44px]">
+        <Link
+          href={`/rooms/${room._id}`}
+          className="flex-1 flex items-center justify-center bg-[#16A34A] text-white rounded-xl py-2.5 text-sm font-medium min-h-[44px]"
+        >
           View
         </Link>
       </div>

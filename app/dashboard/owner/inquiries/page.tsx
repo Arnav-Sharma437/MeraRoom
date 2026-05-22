@@ -116,7 +116,7 @@ export default function OwnerInquiriesPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center bg-[#25D366] text-white text-sm font-semibold rounded-xl px-4 py-2"
                 >
-                  💬 Reply on WhatsApp
+                  Reply on WhatsApp
                 </a>
                 <select
                   value={inq.status}

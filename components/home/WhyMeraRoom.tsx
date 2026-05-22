@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { WHY_MERAROOM } from '@/constants';
+import { LucideByName } from '@/components/ui/LucideByName';
 import { staggerContainer, fadeInUp, viewportOnce } from '@/lib/animations';
 
 export default function WhyMeraRoom() {
@@ -32,8 +33,8 @@ export default function WhyMeraRoom() {
               whileTap={{ scale: 0.98 }}
               className="card-surface rounded-2xl p-6 border-l-4 border-brand-gold transition-default hover:shadow-lg dark:hover:shadow-card-dark hover:border-brand-green"
             >
-              <div className="w-12 h-12 bg-brand-dark dark:bg-brand-dark-deep rounded-xl flex items-center justify-center text-brand-gold text-xl mb-4">
-                {feature.icon}
+              <div className="w-12 h-12 bg-brand-dark dark:bg-brand-dark-deep rounded-xl flex items-center justify-center text-brand-gold mb-4">
+                <LucideByName name={feature.icon} size={24} />
               </div>
               <h3 className="font-semibold text-brand-dark dark:text-[#F9FAFB] text-lg mb-2">
                 {feature.title}

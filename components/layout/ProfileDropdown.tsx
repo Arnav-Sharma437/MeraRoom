@@ -4,14 +4,14 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LogOut } from 'lucide-react';
+import { LucideByName } from '@/components/ui/LucideByName';
 import type { UserRole } from '@/models/User';
 
 interface MenuItem {
   href?: string;
   label: string;
   icon: string;
-  onClick?: () => void;
-  danger?: boolean;
 }
 
 interface ProfileDropdownProps {
@@ -36,24 +36,19 @@ export default function ProfileDropdown({ name, role }: ProfileDropdownProps) {
   const items: MenuItem[] =
     role === 'admin'
       ? [
-          { href: '/admin', label: 'Admin Panel', icon: '⚙️' },
-          { href: '/dashboard/user', label: 'My Profile', icon: '👤' },
+          { href: '/admin', label: 'Admin Panel', icon: 'Settings' },
+          { href: '/dashboard/user', label: 'My Profile', icon: 'User' },
         ]
       : role === 'owner'
         ? [
-            { href: '/dashboard/owner', label: 'My Listings', icon: '🏠' },
-            { href: '/dashboard/owner/post', label: 'Post New Room', icon: '➕' },
-            { href: '/dashboard/owner/inquiries', label: 'Inquiries', icon: '📩' },
+            { href: '/dashboard/owner', label: 'My Listings', icon: 'Home' },
+            { href: '/dashboard/owner/post', label: 'Post New Room', icon: 'Plus' },
+            { href: '/dashboard/owner/inquiries', label: 'Inquiries', icon: 'Mail' },
           ]
         : [
-            { href: '/dashboard/user', label: 'My Profile', icon: '👤' },
-            { href: '/dashboard/user#saved', label: 'Saved Rooms', icon: '❤️' },
+            { href: '/dashboard/user', label: 'My Profile', icon: 'User' },
+            { href: '/dashboard/user#saved', label: 'Saved Rooms', icon: 'Heart' },
           ];
-
-  const handleLogout = () => {
-    setOpen(false);
-    signOut({ callbackUrl: '/' });
-  };
 
   return (
     <div className="relative" ref={ref}>
@@ -86,7 +81,7 @@ export default function ProfileDropdown({ name, role }: ProfileDropdownProps) {
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-[#F0FDF4] dark:hover:bg-[#0F2E1E]/30 text-[#0F2E1E] dark:text-white hover:text-[#16A34A] transition-default"
                 >
-                  <span>{item.icon}</span>
+                  <LucideByName name={item.icon} size={16} />
                   {item.label}
                 </Link>
               ) : null
@@ -94,10 +89,13 @@ export default function ProfileDropdown({ name, role }: ProfileDropdownProps) {
             <div className="border-t border-gray-100 dark:border-[#1F2E1F] my-1" />
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() => {
+                setOpen(false);
+                signOut({ callbackUrl: '/' });
+              }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-default"
             >
-              <span>🚪</span>
+              <LogOut size={16} />
               Logout
             </button>
           </motion.div>

@@ -36,7 +36,6 @@ export default function SearchPageClient() {
   const [loading, setLoading] = useState(true);
   const [filterOpen, setFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [searchInput, setSearchInput] = useState(filters.search);
   const mockRooms = useMemo(
     () => getMockSearchRooms().map((r, i) => enrichMockRoom(r as Record<string, unknown>, i)),
@@ -268,15 +267,6 @@ export default function SearchPageClient() {
                     room={room}
                     index={i}
                     view={viewMode}
-                    saved={savedIds.has(room._id)}
-                    onToggleSave={(id) => {
-                      setSavedIds((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(id)) next.delete(id);
-                        else next.add(id);
-                        return next;
-                      });
-                    }}
                   />
                 ))}
               </motion.div>

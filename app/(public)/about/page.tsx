@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Phone } from 'lucide-react';
+import { Phone, MessageCircle } from 'lucide-react';
 import { ABOUT_STATS, ABOUT_VALUES, TEAM } from '@/constants';
+import { LucideByName } from '@/components/ui/LucideByName';
 import { fadeInUp, staggerContainer, viewportOnce } from '@/lib/animations';
 
 const diagonalPattern = {
@@ -35,7 +36,7 @@ export default function AboutPage() {
             variants={fadeInUp}
             className="inline-block bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30 rounded-full px-4 py-1.5 text-sm mb-6"
           >
-            🏔️ Based in Dharamshala, HP
+            Based in Dharamshala, HP
           </motion.span>
           <motion.h1 variants={fadeInUp} className="font-display text-4xl sm:text-5xl text-white leading-tight">
             We&apos;re Making Room
@@ -147,7 +148,8 @@ export default function AboutPage() {
                   whileTap={{ scale: 0.96 }}
                   className="inline-flex items-center justify-center w-full mt-4 bg-[#25D366] text-white rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-110 transition-default"
                 >
-                  💬 Chat on WhatsApp
+                  <MessageCircle size={16} className="inline mr-1" />
+                  Chat on WhatsApp
                 </motion.a>
               </motion.div>
             ))}
@@ -179,9 +181,7 @@ export default function AboutPage() {
                 whileHover={{ borderColor: '#16A34A' }}
                 className="bg-[#F9F6EF] dark:bg-[#111A11] rounded-2xl p-6 border-b-4 border-[#D4AF37] hover:shadow-lg transition-all duration-300"
               >
-                <span className="text-3xl" aria-hidden>
-                  {value.icon}
-                </span>
+                <LucideByName name={value.icon} size={28} className="text-[#16A34A]" />
                 <h3 className="font-semibold text-[#0F2E1E] dark:text-white mt-3 mb-2">
                   {value.title}
                 </h3>

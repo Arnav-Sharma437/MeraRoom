@@ -19,7 +19,6 @@ export async function GET() {
 
     const rooms = await Room.find({
       _id: { $in: user.savedRooms ?? [] },
-      status: 'approved',
     })
       .populate('city', 'name slug state')
       .lean();
@@ -52,7 +51,7 @@ export async function POST(request: NextRequest) {
       $addToSet: { savedRooms: roomId },
     });
 
-    return NextResponse.json({ success: true, message: 'Room saved' });
+    return NextResponse.json({ success: true, saved: true });
   } catch {
     return NextResponse.json({ success: false, error: 'Failed to save room' }, { status: 500 });
   }
@@ -65,8 +64,14 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { searchParams } = request.nextUrl;
-    const roomId = searchParams.get('roomId');
+    let roomId: string | null = null;
+    try {
+      const body = await request.json();
+      roomId = body.roomId ?? null;
+    } catch {
+      roomId = request.nextUrl.searchParams.get('roomId');
+    }
+
     if (!roomId) {
       return NextResponse.json({ success: false, error: 'roomId required' }, { status: 400 });
     }
@@ -76,7 +81,7 @@ export async function DELETE(request: NextRequest) {
       $pull: { savedRooms: roomId },
     });
 
-    return NextResponse.json({ success: true, message: 'Room removed from saved' });
+    return NextResponse.json({ success: true, saved: false });
   } catch {
     return NextResponse.json({ success: false, error: 'Failed to unsave room' }, { status: 500 });
   }
