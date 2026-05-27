@@ -11,7 +11,7 @@ export default function AuthBrandPanel() {
       variants={slideInLeft}
       initial="hidden"
       animate="visible"
-      className="hidden lg:flex lg:w-[40%] bg-[#0F2E1E] h-screen sticky top-0 flex-col justify-between p-10"
+      className="hidden md:flex md:w-[40%] bg-[#0F2E1E] h-screen sticky top-0 flex-col justify-between p-10"
     >
       <div>
         <Image

@@ -299,7 +299,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                   </span>
                 ))}
               </div>
-              <div className="rounded-2xl overflow-hidden h-[300px] bg-gray-100 dark:bg-[#111A11]">
+              <div className="rounded-2xl overflow-hidden h-48 md:h-[300px] bg-gray-100 dark:bg-[#111A11]">
                 {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? (
                   <iframe
                     title="Room location map"
@@ -336,9 +336,9 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
             {similar.length > 0 && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
                 <h2 className="font-display text-xl text-[#0F2E1E] dark:text-white mb-4">Similar Rooms Nearby</h2>
-                <div className="flex gap-4 overflow-x-auto scrollbar-hide md:grid md:grid-cols-3 md:overflow-visible pb-2">
+                <div className="flex gap-4 overflow-x-auto hide-scrollbar lg:grid lg:grid-cols-3 lg:overflow-visible pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
                   {similar.map((r, i) => (
-                    <div key={r._id} className="min-w-[280px] md:min-w-0 flex-shrink-0 md:flex-shrink">
+                    <div key={r._id} className="min-w-[280px] lg:min-w-0 flex-shrink-0 lg:flex-shrink">
                       <RoomCard room={r} index={i} />
                     </div>
                   ))}
@@ -358,12 +358,12 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
         </div>
       </div>
 
-      <div className="lg:hidden fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 right-0 z-40 px-4 py-3 bg-white/95 dark:bg-[#111A11]/95 backdrop-blur border-t border-gray-200 dark:border-[#1F2E1F] flex gap-3">
-        <WhatsAppButton href={whatsappHref} label="WhatsApp" size="md" className="flex-1" showLabel />
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-20 z-40 px-4 py-3 bg-white/95 dark:bg-[#111A11]/95 backdrop-blur border-t border-gray-200 dark:border-[#1F2E1F] flex items-center justify-between gap-3">
+        <WhatsAppButton href={whatsappHref} label="WhatsApp" size="md" className="flex-1 min-h-[44px]" showLabel />
         <motion.a
           href={phoneHref}
           whileTap={{ scale: 0.96 }}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#16A34A] text-white rounded-xl py-3 font-semibold min-h-[44px]"
+          className="flex-1 flex items-center justify-center gap-2 bg-[#16A34A] text-white rounded-xl py-2.5 font-semibold min-h-[44px]"
         >
           <Phone size={18} /> Call
         </motion.a>

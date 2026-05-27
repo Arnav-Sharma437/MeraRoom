@@ -116,7 +116,7 @@ export default function SearchPageClient() {
             </button>
           )}
         </div>
-        <div className="flex gap-2 py-2 overflow-x-auto scrollbar-hide -mx-1 px-1">
+        <div className="flex gap-2 py-2 overflow-x-auto hide-scrollbar -mx-1 px-1" style={{ WebkitOverflowScrolling: 'touch' }}>
           {SEARCH_FILTER_CHIPS.map((chip) => (
             <motion.button
               key={chip.id}
@@ -193,7 +193,7 @@ export default function SearchPageClient() {
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex gap-8">
-          <div className="hidden md:block w-72 flex-shrink-0">
+          <div className="hidden md:block w-64 lg:w-72 flex-shrink-0">
             <RoomFilters
               filters={draftFilters}
               onChange={setDraftFilters}
@@ -206,25 +206,25 @@ export default function SearchPageClient() {
           </div>
 
           <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 w-full">
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 <span className="font-semibold text-[#0F2E1E] dark:text-white">{total}</span> Rooms found in {CITY.name}
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full md:w-auto">
                 <select
                   value={filters.sort}
                   onChange={(e) => {
                     setFilters((f) => ({ ...f, sort: e.target.value as SearchFilterState['sort'] }));
                     setPage(1);
                   }}
-                  className="text-sm border border-gray-200 dark:border-[#1F2E1F] rounded-lg px-3 py-2 bg-white dark:bg-[#111A11] text-[#1A1A1A] dark:text-white"
+                  className="text-sm border border-gray-200 dark:border-[#1F2E1F] rounded-lg px-3 py-2 bg-white dark:bg-[#111A11] text-[#1A1A1A] dark:text-white w-full md:w-auto"
                 >
                   <option value="newest">Newest First</option>
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
                   <option value="popular">Most Popular</option>
                 </select>
-                <div className="hidden md:flex border border-gray-200 dark:border-[#1F2E1F] rounded-lg overflow-hidden">
+                <div className="hidden md:flex border border-gray-200 dark:border-[#1F2E1F] rounded-lg overflow-hidden shrink-0">
                   <button
                     type="button"
                     onClick={() => setViewMode('grid')}

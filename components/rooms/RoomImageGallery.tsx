@@ -77,7 +77,7 @@ export default function RoomImageGallery({
   return (
     <>
       <div
-        className="md:hidden relative h-[280px] w-full overflow-hidden"
+        className="lg:hidden relative h-72 md:h-80 w-full overflow-hidden"
         onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
         onTouchEnd={(e) => {
           const diff = touchStart - e.changedTouches[0].clientX;
@@ -129,7 +129,7 @@ export default function RoomImageGallery({
         <button type="button" className="absolute inset-0 z-0" onClick={() => gallery.length && setLightbox(true)} aria-label="View fullscreen" />
       </div>
 
-      <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-96 rounded-2xl overflow-hidden">
+      <div className="hidden lg:grid grid-cols-4 grid-rows-2 gap-2 h-96 rounded-2xl overflow-hidden">
         <button
           type="button"
           className="col-span-2 row-span-2 relative rounded-l-2xl overflow-hidden"

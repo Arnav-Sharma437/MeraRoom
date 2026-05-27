@@ -21,7 +21,7 @@ export default function HowItWorks() {
           How MeraRoom Works
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4 relative">
           {HOW_IT_WORKS_STEPS.map((step, index) => {
             const Icon = iconMap[step.icon as keyof typeof iconMap];
             const animation =
@@ -35,7 +35,7 @@ export default function HowItWorks() {
               <div key={step.step} className="relative flex flex-col items-center">
                 {index < HOW_IT_WORKS_STEPS.length - 1 && (
                   <ArrowRight
-                    className="hidden md:block absolute -right-6 top-12 text-brand-gold/40 z-10"
+                    className="hidden lg:block absolute -right-6 top-12 text-brand-gold/40 z-10"
                     size={28}
                   />
                 )}

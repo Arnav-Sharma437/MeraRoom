@@ -52,6 +52,10 @@ export interface IRoom extends Document {
   whatsappNumber: string;
   status: RoomStatus;
   isFeatured: boolean;
+  featuredUntil?: Date;
+  isVerified: boolean;
+  verifiedAt?: Date;
+  rejectionReason?: string;
   isAvailable: boolean;
   views: number;
   createdAt: Date;
@@ -120,6 +124,10 @@ const RoomSchema = new Schema<IRoom>(
       default: 'pending',
     },
     isFeatured: { type: Boolean, default: false },
+    featuredUntil: { type: Date },
+    isVerified: { type: Boolean, default: false },
+    verifiedAt: { type: Date },
+    rejectionReason: { type: String },
     isAvailable: { type: Boolean, default: true },
     views: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },

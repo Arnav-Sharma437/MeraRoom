@@ -62,7 +62,7 @@ export default function StatsSection() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-center"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center"
         >
           {HOME_STATS.map((stat) => (
             <motion.div key={stat.label} variants={fadeInUp}>

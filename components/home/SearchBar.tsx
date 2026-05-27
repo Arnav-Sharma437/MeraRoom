@@ -30,8 +30,8 @@ export default function SearchBar() {
       onSubmit={handleSearch}
       className="w-full max-w-3xl mx-auto card-surface shadow-2xl dark:shadow-card-dark rounded-2xl p-3"
     >
-      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-0">
-        <div className="flex items-center md:border-r border-gray-200 dark:border-[#1F2E1F] md:pr-3 md:min-w-[200px]">
+      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-0">
+        <div className="flex items-center w-full md:w-auto md:border-r border-gray-200 dark:border-[#1F2E1F] md:pr-3 md:min-w-[200px]">
           <MapPin className="text-brand-green ml-2 md:ml-3 flex-shrink-0" size={20} />
           <select
             value={area}
@@ -53,13 +53,13 @@ export default function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by area, landmark..."
-          className="flex-1 px-4 py-3 text-brand-black dark:text-[#F9FAFB] placeholder:text-brand-gray dark:placeholder:text-gray-500 text-sm focus:outline-none border-t md:border-t-0 border-gray-200 dark:border-[#1F2E1F] md:border-none"
+          className="w-full md:flex-1 px-4 py-3 text-brand-black dark:text-[#F9FAFB] placeholder:text-brand-gray dark:placeholder:text-gray-500 text-sm focus:outline-none border-y md:border-y-0 border-gray-200 dark:border-[#1F2E1F] md:border-none"
         />
 
         <motion.button
           type="submit"
           whileTap={{ scale: 0.97 }}
-          className="flex items-center justify-center gap-2 bg-brand-green text-white font-semibold rounded-xl px-6 py-3 min-h-[44px] transition-default hover:bg-brand-gold hover:text-brand-dark md:ml-2"
+          className="w-full md:w-auto flex items-center justify-center gap-2 bg-brand-green text-white font-semibold rounded-xl px-6 py-3 min-h-[44px] transition-default hover:bg-brand-gold hover:text-brand-dark md:ml-2"
         >
           <Search size={18} />
           <span>Search Rooms</span>

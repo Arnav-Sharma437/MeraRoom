@@ -32,7 +32,7 @@ export default function CityGrid() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4"
         >
           {HOME_AREAS.map((area) => {
             const imageUrl = AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
@@ -44,7 +44,7 @@ export default function CityGrid() {
                 variants={scaleIn}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => router.push(`/search?area=${area.slug}`)}
-                className="relative aspect-[4/3] h-48 sm:h-auto rounded-2xl overflow-hidden cursor-pointer group"
+                className="relative w-full h-36 md:h-44 lg:h-48 rounded-2xl overflow-hidden cursor-pointer group"
               >
                 <Image
                   src={imageUrl}

@@ -14,7 +14,7 @@ export default function HeroSection() {
           backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.5) 10px, rgba(212, 175, 55, 0.5) 20px)`,
         }}
       />
-      <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+      <div className="container mx-auto px-4 md:px-8 py-16 md:py-24 relative z-10">
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -25,7 +25,7 @@ export default function HeroSection() {
             <Home size={16} />
             Dharamshala&apos;s Trusted Room Finder
           </span>
-          <h1 className="font-display text-4xl md:text-6xl text-white leading-tight mb-4">
+          <h1 className="font-display text-3xl md:text-4xl lg:text-6xl text-white leading-tight mb-4">
             Find Your Perfect
             <br />
             <span className="text-brand-gold">Room in Dharamshala</span>

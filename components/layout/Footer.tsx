@@ -16,34 +16,37 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-brand-dark dark:bg-brand-dark-deep text-white mt-auto hidden md:block">
+    <footer className="bg-brand-dark dark:bg-brand-dark-deep text-white mt-auto">
       <div className="container mx-auto px-4 py-16">
         <motion.div
           variants={staggerContainer(0.1)}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 text-center md:text-left"
         >
           <motion.div variants={fadeInUp}>
-            <Link href="/">
-              <Image
-                src="/meraroom-logo-dark.svg"
-                alt="MeraRoom"
-                width={160}
-                height={46}
-                className="h-10 w-auto mb-4"
-              />
-            </Link>
+            <div className="flex justify-center md:justify-start">
+              <Link href="/">
+                <Image
+                  src="/meraroom-logo-dark.svg"
+                  alt="MeraRoom"
+                  width={160}
+                  height={46}
+                  className="h-10 w-auto mb-4"
+                />
+              </Link>
+            </div>
             <p className="font-display text-brand-gold text-lg mb-2">Find Your Space</p>
             <p className="text-white/60 text-sm leading-relaxed mb-4">
               Verified rooms across {CITY.name}, {CITY.state}. McLeod Ganj, Bhagsu,
               Dharamkot &amp; 17 localities.
             </p>
+            <hr className="border-white/10 mt-8 md:hidden" />
           </motion.div>
 
           <motion.div variants={fadeInUp}>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-semibold mb-4 text-[#D4AF37] md:text-white">Quick Links</h4>
             <ul className="space-y-2">
               {footerLinks.map((link) => (
                 <li key={link.href}>
@@ -56,10 +59,11 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+            <hr className="border-white/10 mt-8 md:hidden" />
           </motion.div>
 
           <motion.div variants={fadeInUp}>
-            <h4 className="font-semibold mb-4">Areas in Dharamshala</h4>
+            <h4 className="font-semibold mb-4 text-[#D4AF37] md:text-white">Areas in Dharamshala</h4>
             <ul className="space-y-2">
               {FOOTER_AREAS.map((area) => (
                 <li key={area.href}>
@@ -72,11 +76,12 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+            <hr className="border-white/10 mt-8 md:hidden" />
           </motion.div>
 
           <motion.div variants={fadeInUp}>
-            <h4 className="font-semibold mb-4">Contact</h4>
-            <ul className="space-y-3 text-sm text-white/60">
+            <h4 className="font-semibold mb-4 text-[#D4AF37] md:text-white">Contact</h4>
+            <ul className="space-y-3 text-sm text-white/60 flex flex-col items-center md:items-start">
               {CONTACTS.map((c) => (
                 <li key={c.name} className="flex items-center gap-2">
                   <MessageCircle size={16} className="text-brand-gold flex-shrink-0" />
@@ -100,7 +105,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-white/50">
+        <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-sm text-white/50">
           <p>© {year} MeraRoom. All rights reserved.</p>
           <p>Made in Dharamshala, Himachal Pradesh</p>
         </div>

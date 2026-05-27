@@ -99,7 +99,7 @@ function RegisterForm() {
         className="flex-1 flex items-center justify-center min-h-screen px-6 py-10 bg-white dark:bg-[#0A0F0A]"
       >
         <div className="max-w-md w-full mx-auto">
-          <div className="lg:hidden flex flex-col items-center mb-8">
+          <div className="md:hidden flex flex-col items-center mb-8">
             <Image
               src="/meraroom-icon.svg"
               alt="MeraRoom"

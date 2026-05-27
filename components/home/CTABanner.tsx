@@ -21,19 +21,19 @@ export default function CTABanner() {
           Join students, travellers, and locals who found their perfect space in
           McLeod Ganj, Bhagsu, Dharamkot &amp; beyond.
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <motion.div whileTap={{ scale: 0.97 }}>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4">
+          <motion.div whileTap={{ scale: 0.97 }} className="w-full sm:w-auto">
             <Link
               href="/search"
-              className="inline-block bg-brand-gold text-brand-dark font-bold rounded-xl px-8 py-4 min-h-[44px] transition-default hover:brightness-110 hover:scale-[1.03] w-full sm:w-auto"
+              className="inline-block bg-brand-gold text-brand-dark font-bold rounded-xl px-8 py-4 min-h-[44px] transition-default hover:brightness-110 hover:scale-[1.03] w-full sm:w-auto text-center"
             >
               Search Rooms Now
             </Link>
           </motion.div>
-          <motion.div whileTap={{ scale: 0.97 }}>
+          <motion.div whileTap={{ scale: 0.97 }} className="w-full sm:w-auto">
             <Link
               href="/dashboard/owner"
-              className="inline-block border-2 border-white text-white rounded-xl px-8 py-4 font-semibold min-h-[44px] transition-default hover:bg-white hover:text-brand-dark w-full sm:w-auto"
+              className="inline-block border-2 border-white text-white rounded-xl px-8 py-4 font-semibold min-h-[44px] transition-default hover:bg-white hover:text-brand-dark w-full sm:w-auto text-center"
             >
               List Your Room Free
             </Link>

@@ -111,7 +111,7 @@ export default function UserDashboardPage() {
   return (
     <div className="min-h-screen bg-[#F9F6EF] dark:bg-[#0A0F0A] p-4 md:p-8 max-w-4xl mx-auto">
       <DashboardTopBar />
-      <div className="flex gap-2 overflow-x-auto mb-8 lg:hidden">
+      <div className="flex gap-2 mb-8 lg:hidden w-full">
         {TABS.map((t) => {
           const TabIcon = t.Icon;
           return (
@@ -120,7 +120,7 @@ export default function UserDashboardPage() {
             type="button"
             onClick={() => setTab(t.id)}
             className={cn(
-              'rounded-full px-4 py-1.5 text-sm font-semibold whitespace-nowrap flex items-center gap-1',
+              'flex-1 justify-center rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap flex items-center gap-1.5 transition-all',
               tab === t.id ? 'bg-[#16A34A] text-white' : 'bg-white dark:bg-[#111A11] text-gray-600 border border-gray-200 dark:border-[#1F2E1F]'
             )}
           >

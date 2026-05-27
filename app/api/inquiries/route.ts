@@ -40,7 +40,9 @@ export async function GET(request: NextRequest) {
       }
       filter.room = roomId;
     } else {
-      return NextResponse.json({ success: false, error: 'owner or room required' }, { status: 400 });
+      if (session.user.role !== 'admin') {
+        return NextResponse.json({ success: false, error: 'owner or room required' }, { status: 400 });
+      }
     }
 
     if (status && status !== 'all') {
