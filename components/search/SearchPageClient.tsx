@@ -9,6 +9,7 @@ import RoomCard from '@/components/rooms/RoomCard';
 import RoomFilters from '@/components/rooms/RoomFilters';
 import EmptyState from '@/components/ui/EmptyState';
 import { RoomCardSkeleton } from '@/components/ui/Skeleton';
+import AdBanner from '@/components/ui/AdBanner';
 import type { Room, ApiResponse } from '@/types';
 import { DHARAMSHALA_AREAS, SEARCH_FILTER_CHIPS, CITY, getMockSearchRooms } from '@/constants';
 import {
@@ -242,6 +243,11 @@ export default function SearchPageClient() {
                 </div>
               </div>
             </div>
+
+            <AdBanner 
+              slot={2}
+              className="mb-4 h-20 md:h-28"
+            />
 
             {loading ? (
               <div className={cn(viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-4')}>

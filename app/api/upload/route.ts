@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
+    const folder = (formData.get('folder') as string | null) || 'meraroom/rooms';
 
     if (!file) {
       return NextResponse.json(
@@ -24,10 +25,14 @@ export async function POST(request: NextRequest) {
     const base64 = buffer.toString('base64');
     const dataUri = `data:${file.type};base64,${base64}`;
 
+    const isAd = folder.includes('ads');
+
     const result = await cloudinary.uploader.upload(dataUri, {
-      folder: 'meraroom/rooms',
+      folder,
       resource_type: 'image',
-      transformation: [{ width: 1200, height: 800, crop: 'fill', quality: 'auto' }],
+      ...(isAd
+        ? { transformation: [{ quality: 'auto' }] }
+        : { transformation: [{ width: 1200, height: 800, crop: 'fill', quality: 'auto' }] }),
     });
 
     return NextResponse.json({

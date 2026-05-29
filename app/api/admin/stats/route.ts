@@ -6,6 +6,7 @@ import Room from '@/models/Room';
 import User from '@/models/User';
 import Inquiry from '@/models/Inquiry';
 import Payment from '@/models/Payment';
+import Contact from '@/models/Contact';
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,7 +32,8 @@ export async function GET(request: NextRequest) {
       featuredRooms,
       verifiedRooms,
       recentRooms,
-      payments
+      payments,
+      unreadContacts
     ] = await Promise.all([
       Room.countDocuments(),
       Room.countDocuments({ status: 'pending' }),
@@ -48,7 +50,8 @@ export async function GET(request: NextRequest) {
         .limit(5)
         .populate('owner', 'name phone')
         .lean(),
-      Payment.find({ status: 'paid' }).lean()
+      Payment.find({ status: 'paid' }).lean(),
+      Contact.countDocuments({ status: 'new' })
     ]);
 
     const totalRevenue = payments.reduce((sum, p) => sum + (p.amount ?? 0), 0);
@@ -110,7 +113,8 @@ export async function GET(request: NextRequest) {
           newInquiries,
           featuredRooms,
           verifiedRooms,
-          totalRevenue, 
+          totalRevenue,
+          unreadContacts,
         },
         charts: {
           roomsByArea: roomsByAreaFormatted,

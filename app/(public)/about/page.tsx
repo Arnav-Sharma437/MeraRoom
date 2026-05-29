@@ -120,7 +120,7 @@ export default function AboutPage() {
             The Team Behind MeraRoom
           </motion.h2>
 
-          <div className="flex flex-col md:flex-row gap-6 max-w-2xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-6 max-w-4xl mx-auto">
             {TEAM.map((member) => (
               <motion.div
                 key={member.name}

@@ -160,6 +160,13 @@ export default function ContactPage() {
                 href={CONTACTS[1].href}
                 initial="V"
               />
+              <ContactCard
+                name="Shubham"
+                role="Marketing"
+                phone={CONTACTS[2].phone}
+                href={CONTACTS[2].href}
+                initial="S"
+              />
 
               <div className="bg-[#0F2E1E] rounded-2xl p-5 space-y-3 text-sm">
                 <p className="text-white/70 flex items-center gap-2">

@@ -44,6 +44,12 @@ export const CONTACTS = [
     whatsapp: '919418100803',
     href: 'https://wa.me/919418100803',
   },
+  {
+    name: 'Shubham',
+    phone: '+91 8091063803',
+    whatsapp: '918091063803',
+    href: 'https://wa.me/918091063803',
+  },
 ] as const;
 
 export const POST_ROOM_TYPES = [
@@ -418,6 +424,12 @@ export const TEAM = [
     role: 'Co-Founder & Operations',
     phone: '+91 9418100803',
     href: 'https://wa.me/919418100803',
+  },
+  {
+    name: 'Shubham Siyal',
+    role: 'Marketing & Growth',
+    phone: '+91 8091063803',
+    href: 'https://wa.me/918091063803',
   },
 ] as const;
 

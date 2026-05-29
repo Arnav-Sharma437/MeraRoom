@@ -23,6 +23,7 @@ import { useSavedRooms } from '@/hooks/useSavedRooms';
 import RoomImageGallery from '@/components/rooms/RoomImageGallery';
 import RoomCard from '@/components/rooms/RoomCard';
 import WhatsAppButton from '@/components/rooms/WhatsAppButton';
+import AdBanner from '@/components/ui/AdBanner';
 import type { Room, ApiResponse, User } from '@/types';
 import { MOCK_FEATURED_ROOMS, ROOM_TYPES, FURNISHING_TYPES, GENDER_OPTIONS, CITY, getMockSearchRooms } from '@/constants';
 import { cn, formatRent, getWhatsAppLink } from '@/lib/utils';
@@ -286,6 +287,11 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                 })}
               </div>
             </motion.section>
+
+            <AdBanner 
+              slot={3} 
+              className="my-6 h-24"
+            />
 
             <motion.section id="map" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
               <h2 className="font-display text-xl text-[#0F2E1E] dark:text-white mb-3">Location</h2>

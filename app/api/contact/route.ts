@@ -23,11 +23,11 @@ export async function POST(request: Request) {
       subject,
       message: message ?? '',
       status: 'new',
+      createdAt: new Date(),
     });
 
     return NextResponse.json({
       success: true,
-      message: "Message sent! We'll reply soon.",
     });
   } catch {
     return NextResponse.json(

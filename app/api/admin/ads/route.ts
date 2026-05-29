@@ -14,17 +14,19 @@ export async function GET(request: NextRequest) {
     const ads = await Ad.find().lean();
 
     // Map to slots 1, 2, and 3
-    const slots = [1, 2, 3].map((slotId) => {
-      const activeAd = ads.find((a) => a.slotId === slotId);
+    const slots = [1, 2, 3].map((slotNum) => {
+      const activeAd = ads.find((a) => a.slot === slotNum);
       return (
         activeAd ?? {
-          slotId,
+          slot: slotNum,
           businessName: '',
-          contactNumber: '',
+          phone: '',
           startDate: null,
           endDate: null,
-          amountPaid: 0,
-          bannerUrl: '',
+          amount: 0,
+          bannerImage: '',
+          linkUrl: '',
+          isActive: false,
           isPaid: false,
         }
       );
@@ -48,16 +50,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const ad = await Ad.findOneAndUpdate(
-      { slotId: Number(body.slotId) },
+      { slot: Number(body.slot) },
       {
         $set: {
           businessName: body.businessName,
-          contactNumber: body.contactNumber,
+          phone: body.phone,
           startDate: new Date(body.startDate),
           endDate: new Date(body.endDate),
-          amountPaid: Number(body.amountPaid),
-          bannerUrl: body.bannerUrl,
+          amount: Number(body.amount),
+          bannerImage: body.bannerImage,
+          linkUrl: body.linkUrl ?? '',
           isPaid: !!body.isPaid,
+          isActive: body.isActive !== undefined ? !!body.isActive : true,
         },
       },
       { upsert: true, new: true }
@@ -79,15 +83,15 @@ export async function DELETE(request: NextRequest) {
 
     await connectDB();
     const { searchParams } = request.nextUrl;
-    const slotId = searchParams.get('slotId');
+    const slot = searchParams.get('slot') || searchParams.get('slotId');
 
-    if (!slotId) {
-      return NextResponse.json({ success: false, error: 'Slot ID is required' }, { status: 400 });
+    if (!slot) {
+      return NextResponse.json({ success: false, error: 'Slot number is required' }, { status: 400 });
     }
 
-    await Ad.findOneAndDelete({ slotId: Number(slotId) });
+    await Ad.findOneAndDelete({ slot: Number(slot) });
 
-    return NextResponse.json({ success: true, message: `Ad slot ${slotId} cleared` });
+    return NextResponse.json({ success: true, message: `Ad slot ${slot} cleared` });
   } catch (error) {
     console.error('DELETE /api/admin/ads error:', error);
     return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });

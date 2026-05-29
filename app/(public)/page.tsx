@@ -5,11 +5,18 @@ import HowItWorks from '@/components/home/HowItWorks';
 import StatsSection from '@/components/home/StatsSection';
 import WhyMeraRoom from '@/components/home/WhyMeraRoom';
 import CTABanner from '@/components/home/CTABanner';
+import AdBanner from '@/components/ui/AdBanner';
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <div className="container mx-auto px-4">
+        <AdBanner 
+          slot={1} 
+          className="my-6 h-24 md:h-32"
+        />
+      </div>
       <CityGrid />
       <FeaturedRooms />
       <HowItWorks />

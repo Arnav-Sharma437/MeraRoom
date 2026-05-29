@@ -11,6 +11,7 @@ import {
   Home,
   CheckSquare,
   MessageCircle,
+  MessageSquare,
   Star,
   Shield,
   Megaphone,
@@ -30,7 +31,8 @@ const NAV_ITEMS = [
   { href: '/admin', label: 'Overview', icon: BarChart2 },
   { href: '/admin/rooms', label: 'Rooms', icon: Home },
   { href: '/admin/approvals', label: 'Approvals', icon: CheckSquare, badgeKey: 'pendingRooms' },
-  { href: '/admin/inquiries', label: 'Inquiries', icon: MessageCircle, badgeKey: 'inquiriesToday' }, // or new count, we can map to new inquiries
+  { href: '/admin/inquiries', label: 'Inquiries', icon: MessageCircle, badgeKey: 'inquiriesToday' },
+  { href: '/admin/contacts', label: 'Contact Messages', icon: MessageSquare, badgeKey: 'unreadContacts' },
   { href: '/admin/featured', label: 'Featured', icon: Star },
   { href: '/admin/verified', label: 'Verified', icon: Shield },
   { href: '/admin/ads', label: 'Advertisements', icon: Megaphone },
@@ -43,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
-  const [badges, setBadges] = useState<Record<string, number>>({ pendingRooms: 0, inquiriesToday: 0 });
+  const [badges, setBadges] = useState<Record<string, number>>({ pendingRooms: 0, inquiriesToday: 0, unreadContacts: 0 });
   const [moreOpen, setMoreOpen] = useState(false);
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -60,6 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           setBadges({
             pendingRooms: json.data.stats.pendingRooms ?? 0,
             inquiriesToday: json.data.stats.inquiriesToday ?? 0,
+            unreadContacts: json.data.stats.unreadContacts ?? 0,
           });
         }
       } catch (err) {
