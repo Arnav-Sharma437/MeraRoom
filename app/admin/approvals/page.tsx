@@ -151,7 +151,7 @@ export default function ApprovalsPage() {
             {rooms.map((room) => {
               const whatsappMsg = `Hi ${room.owner?.name || 'Owner'}, regarding your room submission "${room.title}" on MeraRoom.`;
               const whatsappHref = getWhatsAppLink(room.whatsappNumber, whatsappMsg);
-              const activeAmenities = Object.entries(room.amenities)
+              const activeAmenities = Object.entries(room.amenities || {})
                 .filter(([, v]) => v)
                 .map(([k]) => POST_AMENITIES.find((a) => a.key === k))
                 .filter(Boolean);

@@ -1,27 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import Inquiry from '@/models/Inquiry';
 import Room from '@/models/Room';
-import { requireSession } from '@/lib/auth-server';
 import { normalizePhone } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await requireSession();
+    await connectDB();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectDB();
-    const { searchParams } = request.nextUrl;
-    const ownerParam = searchParams.get('owner');
+    const { searchParams } = new URL(request.url);
+    const owner = searchParams.get('owner');
     const roomId = searchParams.get('room');
     const status = searchParams.get('status');
 
-    const filter: Record<string, unknown> = {};
+    const filter: Record<string, any> = {};
 
-    if (ownerParam) {
-      const ownerId = ownerParam === 'me' ? session.user.id : ownerParam;
+    if (owner) {
+      const ownerId = owner === 'me' ? session.user.id : owner;
+      // Allow only the owner themselves or admin to query their inquiries
       if (ownerId !== session.user.id && session.user.role !== 'admin') {
         return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
       }
@@ -32,16 +34,14 @@ export async function GET(request: NextRequest) {
       if (!room) {
         return NextResponse.json({ success: false, error: 'Room not found' }, { status: 404 });
       }
-      if (
-        room.owner.toString() !== session.user.id &&
-        session.user.role !== 'admin'
-      ) {
+      if (room.owner.toString() !== session.user.id && session.user.role !== 'admin') {
         return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
       }
       filter.room = roomId;
     } else {
+      // No filters - admin only
       if (session.user.role !== 'admin') {
-        return NextResponse.json({ success: false, error: 'owner or room required' }, { status: 400 });
+        return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
       }
     }
 
@@ -53,15 +53,14 @@ export async function GET(request: NextRequest) {
       .populate({
         path: 'room',
         select: 'title area rent whatsappNumber owner',
-        populate: { path: 'owner', select: 'name phone' },
       })
+      .populate('user', 'name phone email')
       .sort({ createdAt: -1 })
       .lean();
 
     return NextResponse.json({ success: true, data: inquiries });
   } catch (error) {
-    console.error('GET /api/inquiries error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch inquiries' }, { status: 500 });
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
 
@@ -78,25 +77,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const room = await Room.findById(roomId);
+    const room = await Room.findById(roomId).lean();
     if (!room) {
       return NextResponse.json({ success: false, error: 'Room not found' }, { status: 404 });
     }
 
-    const session = await requireSession();
+    // Optional user session if logged in
+    const session = await getServerSession(authOptions);
 
     const inquiry = await Inquiry.create({
       name,
       phone: normalizePhone(phone),
       message: message ?? '',
       room: roomId,
-      user: session?.user?.id,
+      user: session?.user?.id || undefined,
       status: 'new',
+      createdAt: new Date(),
     });
 
     return NextResponse.json({ success: true, data: inquiry }, { status: 201 });
   } catch (error) {
-    console.error('POST /api/inquiries error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to create inquiry' }, { status: 500 });
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }

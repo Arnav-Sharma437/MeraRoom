@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import Inquiry from '@/models/Inquiry';
 import Room from '@/models/Room';
-import { requireSession } from '@/lib/auth-server';
 
 interface RouteParams {
   params: { id: string };
@@ -10,12 +11,12 @@ interface RouteParams {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await requireSession();
+    await connectDB();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectDB();
     const inquiry = await Inquiry.findById(params.id);
     if (!inquiry) {
       return NextResponse.json({ success: false, error: 'Inquiry not found' }, { status: 404 });
@@ -50,6 +51,6 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
     console.error('PATCH /api/inquiries/[id] error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to update inquiry' }, { status: 500 });
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }

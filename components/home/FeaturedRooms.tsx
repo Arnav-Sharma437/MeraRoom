@@ -51,10 +51,29 @@ export default function FeaturedRooms() {
         if (data.success && data.data && data.data.length > 0) {
           setRooms(data.data);
         } else {
-          setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+          // If no featured rooms, fetch regular approved rooms
+          const fallbackRes = await axios.get<ApiResponse<Room[]>>(
+            '/api/rooms?limit=6'
+          );
+          if (fallbackRes.data.success && fallbackRes.data.data && fallbackRes.data.data.length > 0) {
+            setRooms(fallbackRes.data.data);
+          } else {
+            setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+          }
         }
       } catch {
-        setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+        try {
+          const fallbackRes = await axios.get<ApiResponse<Room[]>>(
+            '/api/rooms?limit=6'
+          );
+          if (fallbackRes.data.success && fallbackRes.data.data && fallbackRes.data.data.length > 0) {
+            setRooms(fallbackRes.data.data);
+          } else {
+            setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+          }
+        } catch {
+          setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+        }
       } finally {
         setLoading(false);
       }

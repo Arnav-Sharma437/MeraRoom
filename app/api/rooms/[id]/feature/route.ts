@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import Room from '@/models/Room';
-import { requireSession } from '@/lib/auth-server';
 
 interface RouteParams {
   params: { id: string };
@@ -9,17 +10,19 @@ interface RouteParams {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await requireSession();
-    if (!session?.user?.id || session.user.role !== 'admin') {
-      return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
+    await connectDB();
+    const session = await getServerSession(authOptions);
+    
+    if (session?.user?.role !== 'admin') {
+      return NextResponse.json({ success: false, error: 'Admin only' }, { status: 403 });
     }
 
-    await connectDB();
     const body = await request.json();
+    const { isFeatured, featuredUntil } = body;
 
     const updateData: Record<string, any> = {
-      isFeatured: !!body.isFeatured,
-      featuredUntil: body.featuredUntil ? new Date(body.featuredUntil) : null,
+      isFeatured: !!isFeatured,
+      featuredUntil: isFeatured && featuredUntil ? new Date(featuredUntil) : null,
     };
 
     const room = await Room.findByIdAndUpdate(
@@ -34,7 +37,6 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({ success: true, data: room });
   } catch (error) {
-    console.error('PATCH /api/rooms/[id]/feature error:', error);
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }

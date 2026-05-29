@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import connectDB from '@/lib/mongodb';
 import Room from '@/models/Room';
-import { requireSession } from '@/lib/auth-server';
 
 interface RouteParams {
   params: { id: string };
@@ -29,22 +30,23 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ success: false, error: 'Room not found' }, { status: 404 });
     }
 
+    // Increment views
     await Room.findByIdAndUpdate(params.id, { $inc: { views: 1 } });
 
     return NextResponse.json({ success: true, data: room });
-  } catch {
-    return NextResponse.json({ success: false, error: 'Failed to fetch room' }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await requireSession();
+    await connectDB();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectDB();
     const check = await canManageRoom(params.id, session.user.id, session.user.role ?? 'user');
     if (!check.ok) {
       return NextResponse.json(
@@ -56,26 +58,31 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const body = await request.json();
     delete body.owner;
 
-    const room = await Room.findByIdAndUpdate(params.id, body, {
+    const room = await Room.findByIdAndUpdate(params.id, { $set: body }, {
       new: true,
       runValidators: true,
     }).lean();
 
     return NextResponse.json({ success: true, data: room });
   } catch (error) {
-    console.error('PUT /api/rooms/[id] error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to update room' }, { status: 500 });
+    console.error('PATCH /api/rooms/[id] error:', error);
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
+}
+
+// Keep PUT support just in case
+export async function PUT(request: NextRequest, { params }: RouteParams) {
+  return PATCH(request, { params });
 }
 
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   try {
-    const session = await requireSession();
+    await connectDB();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    await connectDB();
     const check = await canManageRoom(params.id, session.user.id, session.user.role ?? 'user');
     if (!check.ok) {
       return NextResponse.json(
@@ -89,6 +96,6 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ success: true, message: 'Room deleted' });
   } catch (error) {
     console.error('DELETE /api/rooms/[id] error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to delete room' }, { status: 500 });
+    return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
