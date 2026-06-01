@@ -1,26 +1,43 @@
 import type { Metadata } from 'next';
 import RoomDetailClient from '@/components/rooms/RoomDetailClient';
-import { MOCK_FEATURED_ROOMS, getMockSearchRooms } from '@/constants';
+import connectDB from '@/lib/mongodb';
+import Room from '@/models/Room';
 
 interface RoomDetailPageProps {
   params: { id: string };
 }
 
 export async function generateMetadata({ params }: RoomDetailPageProps): Promise<Metadata> {
-  const all = [...MOCK_FEATURED_ROOMS, ...getMockSearchRooms().slice(6)];
-  const room = all.find((r) => r._id === params.id) ?? MOCK_FEATURED_ROOMS[0];
-  const description = room.description.slice(0, 150);
-  const title = `${room.title} in ${room.area}, Dharamshala | MeraRoom`;
+  try {
+    await connectDB();
+    const room = await Room.findById(params.id).select('title area description').lean();
 
-  return {
-    title,
-    description,
-    openGraph: {
+    if (!room) {
+      return {
+        title: 'Room Not Found | MeraRoom',
+        description: 'This listing is no longer available.',
+      };
+    }
+
+    const title = `${room.title} in ${room.area} | MeraRoom`;
+    const description = room.description ? room.description.slice(0, 150) : '';
+
+    return {
       title,
       description,
-      type: 'website',
-    },
-  };
+      openGraph: {
+        title,
+        description,
+        type: 'website',
+      },
+    };
+  } catch (err) {
+    console.error('Error generating room metadata:', err);
+    return {
+      title: 'MeraRoom — Dharamshala Stays',
+      description: 'Find rooms and PGs in Dharamshala.',
+    };
+  }
 }
 
 export default function RoomDetailPage({ params }: RoomDetailPageProps) {

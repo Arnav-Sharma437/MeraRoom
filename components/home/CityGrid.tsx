@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -8,6 +9,22 @@ import { staggerContainer, scaleIn, fadeInUp, viewportOnce } from '@/lib/animati
 
 export default function CityGrid() {
   const router = useRouter();
+  const [counts, setCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    async function loadCounts() {
+      try {
+        const res = await fetch('/api/rooms/count-by-area');
+        const json = await res.json();
+        if (json.success && json.data) {
+          setCounts(json.data);
+        }
+      } catch (err) {
+        console.error('Failed to load area room counts', err);
+      }
+    }
+    loadCounts();
+  }, []);
 
   return (
     <section className="bg-white dark:bg-surface-dark py-16 md:py-20">
@@ -36,6 +53,7 @@ export default function CityGrid() {
         >
           {HOME_AREAS.map((area) => {
             const imageUrl = AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
+            const count = counts[area.name.toLowerCase().trim()] ?? 0;
 
             return (
               <motion.button
@@ -54,8 +72,8 @@ export default function CityGrid() {
                   sizes="(max-width: 640px) 50vw, 20vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-[#0F2E1E]/80 transition-colors duration-300" />
-                <span className="absolute top-2 right-2 bg-[#D4AF37] text-[#0F2E1E] text-[10px] md:text-xs font-bold rounded-full px-2 py-0.5">
-                  {area.roomCount} rooms
+                <span className="absolute top-2 right-2 bg-[#D4AF37] text-[#0F2E1E] text-[10px] md:text-xs font-bold rounded-full px-2.5 py-0.5">
+                  {count} rooms
                 </span>
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-left">
                   <p className="font-semibold text-white text-base group-hover:text-[#D4AF37] transition-colors">

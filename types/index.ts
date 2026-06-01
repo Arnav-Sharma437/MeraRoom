@@ -16,6 +16,7 @@ export interface User {
   name: string;
   email: string;
   phone?: string;
+  whatsappNumber?: string;
   role: UserRole;
   avatar?: string;
   isVerified: boolean;

@@ -95,7 +95,7 @@ export default function OwnerListingsPage() {
         </Link>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto mb-6">
+      <div className="flex gap-2 overflow-x-auto mb-6 scrollbar-hide hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
         {STATUS_TABS.map((tab) => (
           <button
             key={tab}

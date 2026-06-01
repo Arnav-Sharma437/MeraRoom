@@ -16,20 +16,24 @@ export default function BottomNavBar() {
 
   const postHref =
     role === 'owner' ? '/dashboard/owner/post' : '/register?role=owner';
-  const savedHref = isLoggedIn ? '/dashboard/user#saved' : '/login';
+  const savedHref = isLoggedIn ? '/dashboard/user' : '/login';
   const profileHref = isLoggedIn
-    ? role === 'owner'
-      ? '/dashboard/owner'
-      : '/dashboard/user'
+    ? role === 'admin'
+      ? '/admin'
+      : role === 'owner'
+        ? '/dashboard/owner'
+        : '/dashboard/user'
     : '/login';
+
+  const showPost = !isLoggedIn || role === 'owner';
 
   const tabs = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/search', label: 'Search', icon: Search },
-    { href: postHref, label: 'Post', icon: Plus, center: true },
+    ...(showPost ? [{ href: postHref, label: 'Post', icon: Plus, center: true }] : []),
     { href: savedHref, label: 'Saved', icon: Heart },
     { href: profileHref, label: 'Profile', icon: User, isProfile: true },
-  ] as const;
+  ];
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';

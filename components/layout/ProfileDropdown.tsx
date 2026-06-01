@@ -37,17 +37,15 @@ export default function ProfileDropdown({ name, role }: ProfileDropdownProps) {
     role === 'admin'
       ? [
           { href: '/admin', label: 'Admin Panel', icon: 'Settings' },
-          { href: '/dashboard/user', label: 'My Profile', icon: 'User' },
         ]
       : role === 'owner'
         ? [
             { href: '/dashboard/owner', label: 'My Listings', icon: 'Home' },
-            { href: '/dashboard/owner/post', label: 'Post New Room', icon: 'Plus' },
+            { href: '/dashboard/owner/post', label: 'Post Room', icon: 'Plus' },
             { href: '/dashboard/owner/inquiries', label: 'Inquiries', icon: 'Mail' },
           ]
         : [
-            { href: '/dashboard/user', label: 'My Profile', icon: 'User' },
-            { href: '/dashboard/user#saved', label: 'Saved Rooms', icon: 'Heart' },
+            { href: '/dashboard/user', label: 'Saved Rooms', icon: 'Heart' },
           ];
 
   return (

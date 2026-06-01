@@ -1,6 +1,11 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import SearchPageClient from '@/components/search/SearchPageClient';
 import Loader from '@/components/ui/Loader';
+
+export const metadata: Metadata = {
+  title: 'Rooms in Dharamshala | MeraRoom',
+};
 
 export default function SearchPage() {
   return (

@@ -20,7 +20,7 @@ export default function OwnerMobileTabs() {
   };
 
   return (
-    <div className="lg:hidden bg-[#0F2E1E] px-4 py-3 overflow-x-auto scrollbar-hide">
+    <div className="lg:hidden bg-[#0F2E1E] px-4 py-3 overflow-x-auto scrollbar-hide hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
       <div className="flex gap-2 min-w-max">
         {TABS.map((tab) => (
           <Link

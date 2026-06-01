@@ -67,7 +67,7 @@ export default function OwnerInquiriesPage() {
     <div>
       <h1 className="font-display text-2xl text-[#0F2E1E] dark:text-white mb-6">Inquiries</h1>
 
-      <div className="flex gap-2 overflow-x-auto mb-6">
+      <div className="flex gap-2 overflow-x-auto mb-6 scrollbar-hide hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
         {FILTERS.map((tab) => (
           <button
             key={tab}

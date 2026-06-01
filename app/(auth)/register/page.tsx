@@ -76,7 +76,11 @@ function RegisterForm() {
       });
 
       if (signInResult?.ok) {
-        router.push('/dashboard');
+        if (role === 'owner') {
+          router.push('/dashboard/owner');
+        } else {
+          router.push('/');
+        }
         router.refresh();
       } else {
         router.push('/login');
@@ -120,33 +124,59 @@ function RegisterForm() {
           </p>
 
           <p className="text-sm font-medium text-[#0F2E1E] dark:text-white mb-3">I am a...</p>
-          <div className="flex gap-3 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
             {(
               [
-                { id: 'user' as const, Icon: Search, label: 'Room Seeker' },
-                { id: 'owner' as const, Icon: Home, label: 'Property Owner' },
+                {
+                  id: 'user' as const,
+                  Icon: Search,
+                  title: "I'm Looking for a Room",
+                  subtitle: "Find & save rooms",
+                  selectedClass: 'border-2 border-[#16A34A] bg-[#F0FDF4] dark:bg-[#0F2E1E]/30',
+                },
+                {
+                  id: 'owner' as const,
+                  Icon: Home,
+                  title: "I Want to List My Room",
+                  subtitle: "Post & manage listings",
+                  selectedClass: 'border-2 border-[#D4AF37] bg-[#D4AF37]/10',
+                },
               ] as const
             ).map((option) => {
               const RoleIcon = option.Icon;
+              const isSelected = role === option.id;
               return (
-              <motion.button
-                key={option.id}
-                type="button"
-                whileTap={{ scale: 0.96 }}
-                onClick={() => setRole(option.id)}
-                className={cn(
-                  'flex-1 border-2 rounded-xl p-4 text-center cursor-pointer transition-default',
-                  role === option.id
-                    ? 'border-[#16A34A] bg-[#F0FDF4] dark:bg-[#0F2E1E]/30'
-                    : 'border-gray-200 dark:border-[#1F2E1F] bg-white dark:bg-[#111A11]'
-                )}
-              >
-                <RoleIcon className="w-8 h-8 mx-auto mb-1 text-[#16A34A]" aria-hidden />
-                <span className="font-semibold text-sm text-[#0F2E1E] dark:text-white">
-                  {option.label}
-                </span>
-              </motion.button>
-            );
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setRole(option.id)}
+                  className={cn(
+                    'flex-1 border-2 rounded-xl p-4 text-left cursor-pointer transition-default min-h-[44px] flex flex-col justify-between',
+                    isSelected
+                      ? option.selectedClass
+                      : 'border-gray-200 dark:border-[#1F2E1F] bg-white dark:bg-[#111A11]'
+                  )}
+                >
+                  <div className="flex items-start gap-3 w-full">
+                    <span className={cn(
+                      'p-2 rounded-lg shrink-0',
+                      isSelected
+                        ? option.id === 'user' ? 'bg-[#16A34A]/10 text-[#16A34A]' : 'bg-[#D4AF37]/15 text-[#D4AF37]'
+                        : 'bg-gray-100 dark:bg-[#1A2A1A] text-gray-400'
+                    )}>
+                      <RoleIcon className="w-6 h-6" aria-hidden />
+                    </span>
+                    <div>
+                      <span className="font-semibold text-sm block text-[#0F2E1E] dark:text-white">
+                        {option.title}
+                      </span>
+                      <span className="text-xs text-gray-500 block mt-0.5">
+                        {option.subtitle}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
             })}
           </div>
 
@@ -163,7 +193,13 @@ function RegisterForm() {
               type="tel"
               placeholder="+91 98765 43210"
               leftIcon={Phone}
-              {...register('phone', { required: 'Phone is required' })}
+              {...register('phone', {
+                required: 'Phone is required',
+                pattern: {
+                  value: /^[6-9]\d{9}$/,
+                  message: 'Enter valid Indian mobile number',
+                },
+              })}
               error={errors.phone?.message}
             />
             <p className="text-xs text-gray-400 -mt-2 mb-4">
@@ -217,14 +253,21 @@ function RegisterForm() {
             {role === 'owner' && (
               <>
                 <FormField
-                  label="WhatsApp Number"
+                  label="WhatsApp Number for Inquiries"
                   type="tel"
                   placeholder="+91 98765 43210"
                   leftIcon={Phone}
-                  {...register('whatsappNumber')}
+                  {...register('whatsappNumber', {
+                    required: 'WhatsApp number is required',
+                    pattern: {
+                      value: /^[6-9]\d{9}$/,
+                      message: 'Enter valid Indian mobile number',
+                    },
+                  })}
+                  error={errors.whatsappNumber?.message}
                 />
                 <p className="text-xs text-[#16A34A] -mt-2 mb-4">
-                  Users will contact you here (can be same as phone)
+                  Buyers will contact you here
                 </p>
               </>
             )}

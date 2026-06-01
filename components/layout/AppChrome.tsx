@@ -6,11 +6,13 @@ import MobileTopBar from '@/components/layout/MobileTopBar';
 import BottomNavBar from '@/components/layout/BottomNavBar';
 import Footer from '@/components/layout/Footer';
 
-const MINIMAL_CHROME_PREFIXES = ['/login', '/register', '/dashboard', '/admin'];
-
 export default function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const minimal = MINIMAL_CHROME_PREFIXES.some((p) => pathname.startsWith(p));
+  const minimal =
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/register') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/dashboard/owner');
 
   if (minimal) {
     return <main className="flex-1">{children}</main>;

@@ -24,12 +24,14 @@ import {
   Bell,
   MoreHorizontal,
   X,
+  Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Overview', icon: BarChart2 },
   { href: '/admin/rooms', label: 'Rooms', icon: Home },
+  { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/approvals', label: 'Approvals', icon: CheckSquare, badgeKey: 'pendingRooms' },
   { href: '/admin/inquiries', label: 'Inquiries', icon: MessageCircle, badgeKey: 'inquiriesToday' },
   { href: '/admin/contacts', label: 'Contact Messages', icon: MessageSquare, badgeKey: 'unreadContacts' },

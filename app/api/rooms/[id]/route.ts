@@ -30,6 +30,17 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ success: false, error: 'Room not found' }, { status: 404 });
     }
 
+    if (room.status !== 'approved') {
+      const session = await getServerSession(authOptions);
+      const ownerId = room.owner?._id ? room.owner._id.toString() : room.owner.toString();
+      const isOwner = session?.user?.id && ownerId === session.user.id;
+      const isAdmin = session?.user?.role === 'admin';
+      
+      if (!isOwner && !isAdmin) {
+        return NextResponse.json({ success: false, error: 'Room not found' }, { status: 404 });
+      }
+    }
+
     // Increment views
     await Room.findByIdAndUpdate(params.id, { $inc: { views: 1 } });
 

@@ -46,33 +46,33 @@ export default function FeaturedRooms() {
     const fetchRooms = async () => {
       try {
         const { data } = await axios.get<ApiResponse<Room[]>>(
-          '/api/rooms?isFeatured=true&limit=6'
+          '/api/rooms?isFeatured=true&limit=6&status=approved'
         );
         if (data.success && data.data && data.data.length > 0) {
           setRooms(data.data);
         } else {
           // If no featured rooms, fetch regular approved rooms
           const fallbackRes = await axios.get<ApiResponse<Room[]>>(
-            '/api/rooms?limit=6'
+            '/api/rooms?limit=6&status=approved'
           );
           if (fallbackRes.data.success && fallbackRes.data.data && fallbackRes.data.data.length > 0) {
             setRooms(fallbackRes.data.data);
           } else {
-            setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+            setRooms([]);
           }
         }
       } catch {
         try {
           const fallbackRes = await axios.get<ApiResponse<Room[]>>(
-            '/api/rooms?limit=6'
+            '/api/rooms?limit=6&status=approved'
           );
           if (fallbackRes.data.success && fallbackRes.data.data && fallbackRes.data.data.length > 0) {
             setRooms(fallbackRes.data.data);
           } else {
-            setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+            setRooms([]);
           }
         } catch {
-          setRooms(MOCK_FEATURED_ROOMS as unknown as Room[]);
+          setRooms([]);
         }
       } finally {
         setLoading(false);
@@ -94,29 +94,50 @@ export default function FeaturedRooms() {
           <h2 className="font-display text-3xl md:text-4xl text-brand-dark dark:text-[#F9FAFB]">
             Featured Rooms in Dharamshala
           </h2>
-          <Link
-            href="/search"
-            className="text-brand-green font-semibold hover:text-brand-gold transition-default"
-          >
-            View All →
-          </Link>
+          {!loading && rooms.length > 0 && (
+            <Link
+              href="/search"
+              className="text-[#16A34A] font-semibold hover:text-[#D4AF37] transition-default"
+            >
+              View All →
+            </Link>
+          )}
         </motion.div>
 
-        <motion.div
-          variants={staggerContainer(0.1)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
-        >
-          {loading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <RoomCardSkeleton key={i} mobile={i < 6} />
-              ))
-            : rooms.map((room, index) => (
-                <RoomCard key={room._id} room={room} index={index} />
-              ))}
-        </motion.div>
+        {loading ? (
+          <motion.div
+            variants={staggerContainer(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+          >
+            {Array.from({ length: 6 }).map((_, i) => (
+              <RoomCardSkeleton key={i} mobile={i < 6} />
+            ))}
+          </motion.div>
+        ) : rooms.length === 0 ? (
+          <div className="text-center py-16 bg-white dark:bg-[#111A11] rounded-3xl border border-gray-100 dark:border-[#1F2E1F] max-w-md mx-auto shadow-sm">
+            <p className="text-gray-500 font-semibold text-lg text-[#0F2E1E] dark:text-white mb-2">
+              Rooms coming soon!
+            </p>
+            <p className="text-gray-400 text-sm">
+              We are currently verifying properties. Please check back later.
+            </p>
+          </div>
+        ) : (
+          <motion.div
+            variants={staggerContainer(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+          >
+            {rooms.map((room, index) => (
+              <RoomCard key={room._id} room={room} index={index} />
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );

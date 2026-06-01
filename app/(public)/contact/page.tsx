@@ -211,14 +211,23 @@ export default function ContactPage() {
                   <FormField
                     label="Your Name"
                     placeholder="Rahul Sharma"
-                    {...register('name', { required: 'Name is required' })}
+                    {...register('name', {
+                      required: 'Name is required',
+                      minLength: { value: 2, message: 'Name must be at least 2 characters' },
+                    })}
                     error={errors.name?.message}
                   />
                   <FormField
                     label="Phone Number"
                     type="tel"
                     placeholder="+91 98765 43210"
-                    {...register('phone', { required: 'Phone is required' })}
+                    {...register('phone', {
+                      required: 'Phone is required',
+                      pattern: {
+                        value: /^[6-9]\d{9}$/,
+                        message: 'Enter valid Indian mobile number',
+                      },
+                    })}
                     error={errors.phone?.message}
                   />
                   <FormSelect

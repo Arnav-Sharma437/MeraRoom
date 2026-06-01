@@ -35,39 +35,33 @@ export default function SearchPageClient() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchInput, setSearchInput] = useState(filters.search);
-  const mockRooms = useMemo(
-    () => getMockSearchRooms().map((r, i) => enrichMockRoom(r as Record<string, unknown>, i)),
-    []
-  );
 
   const fetchRooms = useCallback(async () => {
     setLoading(true);
+    setHasError(false);
     try {
       const params = buildRoomsQueryParams(filters, page, LIMIT);
+      params.set('status', 'approved');
       const { data } = await axios.get<ApiResponse<Room[]> & { total?: number }>(
         `/api/rooms?${params.toString()}`
       );
-      if (data.success && data.data && data.data.length > 0) {
+      if (data.success && data.data) {
         setRooms(data.data);
         setTotal(data.total ?? data.data.length);
       } else {
-        const filtered = filterMockRooms(mockRooms, filters);
-        const start = (page - 1) * LIMIT;
-        setRooms(filtered.slice(start, start + LIMIT));
-        setTotal(filtered.length);
+        setHasError(true);
       }
-    } catch {
-      const filtered = filterMockRooms(mockRooms, filters);
-      const start = (page - 1) * LIMIT;
-      setRooms(filtered.slice(start, start + LIMIT));
-      setTotal(filtered.length);
+    } catch (err) {
+      console.error('Failed to fetch rooms', err);
+      setHasError(true);
     } finally {
       setLoading(false);
     }
-  }, [filters, page, mockRooms]);
+  }, [filters, page]);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -255,8 +249,34 @@ export default function SearchPageClient() {
                   <RoomCardSkeleton key={i} list={viewMode === 'list'} />
                 ))}
               </div>
+            ) : hasError ? (
+              <div className="text-center py-16 px-4 bg-white dark:bg-[#111A11] rounded-3xl border border-gray-100 dark:border-[#1F2E1F] max-w-md mx-auto shadow-sm">
+                <p className="text-red-500 font-semibold mb-4">Something went wrong</p>
+                <button
+                  type="button"
+                  onClick={fetchRooms}
+                  className="bg-[#16A34A] text-white font-semibold rounded-xl px-6 py-3 min-h-[44px] hover:bg-[#D4AF37] hover:text-[#0F2E1E] transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
             ) : rooms.length === 0 ? (
-              <EmptyState onClear={clearFilters} />
+              <div className="text-center py-16 px-4 bg-white dark:bg-[#111A11] rounded-3xl border border-gray-100 dark:border-[#1F2E1F] max-w-md mx-auto shadow-sm">
+                <Search className="w-16 h-16 mx-auto mb-4 text-[#16A34A]/30" />
+                <h3 className="font-display text-xl text-[#0F2E1E] dark:text-white mb-2">
+                  No rooms found in this area
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-sm mx-auto">
+                  Try removing some filters
+                </p>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="border border-[#0F2E1E] dark:border-[#D4AF37] text-[#0F2E1E] dark:text-[#D4AF37] font-semibold rounded-xl px-6 py-3 min-h-[44px]"
+                >
+                  Clear Filters
+                </button>
+              </div>
             ) : (
               <motion.div
                 initial="hidden"

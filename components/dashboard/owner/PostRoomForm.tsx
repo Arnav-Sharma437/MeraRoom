@@ -90,19 +90,40 @@ export default function PostRoomForm() {
   const validateStep = (): boolean => {
     const e: Record<string, string> = {};
     if (step === 0) {
-      if (!form.title.trim()) e.title = 'Title is required';
-      if (!form.description.trim()) e.description = 'Description is required';
-      if (!form.rent || Number(form.rent) <= 0) e.rent = 'Valid rent is required';
+      if (!form.title.trim()) {
+        e.title = 'Title is required';
+      } else if (form.title.trim().length < 10) {
+        e.title = 'Title must be at least 10 characters';
+      }
+      if (!form.description.trim()) {
+        e.description = 'Description is required';
+      }
+      const rentNum = Number(form.rent);
+      if (!form.rent) {
+        e.rent = 'Rent is required';
+      } else if (isNaN(rentNum) || rentNum < 1000 || rentNum > 100000) {
+        e.rent = 'Rent must be between ₹1,000 and ₹1,00,000';
+      }
     }
     if (step === 1) {
       if (!form.area) e.area = 'Area is required';
       if (!form.address.trim()) e.address = 'Address is required';
-      if (!form.whatsappNumber.trim()) e.whatsapp = 'WhatsApp number is required';
+      
+      const cleanWa = form.whatsappNumber.trim().replace(/\D/g, '');
+      const waDigits = cleanWa.length === 12 && cleanWa.startsWith('91') ? cleanWa.slice(2) : cleanWa;
+      if (!form.whatsappNumber.trim()) {
+        e.whatsapp = 'WhatsApp number is required';
+      } else if (!/^[6-9]\d{9}$/.test(waDigits)) {
+        e.whatsapp = 'Enter valid Indian mobile number';
+      }
     }
     if (step === 3) {
       const urls = photoItems.filter((i) => i.url).map((i) => i.url!);
-      if (urls.length < 1) e.images = 'At least 1 photo is required';
-      else update({ images: urls });
+      if (urls.length < 1) {
+        e.images = 'At least 1 photo is required';
+      } else {
+        setForm(f => ({ ...f, images: urls }));
+      }
     }
     if (step === 4) {
       if (!form.terms) e.terms = 'Please confirm accuracy';
@@ -171,16 +192,16 @@ export default function PostRoomForm() {
       >
         <CheckCircle className="w-20 h-20 text-[#16A34A] mx-auto mb-6" />
         <h2 className="font-display text-3xl text-[#0F2E1E] dark:text-white mb-2">
-          Listing Submitted!
+          Room submitted for review!
         </h2>
         <p className="text-gray-500 mb-8">
-          We&apos;ll review and publish within 24 hours.
+          Admin will approve within 24hrs
         </p>
         <div className="flex flex-col gap-3">
           <button
             type="button"
-            onClick={() => router.push('/dashboard/owner/listings')}
-            className="bg-[#16A34A] text-white rounded-xl py-3.5 font-semibold"
+            onClick={() => router.push('/dashboard/owner')}
+            className="bg-[#16A34A] text-white rounded-xl py-3.5 font-semibold min-h-[44px]"
           >
             View My Listings
           </button>

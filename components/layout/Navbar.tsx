@@ -97,15 +97,7 @@ export default function Navbar() {
           )}
 
           {isLoggedIn && role === 'user' && (
-            <>
-              <Link
-                href="/dashboard/user#saved"
-                className="text-white/80 text-sm font-medium hover:text-[#D4AF37] transition-default"
-              >
-                My Saved
-              </Link>
-              <ProfileDropdown name={user.name ?? 'User'} role="user" />
-            </>
+            <ProfileDropdown name={user.name ?? 'User'} role="user" />
           )}
 
           {isLoggedIn && role === 'owner' && (

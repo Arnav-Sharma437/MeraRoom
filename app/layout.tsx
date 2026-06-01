@@ -21,21 +21,15 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'MeraRoom — Find Your Perfect Room in Dharamshala',
+  title: 'MeraRoom — Find Rooms in Dharamshala',
   description:
-    'Search verified rooms, PGs and hostels across Dharamshala, Himachal Pradesh. Connect directly with owners on WhatsApp.',
-  keywords: [
-    'room rent Dharamshala',
-    'PG McLeod Ganj',
-    'Bhagsu rooms',
-    'Dharamkot accommodation',
-    'MeraRoom',
-  ],
+    'Find verified rooms, PGs and stays in Dharamshala. Search by area, contact owners directly on WhatsApp. Free to use.',
+  keywords: 'rooms in dharamshala, PG dharamshala, room rent mcleod ganj, accommodation dharamshala',
   authors: [{ name: 'MeraRoom' }],
   openGraph: {
-    title: 'MeraRoom — Find Your Perfect Room in Dharamshala',
+    title: 'MeraRoom — Find Rooms in Dharamshala',
     description:
-      'Verified rooms across Dharamshala — McLeod Ganj, Bhagsu, Dharamkot & more.',
+      'Find verified rooms, PGs and stays in Dharamshala. Search by area, contact owners directly on WhatsApp. Free to use.',
     url: process.env.NEXTAUTH_URL ?? 'http://localhost:3000',
     siteName: 'MeraRoom',
     locale: 'en_IN',
@@ -43,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MeraRoom — Dharamshala Rooms',
+    title: 'MeraRoom — Find Rooms in Dharamshala',
     description: 'Find verified rooms in Dharamshala on WhatsApp.',
   },
   robots: { index: true, follow: true },

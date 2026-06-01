@@ -24,14 +24,18 @@ export const authOptions: NextAuthOptions = {
         const phone = normalizePhone(credentials.phone);
         const user = await User.findOne({ phone }).select('+password');
 
-        if (!user) return null;
+        if (!user) {
+          throw new Error('Phone number not registered');
+        }
 
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password
         );
 
-        if (!isValid) return null;
+        if (!isValid) {
+          throw new Error('Incorrect password');
+        }
 
         return {
           id: user._id.toString(),

@@ -36,7 +36,7 @@ export default function LoginPage() {
       const userRole = (session.user as { role?: string }).role;
       if (userRole === 'admin') router.replace('/admin');
       else if (userRole === 'owner') router.replace('/dashboard/owner');
-      else router.replace('/dashboard/user');
+      else router.replace('/');
     }
   }, [session, router]);
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
     setLoading(false);
 
     if (!result?.ok) {
-      setError('Invalid phone or password');
+      setError(result?.error || 'Invalid phone or password');
       return;
     }
 
@@ -61,7 +61,7 @@ export default function LoginPage() {
     const userRole = (newSession?.user as { role?: string })?.role;
     if (userRole === 'admin') router.push('/admin');
     else if (userRole === 'owner') router.push('/dashboard/owner');
-    else router.push('/dashboard/user');
+    else router.push('/');
     router.refresh();
   };
 

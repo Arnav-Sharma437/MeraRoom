@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import {
   MapPin,
@@ -61,6 +62,8 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
   const [expanded, setExpanded] = useState(false);
   const { isSaved, toggleSave } = useSavedRooms();
 
+  const { data: session } = useSession();
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -69,20 +72,13 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
           setRoom(data.data);
           loadSimilar(data.data.area, id);
         } else {
-          loadMock();
+          setRoom(null);
         }
       } catch {
-        loadMock();
+        setRoom(null);
       } finally {
         setLoading(false);
       }
-    };
-
-    const loadMock = () => {
-      const mocks = getMockSearchRooms().map((r, i) => enrichMockRoom(r as Record<string, unknown>, i));
-      const found = mocks.find((r) => r._id === id) ?? enrichMockRoom(MOCK_FEATURED_ROOMS[0] as Record<string, unknown>, 0);
-      setRoom(found);
-      setSimilar(filterMockRooms(mocks, { ...DEFAULT_FILTERS, areas: [] }, id).filter((r) => r.area === found.area).slice(0, 3));
     };
 
     const loadSimilar = async (area: string, excludeId: string) => {
@@ -94,12 +90,10 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
         if (data.success && data.data?.length) {
           setSimilar(data.data.slice(0, 3));
         } else {
-          const mocks = getMockSearchRooms().map((r, i) => enrichMockRoom(r as Record<string, unknown>, i));
-          setSimilar(filterMockRooms(mocks, DEFAULT_FILTERS, excludeId).filter((r) => r.area === area).slice(0, 3));
+          setSimilar([]);
         }
       } catch {
-        const mocks = getMockSearchRooms().map((r, i) => enrichMockRoom(r as Record<string, unknown>, i));
-        setSimilar(filterMockRooms(mocks, DEFAULT_FILTERS, excludeId).filter((r) => r.area === area).slice(0, 3));
+        setSimilar([]);
       }
     };
 
@@ -108,27 +102,37 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
 
   if (loading) return <DetailSkeleton />;
 
-  if (!room) {
+  const owner = typeof room?.owner === 'object' ? (room.owner as User) : null;
+  const ownerId = owner?._id ? owner._id.toString() : room?.owner?.toString();
+  const isOwner = session?.user?.id && ownerId === session.user.id;
+  const isAdmin = session?.user?.role === 'admin';
+  const canView = room && (room.status === 'approved' || isOwner || isAdmin);
+
+  if (!room || !canView) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
         <Home className="w-16 h-16 mb-4 text-[#16A34A]/40" />
-        <h1 className="font-display text-2xl text-[#0F2E1E] dark:text-white mb-2">Room not found</h1>
-        <p className="text-gray-500 mb-6">This listing is no longer available in Dharamshala.</p>
-        <Link href="/search" className="bg-[#16A34A] text-white font-semibold rounded-xl px-6 py-3">
-          Back to Search
+        <h1 className="font-display text-2xl text-[#0F2E1E] dark:text-white mb-2">This room is no longer available</h1>
+        <p className="text-gray-500 mb-6">The listing you are trying to view has been removed or is pending approval.</p>
+        <Link href="/search" className="bg-[#16A34A] text-white font-semibold rounded-xl px-6 py-3 min-h-[44px] inline-flex items-center justify-center">
+          Search Other Rooms
         </Link>
       </div>
     );
   }
 
-  const owner = typeof room.owner === 'object' ? (room.owner as User) : null;
   const ownerName = owner?.name ?? 'Property Owner';
   const typeLabel = ROOM_TYPES.find((t) => t.value === room.roomType)?.label ?? room.roomType;
   const furnishLabel = FURNISHING_TYPES.find((f) => f.value === room.furnishing)?.label ?? room.furnishing;
   const genderLabel = GENDER_OPTIONS.find((g) => g.value === room.gender)?.label ?? 'Any';
-  const whatsappMsg = `Hi, I saw your room "${room.title}" on MeraRoom. Is it still available?`;
-  const whatsappHref = getWhatsAppLink(room.whatsappNumber, whatsappMsg);
-  const phoneHref = `tel:+${room.whatsappNumber.replace(/\D/g, '')}`;
+  
+  const ownerWhatsapp = owner?.whatsappNumber || owner?.phone || room.whatsappNumber || '';
+  const whatsappMsg = `Hi, I found your room listing '${room.title}' on MeraRoom. Is it still available?`;
+  const whatsappHref = getWhatsAppLink(ownerWhatsapp, whatsappMsg);
+  
+  const ownerPhone = owner?.phone || room.whatsappNumber || '';
+  const phoneHref = `tel:${ownerPhone.replace(/\D/g, '')}`;
+  
   const landmarks = NEARBY_LANDMARKS[room.area] ?? NEARBY_LANDMARKS.default;
   const mapQuery = room.latitude && room.longitude
     ? `${room.latitude},${room.longitude}`
@@ -364,14 +368,17 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
         </div>
       </div>
 
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-20 z-40 px-4 py-3 bg-white/95 dark:bg-[#111A11]/95 backdrop-blur border-t border-gray-200 dark:border-[#1F2E1F] flex items-center justify-between gap-3">
-        <WhatsAppButton href={whatsappHref} label="WhatsApp" size="md" className="flex-1 min-h-[44px]" showLabel />
+      <div 
+        style={{ bottom: '64px' }} 
+        className="lg:hidden fixed left-0 right-0 h-20 z-40 px-4 py-3 bg-white/95 dark:bg-[#111A11]/95 backdrop-blur border-t border-gray-200 dark:border-[#1F2E1F] flex items-center justify-between gap-3"
+      >
+        <WhatsAppButton href={whatsappHref} label="WhatsApp Owner" size="md" className="flex-1 min-h-[44px]" showLabel />
         <motion.a
           href={phoneHref}
           whileTap={{ scale: 0.96 }}
           className="flex-1 flex items-center justify-center gap-2 bg-[#16A34A] text-white rounded-xl py-2.5 font-semibold min-h-[44px]"
         >
-          <Phone size={18} /> Call
+          <Phone size={18} /> Call Owner
         </motion.a>
       </div>
     </div>
