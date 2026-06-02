@@ -18,22 +18,52 @@ const diagonalPattern = {
   )`,
 };
 
+const fallbackCoreTeam = [
+  {
+    _id: '1',
+    name: 'Arnav',
+    role: 'Co-Founder & Developer',
+    category: 'core',
+    image: null,
+  },
+  {
+    _id: '2', 
+    name: 'Varun',
+    role: 'Co-Founder & Operations',
+    category: 'core',
+    image: null,
+  },
+  {
+    _id: '3',
+    name: 'Shubham',
+    role: 'Marketing & Growth',
+    category: 'core',
+    image: null,
+  }
+];
+
+const fallbackInvestor = {
+  _id: '4',
+  name: 'Rakesh Kumar',
+  role: 'Angel Investor',
+  category: 'investor',
+  image: null,
+};
+
 export default function AboutPage() {
-  const [team, setTeam] = useState<any[]>([]);
+  const [team, setTeam] = useState<any[]>(() => [...fallbackCoreTeam, fallbackInvestor]);
 
   useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        const res = await fetch('/api/team', { cache: 'no-store' });
-        const json = await res.json();
-        if (json.success && json.data) {
-          setTeam(json.data);
+    fetch('/api/team')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && data.data?.length > 0) {
+          setTeam(data.data);
         }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchTeam();
+      })
+      .catch(() => {
+        // silently fail, show hardcoded
+      });
   }, []);
   return (
     <div className="min-h-screen">
@@ -144,16 +174,17 @@ export default function AboutPage() {
                 <motion.div
                   key={member._id || member.name}
                   variants={fadeInUp}
-                  className="bg-white dark:bg-[#111A11] rounded-2xl p-6 text-center border border-gray-100 dark:border-[#1F2E1F] hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  className="bg-white dark:bg-[#111A11] rounded-2xl p-8 text-center border border-gray-100 dark:border-[#1F2E1F] hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                 >
                   {/* Avatar */}
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#0F2E1E] flex items-center justify-center text-[#D4AF37] text-3xl font-bold font-serif relative overflow-hidden">
+                  <div className="w-28 h-28 md:w-32 md:h-32 mx-auto mb-4 rounded-full bg-[#0F2E1E] flex items-center justify-center text-[#D4AF37] text-4xl md:text-5xl font-bold font-serif relative overflow-hidden shrink-0">
                     {member.image ? (
                       <Image
                         src={member.image}
                         alt={member.name}
-                        fill
-                        className="object-cover rounded-full"
+                        width={128}
+                        height={128}
+                        className="rounded-full object-cover w-28 h-28 md:w-32 md:h-32"
                         unoptimized
                       />
                     ) : (
@@ -204,13 +235,14 @@ export default function AboutPage() {
                       <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#D4AF37] to-[#F5E6C4]" />
                       
                       {/* Avatar with Gold border */}
-                      <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-[#0F2E1E] border-4 border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-4xl font-bold font-serif relative overflow-hidden">
+                      <div className="w-24 h-24 mx-auto mb-3 rounded-full bg-[#0F2E1E] border-4 border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-4xl font-bold font-serif relative overflow-hidden shrink-0">
                         {member.image ? (
                           <Image
                             src={member.image}
                             alt={member.name}
-                            fill
-                            className="object-cover rounded-full"
+                            width={96}
+                            height={96}
+                            className="rounded-full object-cover w-24 h-24"
                             unoptimized
                           />
                         ) : (
