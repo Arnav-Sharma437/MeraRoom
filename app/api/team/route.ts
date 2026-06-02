@@ -14,16 +14,30 @@ export async function GET(request: NextRequest) {
     const query = isAdmin && all ? {} : { isActive: true };
     let members = await TeamMember.find(query).sort({ order: 1 }).lean();
     
-    // Seed initial 3 members if the collection is empty
+    // Seed initial members if the collection is empty
     const totalCount = await TeamMember.countDocuments();
     if (totalCount === 0) {
       const initialSeed = [
-        { name: 'Arnav', role: 'Co-Founder & Developer', order: 1, isActive: true },
-        { name: 'Varun', role: 'Co-Founder & Operations', order: 2, isActive: true },
-        { name: 'Shubham', role: 'Marketing & Growth', order: 3, isActive: true }
+        { name: 'Arnav', role: 'Co-Founder & Developer', category: 'core', order: 1, isActive: true },
+        { name: 'Varun', role: 'Co-Founder & Operations', category: 'core', order: 2, isActive: true },
+        { name: 'Shubham', role: 'Marketing & Growth', category: 'core', order: 3, isActive: true },
+        { name: 'Rakesh Kumar', role: 'Angel Investor', category: 'investor', order: 4, isActive: true }
       ];
       await TeamMember.insertMany(initialSeed);
       members = await TeamMember.find(query).sort({ order: 1 }).lean();
+    } else {
+      // If team members are there but Rakesh Kumar is missing, add Rakesh Kumar
+      const rakesh = await TeamMember.findOne({ name: 'Rakesh Kumar' });
+      if (!rakesh) {
+        await TeamMember.create({
+          name: 'Rakesh Kumar',
+          role: 'Angel Investor',
+          category: 'investor',
+          order: 4,
+          isActive: true
+        });
+        members = await TeamMember.find(query).sort({ order: 1 }).lean();
+      }
     }
     
     return NextResponse.json({ success: true, data: members });
@@ -48,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
     const body = await request.json();
-    const { name, role, image, order, isActive } = body;
+    const { name, role, category, image, order, isActive } = body;
 
     if (!name || !role) {
       return NextResponse.json(
@@ -60,6 +74,7 @@ export async function POST(request: NextRequest) {
     const newMember = await TeamMember.create({
       name,
       role,
+      category: category || 'core',
       image,
       order: Number(order) || 0,
       isActive: isActive !== undefined ? isActive : true,

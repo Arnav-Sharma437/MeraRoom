@@ -22,7 +22,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     await connectDB();
     const body = await request.json();
-    const { name, role, image, order, isActive } = body;
+    const { name, role, category, image, order, isActive } = body;
 
     const member = await TeamMember.findById(params.id);
     if (!member) {
@@ -34,6 +34,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     if (name !== undefined) member.name = name;
     if (role !== undefined) member.role = role;
+    if (category !== undefined) member.category = category;
     if (image !== undefined) member.image = image;
     if (order !== undefined) member.order = Number(order);
     if (isActive !== undefined) member.isActive = isActive;

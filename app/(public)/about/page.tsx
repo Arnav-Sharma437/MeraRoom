@@ -138,7 +138,7 @@ export default function AboutPage() {
           </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {team.map((member) => {
+            {team.filter((member) => member.category === 'core' || !member.category).map((member) => {
               const initial = member.name.charAt(0).toUpperCase();
               return (
                 <motion.div
@@ -174,6 +174,65 @@ export default function AboutPage() {
               );
             })}
           </div>
+
+          {/* Investors Category Section */}
+          {team.some((member) => member.category === 'investor') && (
+            <div className="mt-20">
+              <motion.h2
+                variants={fadeInUp}
+                className="font-display text-3xl sm:text-4xl text-center text-[#0F2E1E] dark:text-white mb-4"
+              >
+                Supported By
+              </motion.h2>
+              <motion.p
+                variants={fadeInUp}
+                className="text-gray-500 dark:text-gray-400 text-center text-sm mb-12 max-w-md mx-auto"
+              >
+                Proudly backed by forward-thinking individuals who believe in our mission.
+              </motion.p>
+
+              <div className="flex flex-wrap justify-center gap-6 max-w-xl mx-auto">
+                {team.filter((member) => member.category === 'investor').map((member) => {
+                  const initial = member.name.charAt(0).toUpperCase();
+                  return (
+                    <motion.div
+                      key={member._id || member.name}
+                      variants={fadeInUp}
+                      className="bg-white dark:bg-[#111A11] rounded-3xl p-8 text-center border-2 border-[#D4AF37] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group min-w-[260px] flex-1 sm:flex-initial"
+                    >
+                      {/* Premium Accent line */}
+                      <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#D4AF37] to-[#F5E6C4]" />
+                      
+                      {/* Avatar with Gold border */}
+                      <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-[#0F2E1E] border-4 border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-4xl font-bold font-serif relative overflow-hidden">
+                        {member.image ? (
+                          <Image
+                            src={member.image}
+                            alt={member.name}
+                            fill
+                            className="object-cover rounded-full"
+                            unoptimized
+                          />
+                        ) : (
+                          initial
+                        )}
+                      </div>
+                      
+                      {/* Name */}
+                      <h3 className="font-semibold text-xl text-[#0F2E1E] dark:text-white mb-1">
+                        {member.name}
+                      </h3>
+                      
+                      {/* Role/Badge */}
+                      <span className="inline-block bg-[#D4AF37]/10 dark:bg-[#D4AF37]/20 border border-[#D4AF37]/35 text-[#D4AF37] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-1.5">
+                        {member.role}
+                      </span>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </motion.div>
       </section>
 

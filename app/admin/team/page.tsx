@@ -22,6 +22,7 @@ interface TeamMember {
   _id: string;
   name: string;
   role: string;
+  category?: 'core' | 'investor';
   image?: string;
   order: number;
   isActive: boolean;
@@ -37,6 +38,7 @@ export default function AdminTeamPage() {
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
+  const [category, setCategory] = useState<'core' | 'investor'>('core');
   const [image, setImage] = useState('');
   const [order, setOrder] = useState('0');
   const [isActive, setIsActive] = useState(true);
@@ -73,6 +75,7 @@ export default function AdminTeamPage() {
     setEditingMember(null);
     setName('');
     setRole('');
+    setCategory('core');
     setImage('');
     // Set order to next highest
     const maxOrder = members.reduce((max, m) => (m.order > max ? m.order : max), 0);
@@ -85,6 +88,7 @@ export default function AdminTeamPage() {
     setEditingMember(member);
     setName(member.name);
     setRole(member.role);
+    setCategory(member.category || 'core');
     setImage(member.image || '');
     setOrder(String(member.order));
     setIsActive(member.isActive);
@@ -158,6 +162,7 @@ export default function AdminTeamPage() {
     const payload = {
       name,
       role,
+      category,
       image: image || undefined,
       order: Number(order) || 0,
       isActive,
@@ -353,9 +358,17 @@ export default function AdminTeamPage() {
 
                     {/* Member Details */}
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-sm text-[#0F2E1E] dark:text-white flex items-center gap-1.5">
+                      <h4 className="font-semibold text-sm text-[#0F2E1E] dark:text-white flex items-center gap-1.5 flex-wrap">
                         {member.name}
                         <span className="text-[10px] font-mono text-gray-400">Order: {member.order}</span>
+                        <span className={cn(
+                          "text-[9px] font-bold px-1.5 py-0.5 rounded capitalize",
+                          member.category === 'investor' 
+                            ? "bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400" 
+                            : "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
+                        )}>
+                          {member.category === 'investor' ? 'Investor' : 'Core'}
+                        </span>
                       </h4>
                       <p className="text-xs text-[#16A34A] font-medium mt-0.5">{member.role}</p>
                     </div>
@@ -490,6 +503,18 @@ export default function AdminTeamPage() {
                       <span className="text-xs text-gray-500">{isActive ? 'Shown' : 'Hidden'}</span>
                     </div>
                   </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Member Category</label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value as 'core' | 'investor')}
+                    className="w-full rounded-xl px-3 py-2 bg-gray-50 dark:bg-[#0A0F0A] border border-gray-200 dark:border-[#1F2E1F] text-xs text-[#1A1A1A] dark:text-white focus:outline-none"
+                  >
+                    <option value="core">Core Team</option>
+                    <option value="investor">Angel Investor / Advisor</option>
+                  </select>
                 </div>
 
                 {/* Profile Photo Uploader */}
