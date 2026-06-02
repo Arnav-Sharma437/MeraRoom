@@ -107,6 +107,14 @@ export const AREA_IMAGES: Record<string, string> = {
   sakoh: 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=400&q=80',
   'kotwali-bazaar': 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=80',
   sidhpur: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=80',
+  ramnagar: 'https://images.unsplash.com/photo-1454496564094-0a8f71c469b8?w=400&q=80',
+  khanyara: 'https://images.unsplash.com/photo-1494500764466-1c05d7b539c8?w=400&q=80',
+  'forsyth-ganj': 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=80',
+  'jogiwara-road': 'https://images.unsplash.com/photo-1480497491538-f5c40e3952f0?w=400&q=80',
+  'upper-dharamshala': 'https://images.unsplash.com/photo-1465256410760-10640339c72c?w=400&q=80',
+  'lower-dharamshala': 'https://images.unsplash.com/photo-1504109586057-7a2ae83d1338?w=400&q=80',
+  chamunda: 'https://images.unsplash.com/photo-1518002171953-a080ef816115?w=400&q=80',
+  'palampur-road': 'https://images.unsplash.com/photo-1512413917822-2b6d08003a27?w=400&q=80',
 };
 
 export const DEFAULT_AREA_IMAGE =
