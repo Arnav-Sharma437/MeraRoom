@@ -51,20 +51,7 @@ const fallbackInvestor = {
 };
 
 export default function AboutPage() {
-  const [team, setTeam] = useState<any[]>(() => [...fallbackCoreTeam, fallbackInvestor]);
-
-  useEffect(() => {
-    fetch('/api/team')
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success && data.data?.length > 0) {
-          setTeam(data.data);
-        }
-      })
-      .catch(() => {
-        // silently fail, show hardcoded
-      });
-  }, []);
+  const team = [...fallbackCoreTeam, fallbackInvestor];
   return (
     <div className="min-h-screen">
       {/* Hero */}
