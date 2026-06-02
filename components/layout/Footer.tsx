@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { MapPin, MessageCircle } from 'lucide-react';
+import { MapPin, MessageCircle, Phone, Clock } from 'lucide-react';
 import { FOOTER_AREAS, NAV_LINKS, CONTACTS, CITY } from '@/constants';
 import { staggerContainer, fadeInUp, viewportOnce } from '@/lib/animations';
 
@@ -81,25 +81,72 @@ export default function Footer() {
 
           <motion.div variants={fadeInUp}>
             <h4 className="font-semibold mb-4 text-[#D4AF37] md:text-white">Contact</h4>
-            <ul className="space-y-3 text-sm text-white/60 flex flex-col items-center md:items-start">
-              {CONTACTS.map((c) => (
-                <li key={c.name} className="flex items-center gap-2">
-                  <MessageCircle size={16} className="text-brand-gold flex-shrink-0" />
-                  <a
-                    href={c.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-brand-gold transition-default"
-                  >
-                    {c.name}: {c.phone}
+            <div className="space-y-4 text-left flex flex-col items-start">
+              {/* Arnav Phone */}
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mt-0.5">
+                  <Phone size={14} className="text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-xs mb-0.5">Arnav</p>
+                  <a href="tel:+917876650437" className="text-white/70 text-sm hover:text-[#D4AF37] transition-colors">
+                    +91 7876650437
                   </a>
-                </li>
-              ))}
-              <li className="flex items-center gap-2">
-                <MapPin size={16} className="text-brand-gold flex-shrink-0" />
-                <span>{CITY.name}, {CITY.state}</span>
-              </li>
-            </ul>
+                </div>
+              </div>
+
+              {/* Varun Phone */}
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mt-0.5">
+                  <Phone size={14} className="text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-xs mb-0.5">Varun</p>
+                  <a href="tel:+919418100803" className="text-white/70 text-sm hover:text-[#D4AF37] transition-colors">
+                    +91 9418100803
+                  </a>
+                </div>
+              </div>
+
+              {/* WhatsApp Arnav */}
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mt-0.5">
+                  <MessageCircle size={14} className="text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-xs mb-0.5">WhatsApp</p>
+                  <a href="https://wa.me/917876650437" target="_blank" rel="noopener noreferrer" className="text-white/70 text-sm hover:text-[#D4AF37] transition-colors">
+                    +91 7876650437
+                  </a>
+                </div>
+              </div>
+
+              {/* Location */}
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mt-0.5">
+                  <MapPin size={14} className="text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-xs mb-0.5">Location</p>
+                  <p className="text-white/70 text-sm">
+                    {CITY.name}, {CITY.state}
+                  </p>
+                </div>
+              </div>
+
+              {/* Hours */}
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mt-0.5">
+                  <Clock size={14} className="text-[#D4AF37]" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-xs mb-0.5">Hours</p>
+                  <p className="text-white/70 text-sm">
+                    Mon - Sat: 9AM to 7PM
+                  </p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       </div>

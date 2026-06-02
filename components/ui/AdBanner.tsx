@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 interface Ad {
   slot: number;
@@ -49,7 +50,15 @@ export default function AdBanner({ slot, className }: AdBannerProps) {
     return null;
   }
 
-  const imageFit = slot === 2 ? 'object-cover' : 'object-cover';
+  // Sizing definitions based on slot
+  let sizeClasses = '';
+  if (slot === 1) {
+    sizeClasses = 'h-32 md:h-40 mx-4 md:mx-0';
+  } else if (slot === 2) {
+    sizeClasses = 'h-28 md:h-36';
+  } else if (slot === 3) {
+    sizeClasses = 'h-32 md:h-40';
+  }
 
   const bannerContent = (
     <div className="relative w-full h-full bg-gray-50 dark:bg-[#0A0F0A] overflow-hidden group">
@@ -57,12 +66,12 @@ export default function AdBanner({ slot, className }: AdBannerProps) {
         src={ad.bannerImage}
         alt={ad.businessName}
         fill
-        className={`transition-transform duration-500 group-hover:scale-102 ${imageFit}`}
+        className="transition-transform duration-500 group-hover:scale-[1.02] object-cover"
         unoptimized
       />
-      {/* Ad tag badge */}
-      <span className="absolute top-0 right-0 bg-black/60 text-white/95 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-bl-lg uppercase select-none z-10">
-        Ad
+      {/* Sponsored label */}
+      <span className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full backdrop-blur-sm select-none z-10">
+        Sponsored
       </span>
 
       {/* Business Name overlay */}
@@ -75,7 +84,14 @@ export default function AdBanner({ slot, className }: AdBannerProps) {
   );
 
   return (
-    <div className={`rounded-2xl overflow-hidden border border-gray-150 dark:border-white/5 transition-all select-none shadow-sm relative ${className || ''}`}>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-2xl border border-gray-150 dark:border-white/5 select-none shadow-sm transition-all duration-300",
+        ad.linkUrl && "hover:opacity-95 cursor-pointer",
+        sizeClasses,
+        className
+      )}
+    >
       {ad.linkUrl ? (
         <a href={ad.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
           {bannerContent}

@@ -294,7 +294,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
 
             <AdBanner 
               slot={3} 
-              className="my-6 h-24"
+              className="my-6"
             />
 
             <motion.section id="map" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>

@@ -240,7 +240,7 @@ export default function SearchPageClient() {
 
             <AdBanner 
               slot={2}
-              className="mb-4 h-20 md:h-28"
+              className="mb-4"
             />
 
             {loading ? (

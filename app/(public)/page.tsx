@@ -14,7 +14,7 @@ export default function HomePage() {
       <div className="container mx-auto px-4">
         <AdBanner 
           slot={1} 
-          className="my-6 h-24 md:h-32"
+          className="my-6"
         />
       </div>
       <CityGrid />

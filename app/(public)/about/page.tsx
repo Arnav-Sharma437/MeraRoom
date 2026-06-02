@@ -1,9 +1,10 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Phone, MessageCircle } from 'lucide-react';
-import { ABOUT_STATS, ABOUT_VALUES, TEAM } from '@/constants';
+import { ABOUT_STATS, ABOUT_VALUES } from '@/constants';
 import { LucideByName } from '@/components/ui/LucideByName';
 import { fadeInUp, staggerContainer, viewportOnce } from '@/lib/animations';
 
@@ -18,6 +19,22 @@ const diagonalPattern = {
 };
 
 export default function AboutPage() {
+  const [team, setTeam] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const res = await fetch('/api/team', { cache: 'no-store' });
+        const json = await res.json();
+        if (json.success && json.data) {
+          setTeam(json.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchTeam();
+  }, []);
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -120,39 +137,42 @@ export default function AboutPage() {
             The Team Behind MeraRoom
           </motion.h2>
 
-          <div className="flex flex-col md:flex-row gap-6 max-w-4xl mx-auto">
-            {TEAM.map((member) => (
-              <motion.div
-                key={member.name}
-                variants={fadeInUp}
-                whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.12)' }}
-                className="flex-1 bg-white dark:bg-[#111A11] rounded-3xl p-8 border border-gray-100 dark:border-[#1F2E1F] shadow-md text-center transition-shadow duration-300"
-              >
-                <div className="w-20 h-20 mx-auto bg-[#0F2E1E] rounded-full flex items-center justify-center">
-                  <span className="font-display text-3xl text-[#D4AF37]">
-                    {member.name.charAt(0)}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-xl text-[#0F2E1E] dark:text-white mt-4">
-                  {member.name}
-                </h3>
-                <p className="text-[#16A34A] text-sm font-medium mt-1">{member.role}</p>
-                <p className="text-gray-500 text-sm mt-1 flex items-center justify-center gap-1.5">
-                  <Phone size={14} />
-                  {member.phone}
-                </p>
-                <motion.a
-                  href={member.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileTap={{ scale: 0.96 }}
-                  className="inline-flex items-center justify-center w-full mt-4 bg-[#25D366] text-white rounded-xl px-5 py-2.5 text-sm font-semibold hover:brightness-110 transition-default"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            {team.map((member) => {
+              const initial = member.name.charAt(0).toUpperCase();
+              return (
+                <motion.div
+                  key={member._id || member.name}
+                  variants={fadeInUp}
+                  className="bg-white dark:bg-[#111A11] rounded-2xl p-6 text-center border border-gray-100 dark:border-[#1F2E1F] hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                 >
-                  <MessageCircle size={16} className="inline mr-1" />
-                  Chat on WhatsApp
-                </motion.a>
-              </motion.div>
-            ))}
+                  {/* Avatar */}
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#0F2E1E] flex items-center justify-center text-[#D4AF37] text-3xl font-bold font-serif relative overflow-hidden">
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        fill
+                        className="object-cover rounded-full"
+                        unoptimized
+                      />
+                    ) : (
+                      initial
+                    )}
+                  </div>
+                  
+                  {/* Name */}
+                  <h3 className="font-semibold text-lg text-[#0F2E1E] dark:text-white mb-1">
+                    {member.name}
+                  </h3>
+                  
+                  {/* Role */}
+                  <p className="text-[#16A34A] text-sm font-medium">
+                    {member.role}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       </section>

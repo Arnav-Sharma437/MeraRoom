@@ -17,6 +17,7 @@ import {
   CheckCircle,
   XCircle,
   ExternalLink,
+  RefreshCw,
 } from 'lucide-react';
 import {
   BarChart,
@@ -71,7 +72,7 @@ interface RoomRecord {
 export default function AdminOverview() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<Stat | null>(null);
+  const [stats, setStats] = useState<any>(null);
   const [areaChart, setAreaChart] = useState<AreaChartItem[]>([]);
   const [inqChart, setInqChart] = useState<InqChartItem[]>([]);
   const [recentListings, setRecentListings] = useState<RoomRecord[]>([]);
@@ -81,16 +82,18 @@ export default function AdminOverview() {
   const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
 
   const fetchStats = async () => {
+    setLoading(true);
     try {
-      const res = await fetch('/api/admin/stats');
-      const json = await res.json();
-      if (json.success && json.data) {
-        setStats(json.data.stats);
-        setAreaChart(json.data.charts.roomsByArea);
-        setInqChart(json.data.charts.inquiriesByDay);
-        setRecentListings(json.data.recentListings);
-      } else {
-        toast.error('Failed to load dashboard statistics');
+      const res = await fetch(
+        '/api/admin/stats',
+        { cache: 'no-store' }
+      );
+      const data = await res.json();
+      setStats(data.data);
+      if (data.success && data.data) {
+        setAreaChart(data.data.charts?.roomsByArea || []);
+        setInqChart(data.data.charts?.inquiriesByDay || []);
+        setRecentListings(data.data.recentListings || []);
       }
     } catch {
       toast.error('Failed to load dashboard statistics');
@@ -118,6 +121,11 @@ export default function AdminOverview() {
     updateTime();
     const timer = setInterval(updateTime, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(fetchStats, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleApprove = async (id: string) => {
@@ -203,8 +211,18 @@ export default function AdminOverview() {
           <h1 className="font-display text-3xl text-[#0F2E1E] dark:text-white">Good morning, Admin</h1>
           <p className="text-gray-500 text-sm mt-1">Here is a overview of MeraRoom property listings and inquiries.</p>
         </div>
-        <div className="text-sm font-medium text-gray-500 bg-white dark:bg-[#111A11] border border-gray-200 dark:border-[#1F2E1F] rounded-full px-4 py-2 shadow-sm shrink-0 self-start sm:self-center">
-          {dateTime}
+        <div className="flex items-center gap-3 self-start sm:self-center shrink-0">
+          <button
+            onClick={fetchStats}
+            disabled={loading}
+            className="p-2 text-gray-500 hover:text-[#16A34A] bg-white dark:bg-[#111A11] border border-gray-200 dark:border-[#1F2E1F] rounded-full shadow-sm hover:shadow transition-all min-h-[38px] min-w-[38px] flex items-center justify-center"
+            title="Refresh statistics"
+          >
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+          </button>
+          <div className="text-sm font-medium text-gray-500 bg-white dark:bg-[#111A11] border border-gray-200 dark:border-[#1F2E1F] rounded-full px-4 py-2 shadow-sm">
+            {dateTime}
+          </div>
         </div>
       </motion.div>
 

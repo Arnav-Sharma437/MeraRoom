@@ -25,6 +25,7 @@ import {
   MoreHorizontal,
   X,
   Users,
+  Users2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -41,6 +42,7 @@ const NAV_ITEMS = [
   { href: '/admin/locations', label: 'Locations', icon: MapPin },
   { href: '/admin/payments', label: 'Payments', icon: CreditCard },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
+  { href: '/admin/team', label: 'Team', icon: Users2 },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

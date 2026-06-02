@@ -8,6 +8,8 @@ import Inquiry from '@/models/Inquiry';
 import Payment from '@/models/Payment';
 import Contact from '@/models/Contact';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
@@ -39,7 +41,7 @@ export async function GET(request: NextRequest) {
       Room.countDocuments({ status: 'pending' }),
       Room.countDocuments({ status: 'approved' }),
       Room.countDocuments({ status: 'rejected' }),
-      User.countDocuments({ role: 'user' }),
+      User.countDocuments({}), // Total users (all roles)
       User.countDocuments({ role: 'owner' }),
       Inquiry.countDocuments(),
       Inquiry.countDocuments({ status: 'new' }),
@@ -102,6 +104,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
+        // Flat properties
+        totalUsers,
+        totalRooms,
+        pendingRooms,
+        totalInquiries,
+        newInquiries,
+        featuredRooms,
+        verifiedRooms,
+        totalRevenue,
+        unreadContacts,
+        inquiriesToday: newInquiries,
+        
+        // Stats object (nested)
         stats: {
           totalRooms,
           pendingRooms,
@@ -115,12 +130,17 @@ export async function GET(request: NextRequest) {
           verifiedRooms,
           totalRevenue,
           unreadContacts,
+          inquiriesToday: newInquiries,
         },
         charts: {
           roomsByArea: roomsByAreaFormatted,
           inquiriesByDay,
         },
         recentListings: recentRooms,
+      }
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, max-age=0, must-revalidate',
       }
     });
   } catch (error) {
