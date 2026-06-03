@@ -14,14 +14,17 @@ import {
   Home,
   X,
   CheckCircle,
+  Upload,
 } from 'lucide-react';
 import Loader from '@/components/ui/Loader';
+import axios from 'axios';
 
 interface AreaItem {
   name: string;
   slug: string;
   isActive: boolean;
   roomCount: number;
+  image?: string;
 }
 
 export default function LocationsPage() {
@@ -35,6 +38,8 @@ export default function LocationsPage() {
   const [newName, setNewName] = useState('');
   const [newSlug, setNewSlug] = useState('');
   const [newIsActive, setNewIsActive] = useState(true);
+  const [newImage, setNewImage] = useState<string | undefined>(undefined);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const fetchLocations = async () => {
@@ -86,12 +91,14 @@ export default function LocationsPage() {
             if (index > -1) {
               initialAreas[index].isActive = c.isActive;
               initialAreas[index].name = c.name;
+              if (c.image) initialAreas[index].image = c.image;
             } else {
               initialAreas.push({
                 name: c.name,
                 slug: c.slug,
                 isActive: c.isActive ?? true,
                 roomCount: countsMap[c.name] ?? 0,
+                image: c.image,
               });
             }
           });
@@ -116,6 +123,7 @@ export default function LocationsPage() {
         name: a.name,
         slug: a.slug,
         isActive: a.isActive,
+        image: a.image,
       }));
 
       await fetch('/api/admin/settings', {
@@ -133,6 +141,35 @@ export default function LocationsPage() {
     setAreas(updated);
     toast.success('Location visibility toggled');
     await syncLocationsWithSettings(updated);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file');
+      return;
+    }
+
+    setUploadingImage(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'meraroom/locations');
+
+    try {
+      const res = await axios.post('/api/upload', formData);
+      if (res.data.success) {
+        setNewImage(res.data.url);
+        toast.success('Image uploaded successfully');
+      } else {
+        toast.error('Upload failed');
+      }
+    } catch (err) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleAddArea = async (e: React.FormEvent) => {
@@ -154,6 +191,7 @@ export default function LocationsPage() {
       slug,
       isActive: newIsActive,
       roomCount: 0,
+      image: newImage,
     };
 
     const updated = [...areas, newArea];
@@ -162,6 +200,7 @@ export default function LocationsPage() {
     setNewName('');
     setNewSlug('');
     setNewIsActive(true);
+    setNewImage(undefined);
     setSubmitting(false);
     toast.success('New Dharamshala area added successfully!');
     await syncLocationsWithSettings(updated);
@@ -172,6 +211,7 @@ export default function LocationsPage() {
     setNewName(area.name);
     setNewSlug(area.slug);
     setNewIsActive(area.isActive);
+    setNewImage(area.image);
   };
 
   const handleSaveEdit = async (e: React.FormEvent) => {
@@ -181,13 +221,14 @@ export default function LocationsPage() {
     setSubmitting(true);
     const updated = areas.map((a) =>
       a.slug === editArea.slug
-        ? { ...a, name: newName.trim(), isActive: newIsActive }
+        ? { ...a, name: newName.trim(), isActive: newIsActive, image: newImage }
         : a
     );
     setAreas(updated);
     setEditArea(null);
     setNewName('');
     setNewSlug('');
+    setNewImage(undefined);
     setSubmitting(false);
     toast.success('Area updated successfully!');
     await syncLocationsWithSettings(updated);
@@ -356,6 +397,26 @@ export default function LocationsPage() {
                   />
                 </div>
 
+                <div>
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Area Image (Optional)</label>
+                  <div className="flex items-center gap-4">
+                    {newImage ? (
+                      <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 dark:border-[#1F2E1F]">
+                        <img src={newImage} alt="Area" className="object-cover w-full h-full" />
+                        <button type="button" onClick={() => setNewImage(undefined)} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5 text-white hover:bg-black/70">
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer bg-gray-50 dark:bg-[#0A0F0A] border border-dashed border-gray-300 dark:border-[#1F2E1F] rounded-xl flex flex-col items-center justify-center w-16 h-16 hover:bg-gray-100 dark:hover:bg-[#111A11] transition-colors">
+                        {uploadingImage ? <Loader size="sm" className="border-[#16A34A] border-t-transparent" /> : <Upload size={16} className="text-gray-400" />}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                      </label>
+                    )}
+                    <span className="text-xs text-gray-500">Upload a cover image</span>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between py-2 border-y border-gray-50 dark:border-[#1F2E1F]">
                   <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">Searchable Status</span>
                   <button
@@ -426,6 +487,26 @@ export default function LocationsPage() {
                     placeholder="Area name"
                     className="w-full rounded-xl px-3 py-2 bg-gray-50 dark:bg-[#0A0F0A] border border-gray-200 dark:border-[#1F2E1F] text-xs text-[#1A1A1A] dark:text-white focus:outline-none"
                   />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Area Image (Optional)</label>
+                  <div className="flex items-center gap-4">
+                    {newImage ? (
+                      <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 dark:border-[#1F2E1F]">
+                        <img src={newImage} alt="Area" className="object-cover w-full h-full" />
+                        <button type="button" onClick={() => setNewImage(undefined)} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5 text-white hover:bg-black/70">
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer bg-gray-50 dark:bg-[#0A0F0A] border border-dashed border-gray-300 dark:border-[#1F2E1F] rounded-xl flex flex-col items-center justify-center w-16 h-16 hover:bg-gray-100 dark:hover:bg-[#111A11] transition-colors">
+                        {uploadingImage ? <Loader size="sm" className="border-[#D4AF37] border-t-transparent" /> : <Upload size={16} className="text-gray-400" />}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+                      </label>
+                    )}
+                    <span className="text-xs text-gray-500">Upload a cover image</span>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between py-2 border-y border-gray-50 dark:border-[#1F2E1F]">
