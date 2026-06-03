@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
@@ -402,7 +403,7 @@ export default function LocationsPage() {
                   <div className="flex items-center gap-4">
                     {newImage ? (
                       <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 dark:border-[#1F2E1F]">
-                        <img src={newImage} alt="Area" className="object-cover w-full h-full" />
+                        <Image src={newImage} alt="Area" fill className="object-cover" unoptimized />
                         <button type="button" onClick={() => setNewImage(undefined)} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5 text-white hover:bg-black/70">
                           <X size={12} />
                         </button>
@@ -494,7 +495,7 @@ export default function LocationsPage() {
                   <div className="flex items-center gap-4">
                     {newImage ? (
                       <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 dark:border-[#1F2E1F]">
-                        <img src={newImage} alt="Area" className="object-cover w-full h-full" />
+                        <Image src={newImage} alt="Area" fill className="object-cover" unoptimized />
                         <button type="button" onClick={() => setNewImage(undefined)} className="absolute top-1 right-1 bg-black/50 rounded-full p-0.5 text-white hover:bg-black/70">
                           <X size={12} />
                         </button>
