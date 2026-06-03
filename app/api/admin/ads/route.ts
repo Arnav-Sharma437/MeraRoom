@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
       { slot: Number(body.slot) },
       {
         $set: {
+          slotId: Number(body.slot),
           businessName: body.businessName,
           phone: body.phone,
           startDate: new Date(body.startDate),

@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IAd extends Document {
   slot: number; // 1, 2, or 3
+  slotId?: number; // legacy field for index
   businessName: string;
   phone: string;
   bannerImage: string;
@@ -16,6 +17,7 @@ export interface IAd extends Document {
 
 const AdSchema = new Schema<IAd>({
   slot: { type: Number, enum: [1, 2, 3], required: true, unique: true },
+  slotId: { type: Number },
   businessName: { type: String, required: true },
   phone: { type: String, required: true },
   bannerImage: { type: String, required: true },
