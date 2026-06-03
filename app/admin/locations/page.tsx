@@ -58,7 +58,7 @@ export default function LocationsPage() {
       }
 
       // Static list of Dharamshala areas from constants, initialized in state
-      const initialAreas = [
+      const initialAreas: AreaItem[] = [
         { name: 'McLeod Ganj', slug: 'mcleod-ganj', isActive: true },
         { name: 'Shyam Nagar', slug: 'shyam-nagar', isActive: true },
         { name: 'Dari', slug: 'dari', isActive: true },
