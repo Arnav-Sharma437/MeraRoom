@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Phone, User, Search, Home } from 'lucide-react';
+import { Eye, EyeOff, Lock, Phone, User, Search, Home, ArrowLeft } from 'lucide-react';
 import AuthBrandPanel from '@/components/auth/AuthBrandPanel';
 import { FormField } from '@/components/ui/FormField';
 import Loader from '@/components/ui/Loader';
@@ -103,6 +103,10 @@ function RegisterForm() {
         className="flex-1 flex items-center justify-center min-h-screen px-6 py-10 bg-white dark:bg-[#0A0F0A]"
       >
         <div className="max-w-md w-full mx-auto">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#16A34A] transition-colors mb-8">
+            <ArrowLeft size={16} /> Back to Home
+          </Link>
+
           <div className="md:hidden flex flex-col items-center mb-8">
             <Image
               src="/meraroom-icon.svg"
