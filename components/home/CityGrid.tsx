@@ -52,7 +52,7 @@ export default function CityGrid({ customLocations }: { customLocations?: any[] 
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4"
         >
           {(() => {
-            let displayAreas = HOME_AREAS;
+            let displayAreas: any[] = HOME_AREAS;
             if (customLocations && customLocations.length > 0) {
               displayAreas = customLocations.filter(a => a.isActive !== false).map(a => ({
                 name: a.name,
