@@ -94,7 +94,7 @@ export default function CityGrid({ customLocations }: { customLocations?: any[] 
               </motion.button>
               );
             });
-          })}
+          })()}
         </motion.div>
       </div>
     </section>
