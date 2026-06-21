@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { HOME_AREAS, CITY, AREA_IMAGES, DEFAULT_AREA_IMAGE } from '@/constants';
 import { staggerContainer, scaleIn, fadeInUp, viewportOnce } from '@/lib/animations';
 
-export default function CityGrid() {
+export default function CityGrid({ customLocations }: { customLocations?: any[] }) {
   const router = useRouter();
   const [counts, setCounts] = useState<Record<string, number>>({});
 
@@ -40,7 +40,7 @@ export default function CityGrid() {
             Explore by Area in Dharamshala
           </h2>
           <p className="text-brand-gray dark:text-gray-400 text-base md:text-lg max-w-lg mx-auto">
-            Browse rooms across {HOME_AREAS.length} localities — from McLeod Ganj to Dharamkot
+            Browse rooms across {(customLocations || HOME_AREAS).filter(a => a.isActive !== false).length} localities — from McLeod Ganj to Dharamkot
           </p>
         </motion.div>
 
@@ -51,12 +51,22 @@ export default function CityGrid() {
           viewport={viewportOnce}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4"
         >
-          {HOME_AREAS.map((area) => {
-            const imageUrl = AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
-            const count = counts[area.name.toLowerCase().trim()] ?? 0;
+          {(() => {
+            let displayAreas = HOME_AREAS;
+            if (customLocations && customLocations.length > 0) {
+              displayAreas = customLocations.filter(a => a.isActive !== false).map(a => ({
+                name: a.name,
+                slug: a.slug,
+                isActive: a.isActive,
+                image: a.image
+              }));
+            }
+            return displayAreas.map((area: any) => {
+              const imageUrl = area.image ?? AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
+              const count = counts[area.name.toLowerCase().trim()] ?? 0;
 
-            return (
-              <motion.button
+              return (
+                <motion.button
                 key={area.slug}
                 type="button"
                 variants={scaleIn}
@@ -82,7 +92,8 @@ export default function CityGrid() {
                   <p className="text-white/60 text-xs">{CITY.name}</p>
                 </div>
               </motion.button>
-            );
+              );
+            });
           })}
         </motion.div>
       </div>

@@ -6,8 +6,14 @@ import StatsSection from '@/components/home/StatsSection';
 import WhyMeraRoom from '@/components/home/WhyMeraRoom';
 import CTABanner from '@/components/home/CTABanner';
 import AdBanner from '@/components/ui/AdBanner';
+import connectDB from '@/lib/mongodb';
+import Settings from '@/models/Settings';
 
-export default function HomePage() {
+export default async function HomePage() {
+  await connectDB();
+  const settingsDoc = await Settings.findOne({ key: 'custom_locations' }).lean();
+  const customLocations = settingsDoc?.value || null;
+
   return (
     <>
       <HeroSection />
@@ -17,7 +23,7 @@ export default function HomePage() {
           className="my-6"
         />
       </div>
-      <CityGrid />
+      <CityGrid customLocations={customLocations} />
       <FeaturedRooms />
       <HowItWorks />
       <StatsSection />
