@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Phone, User, Search, Home, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Lock, Phone, User, Search, Home, ArrowLeft, Mail } from 'lucide-react';
 import AuthBrandPanel from '@/components/auth/AuthBrandPanel';
 import { FormField } from '@/components/ui/FormField';
 import Loader from '@/components/ui/Loader';
@@ -18,6 +18,7 @@ type RegisterRole = 'user' | 'owner';
 
 interface RegisterFormData {
   name: string;
+  email: string;
   phone: string;
   password: string;
   confirmPassword: string;
@@ -54,6 +55,7 @@ function RegisterForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: data.name,
+          email: data.email,
           phone: data.phone,
           password: data.password,
           role,
@@ -192,6 +194,23 @@ function RegisterForm() {
               {...register('name', { required: 'Name is required' })}
               error={errors.name?.message}
             />
+            <FormField
+              label="Email Address"
+              type="email"
+              placeholder="rahul@example.com"
+              leftIcon={Mail}
+              {...register('email', { 
+                required: 'Email is required',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Enter a valid email address',
+                }
+              })}
+              error={errors.email?.message}
+            />
+            <p className="text-xs text-[#16A34A] -mt-2 mb-4">
+              Required for password recovery
+            </p>
             <FormField
               label="Phone Number"
               type="tel"
