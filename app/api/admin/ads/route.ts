@@ -48,12 +48,14 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
     const body = await request.json();
+    const slotNum = Number(body.slot);
 
     const ad = await Ad.findOneAndUpdate(
-      { slot: Number(body.slot) },
+      { $or: [{ slot: slotNum }, { slotId: slotNum }] },
       {
         $set: {
-          slotId: Number(body.slot),
+          slot: slotNum,
+          slotId: slotNum,
           businessName: body.businessName,
           phone: body.phone,
           startDate: new Date(body.startDate),
@@ -65,7 +67,7 @@ export async function POST(request: NextRequest) {
           isActive: body.isActive !== undefined ? !!body.isActive : true,
         },
       },
-      { upsert: true, new: true }
+      { upsert: true, new: true, runValidators: true }
     );
 
     return NextResponse.json({ success: true, data: ad });
