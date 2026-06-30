@@ -12,14 +12,8 @@ import { DHARAMSHALA_AREAS } from '@/constants';
 
 export default async function HomePage() {
   await connectDB();
-  const customLocationsSetting = await Settings.findOne({ key: 'custom_locations' }).lean();
-  let locations = [];
-
-  if (customLocationsSetting && customLocationsSetting.value) {
-    locations = customLocationsSetting.value;
-  } else {
-    locations = DHARAMSHALA_AREAS.map((a) => ({ ...a, isActive: true }));
-  }
+  const settingsDoc = await Settings.findOne({ key: 'custom_locations' }).lean();
+  const customLocations = settingsDoc?.value || null;
 
   return (
     <>
@@ -30,7 +24,7 @@ export default async function HomePage() {
           className="my-6"
         />
       </div>
-      <CityGrid locations={locations} />
+      <CityGrid customLocations={customLocations} />
       <FeaturedRooms />
       <HowItWorks />
       <StatsSection />

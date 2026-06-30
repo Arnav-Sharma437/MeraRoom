@@ -4,17 +4,10 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { CITY, AREA_IMAGES, DEFAULT_AREA_IMAGE } from '@/constants';
+import { CITY, AREA_IMAGES, DEFAULT_AREA_IMAGE, HOME_AREAS } from '@/constants';
 import { staggerContainer, scaleIn, fadeInUp, viewportOnce } from '@/lib/animations';
 
-interface AreaLocation {
-  name: string;
-  slug: string;
-  image?: string;
-  isActive?: boolean;
-}
-
-export default function CityGrid({ locations = [] }: { locations?: AreaLocation[] }) {
+export default function CityGrid({ customLocations }: { customLocations?: any[] }) {
   const router = useRouter();
   const [counts, setCounts] = useState<Record<string, number>>({});
 
@@ -33,8 +26,6 @@ export default function CityGrid({ locations = [] }: { locations?: AreaLocation[
     loadCounts();
   }, []);
 
-  const activeLocations = locations.filter((loc) => loc.isActive !== false);
-
   return (
     <section className="bg-white dark:bg-surface-dark py-16 md:py-20">
       <div className="container mx-auto px-4">
@@ -49,7 +40,7 @@ export default function CityGrid({ locations = [] }: { locations?: AreaLocation[
             Explore by Area in Dharamshala
           </h2>
           <p className="text-brand-gray dark:text-gray-400 text-base md:text-lg max-w-lg mx-auto">
-            Browse rooms across {activeLocations.length} localities — from McLeod Ganj to Dharamkot
+            Browse rooms across {(customLocations || HOME_AREAS).filter(a => a.isActive !== false).length} localities — from McLeod Ganj to Dharamkot
           </p>
         </motion.div>
 
@@ -60,12 +51,22 @@ export default function CityGrid({ locations = [] }: { locations?: AreaLocation[
           viewport={viewportOnce}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4"
         >
-          {activeLocations.map((area) => {
-            const imageUrl = area.image || AREA_IMAGES[area.slug] || DEFAULT_AREA_IMAGE;
-            const count = counts[area.name.toLowerCase().trim()] ?? 0;
+          {(() => {
+            let displayAreas: any[] = HOME_AREAS;
+            if (customLocations && customLocations.length > 0) {
+              displayAreas = customLocations.filter(a => a.isActive !== false).map(a => ({
+                name: a.name,
+                slug: a.slug,
+                isActive: a.isActive,
+                image: a.image
+              }));
+            }
+            return displayAreas.map((area: any) => {
+              const imageUrl = area.image ?? AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
+              const count = counts[area.name.toLowerCase().trim()] ?? 0;
 
-            return (
-              <motion.button
+              return (
+                <motion.button
                 key={area.slug}
                 type="button"
                 variants={scaleIn}
@@ -91,8 +92,9 @@ export default function CityGrid({ locations = [] }: { locations?: AreaLocation[
                   <p className="text-white/60 text-xs">{CITY.name}</p>
                 </div>
               </motion.button>
-            );
-          })}
+              );
+            });
+          })()}
         </motion.div>
       </div>
     </section>

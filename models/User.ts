@@ -12,6 +12,8 @@ export interface IUser extends Document {
   avatar?: string;
   isVerified: boolean;
   savedRooms: mongoose.Types.ObjectId[];
+  resetToken?: string;
+  resetTokenExpiry?: Date;
   createdAt: Date;
 }
 
@@ -30,6 +32,8 @@ const UserSchema = new Schema<IUser>(
     avatar: { type: String },
     isVerified: { type: Boolean, default: false },
     savedRooms: [{ type: Schema.Types.ObjectId, ref: 'Room' }],
+    resetToken: { type: String },
+    resetTokenExpiry: { type: Date },
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: false }

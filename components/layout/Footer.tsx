@@ -152,9 +152,24 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-sm text-white/50">
-          <p>© {year} MeraRoom. All rights reserved.</p>
-          <p>Made in Dharamshala, Himachal Pradesh</p>
+        <div className="container mx-auto px-4 py-6 flex flex-col items-center justify-center gap-4 text-center text-sm text-white/50">
+          <nav className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-white/40">
+            <Link href="/privacy-policy" className="hover:text-[#D4AF37] transition-colors">
+              Privacy Policy
+            </Link>
+            <span aria-hidden="true">|</span>
+            <Link href="/terms-conditions" className="hover:text-[#D4AF37] transition-colors">
+              Terms &amp; Conditions
+            </Link>
+            <span aria-hidden="true">|</span>
+            <Link href="/refund-policy" className="hover:text-[#D4AF37] transition-colors">
+              Refund Policy
+            </Link>
+          </nav>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full md:text-left">
+            <p>© {year} MeraRoom. All rights reserved.</p>
+            <p>Made in Dharamshala, Himachal Pradesh</p>
+          </div>
         </div>
       </div>
     </footer>

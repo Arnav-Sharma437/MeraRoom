@@ -7,11 +7,11 @@ import { normalizePhone } from '@/lib/utils';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, phone, password, role, whatsappNumber } = body;
+    const { name, email, phone, password, role, whatsappNumber } = body;
 
-    if (!name || !phone || !password) {
+    if (!name || !email || !phone || !password) {
       return NextResponse.json(
-        { success: false, error: 'Name, phone and password are required' },
+        { success: false, error: 'Name, email, phone and password are required' },
         { status: 400 }
       );
     }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const user = await User.create({
       name,
       phone: normalizedPhone,
-      email: `${normalizedPhone}@meraroom.local`,
+      email: email.toLowerCase(),
       password: hashed,
       role: userRole,
       isVerified: false,
