@@ -21,6 +21,7 @@ import {
 import { cn, formatRent, normalizePhone } from '@/lib/utils';
 import type { RoomType, Furnishing, GenderPreference, IRoomAmenities, IRoomAllowedFor } from '@/models/Room';
 import Loader from '@/components/ui/Loader';
+import { useLocations } from '@/hooks/useLocations';
 
 const STEPS = ['Basic Info', 'Location', 'Amenities', 'Photos', 'Review'];
 
@@ -67,6 +68,7 @@ export default function PostRoomForm() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [photoItems, setPhotoItems] = useState<PhotoItem[]>([]);
+  const { locations } = useLocations();
 
   const inputCls =
     'w-full rounded-xl px-4 py-3 bg-gray-50 dark:bg-[#111A11] border border-gray-200 dark:border-[#1F2E1F] text-[#1A1A1A] dark:text-white focus:border-[#16A34A] focus:ring-2 focus:ring-[#16A34A]/20 focus:outline-none';
@@ -379,7 +381,7 @@ export default function PostRoomForm() {
                 className={cn(inputCls, 'mt-1')}
               >
                 <option value="">Select area</option>
-                {DHARAMSHALA_AREAS.map((a) => (
+                {locations.filter((a) => a.isActive !== false).map((a) => (
                   <option key={a.slug} value={a.name}>
                     {a.name}
                   </option>

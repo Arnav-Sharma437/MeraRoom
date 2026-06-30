@@ -26,6 +26,7 @@ import { cn, formatRent, normalizePhone } from '@/lib/utils';
 import Loader from '@/components/ui/Loader';
 import { DHARAMSHALA_AREAS, POST_ROOM_TYPES, POST_FURNISHING, POST_AMENITIES, GENDER_OPTIONS, DEFAULT_AMENITIES } from '@/constants';
 import type { RoomType, Furnishing, GenderPreference, IRoomAmenities, IRoomAllowedFor } from '@/models/Room';
+import { useLocations } from '@/hooks/useLocations';
 
 interface Room {
   _id: string;
@@ -62,6 +63,8 @@ export default function AdminRoomsPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [loading, setLoading] = useState(true);
+  
+  const { locations } = useLocations();
   
   // Search & Filter
   const [search, setSearch] = useState('');
@@ -232,7 +235,7 @@ export default function AdminRoomsPage() {
     setFormDesc('');
     setFormRent('');
     setFormDeposit('');
-    setFormArea(DHARAMSHALA_AREAS[0].name);
+    setFormArea(locations.length > 0 ? locations[0].name : DHARAMSHALA_AREAS[0].name);
     setFormAddress('');
     setFormPhone('');
     setFormType('single');
@@ -834,7 +837,7 @@ export default function AdminRoomsPage() {
                       onChange={(e) => setFormArea(e.target.value)}
                       className="w-full rounded-xl px-4 py-2.5 bg-gray-50 dark:bg-[#0A0F0A] border border-gray-200 dark:border-[#1F2E1F] text-sm text-[#1A1A1A] dark:text-white focus:border-[#16A34A] focus:outline-none"
                     >
-                      {DHARAMSHALA_AREAS.map((a) => (
+                      {locations.map((a) => (
                         <option key={a.slug} value={a.name}>
                           {a.name}
                         </option>
