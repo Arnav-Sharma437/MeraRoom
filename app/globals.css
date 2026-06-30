@@ -148,3 +148,14 @@ button, a {
   );
 }
 
+@keyframes announcement-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-announcement-shimmer {
+  animation: announcement-shimmer 3s infinite;
+}
+
+

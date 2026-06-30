@@ -5,6 +5,7 @@ import Navbar from '@/components/layout/Navbar';
 import MobileTopBar from '@/components/layout/MobileTopBar';
 import BottomNavBar from '@/components/layout/BottomNavBar';
 import Footer from '@/components/layout/Footer';
+import AnnouncementBar from '@/components/layout/AnnouncementBar';
 
 export default function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,6 +21,7 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <AnnouncementBar />
       <div className="hidden md:block">
         <Navbar />
       </div>
