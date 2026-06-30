@@ -4,10 +4,17 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { HOME_AREAS, CITY, AREA_IMAGES, DEFAULT_AREA_IMAGE } from '@/constants';
+import { CITY, AREA_IMAGES, DEFAULT_AREA_IMAGE } from '@/constants';
 import { staggerContainer, scaleIn, fadeInUp, viewportOnce } from '@/lib/animations';
 
-export default function CityGrid() {
+interface AreaLocation {
+  name: string;
+  slug: string;
+  image?: string;
+  isActive?: boolean;
+}
+
+export default function CityGrid({ locations = [] }: { locations?: AreaLocation[] }) {
   const router = useRouter();
   const [counts, setCounts] = useState<Record<string, number>>({});
 
@@ -26,6 +33,8 @@ export default function CityGrid() {
     loadCounts();
   }, []);
 
+  const activeLocations = locations.filter((loc) => loc.isActive !== false);
+
   return (
     <section className="bg-white dark:bg-surface-dark py-16 md:py-20">
       <div className="container mx-auto px-4">
@@ -40,7 +49,7 @@ export default function CityGrid() {
             Explore by Area in Dharamshala
           </h2>
           <p className="text-brand-gray dark:text-gray-400 text-base md:text-lg max-w-lg mx-auto">
-            Browse rooms across {HOME_AREAS.length} localities — from McLeod Ganj to Dharamkot
+            Browse rooms across {activeLocations.length} localities — from McLeod Ganj to Dharamkot
           </p>
         </motion.div>
 
@@ -51,8 +60,8 @@ export default function CityGrid() {
           viewport={viewportOnce}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4"
         >
-          {HOME_AREAS.map((area) => {
-            const imageUrl = AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
+          {activeLocations.map((area) => {
+            const imageUrl = area.image || AREA_IMAGES[area.slug] || DEFAULT_AREA_IMAGE;
             const count = counts[area.name.toLowerCase().trim()] ?? 0;
 
             return (
