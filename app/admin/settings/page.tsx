@@ -163,7 +163,7 @@ export default function SettingsPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Arnav WhatsApp</label>
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Arnav Sharma WhatsApp</label>
                 <input
                   type="text"
                   required
@@ -174,7 +174,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Varun WhatsApp</label>
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Varun Choudhary WhatsApp</label>
                 <input
                   type="text"
                   required

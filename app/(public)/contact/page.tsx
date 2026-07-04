@@ -147,15 +147,15 @@ export default function ContactPage() {
               </h2>
 
               <ContactCard
-                name="Arnav"
-                role="Co-Founder"
+                name="Arnav Sharma"
+                role="Founder"
                 phone={CONTACTS[0].phone}
                 href={CONTACTS[0].href}
                 initial="A"
               />
               <ContactCard
-                name="Varun"
-                role="Co-Founder"
+                name="Varun Choudhary"
+                role="Founder"
                 phone={CONTACTS[1].phone}
                 href={CONTACTS[1].href}
                 initial="V"

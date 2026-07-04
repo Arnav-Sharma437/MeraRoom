@@ -88,7 +88,7 @@ export default function Footer() {
                   <Phone size={14} className="text-[#D4AF37]" />
                 </div>
                 <div>
-                  <p className="text-white/40 text-xs mb-0.5">Arnav</p>
+                  <p className="text-white/40 text-xs mb-0.5">Arnav Sharma</p>
                   <a href="tel:+917876650437" className="text-white/70 text-sm hover:text-[#D4AF37] transition-colors">
                     +91 7876650437
                   </a>
@@ -101,7 +101,7 @@ export default function Footer() {
                   <Phone size={14} className="text-[#D4AF37]" />
                 </div>
                 <div>
-                  <p className="text-white/40 text-xs mb-0.5">Varun</p>
+                  <p className="text-white/40 text-xs mb-0.5">Varun Choudhary</p>
                   <a href="tel:+919418100803" className="text-white/70 text-sm hover:text-[#D4AF37] transition-colors">
                     +91 9418100803
                   </a>

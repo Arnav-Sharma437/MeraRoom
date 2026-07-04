@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const LAST_UPDATED = 'May 21, 2026';
-const arnav = CONTACTS.find((c) => c.name === 'Arnav') ?? CONTACTS[0];
+const arnav = CONTACTS.find((c) => c.name === 'Arnav Sharma') ?? CONTACTS[0];
 
 export default function PrivacyPolicyPage() {
   return (
