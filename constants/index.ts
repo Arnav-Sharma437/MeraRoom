@@ -33,22 +33,16 @@ export const DHARAMSHALA_AREAS = [
 
 export const CONTACTS = [
   {
-    name: 'Arnav',
+    name: 'Arnav Sharma',
     phone: '+91 7876650437',
     whatsapp: '917876650437',
     href: 'https://wa.me/917876650437',
   },
   {
-    name: 'Varun',
+    name: 'Varun Choudhary',
     phone: '+91 9418100803',
     whatsapp: '919418100803',
     href: 'https://wa.me/919418100803',
-  },
-  {
-    name: 'Shubham',
-    phone: '+91 8091063803',
-    whatsapp: '918091063803',
-    href: 'https://wa.me/918091063803',
   },
 ] as const;
 
@@ -422,22 +416,28 @@ export const PAGINATION = {
 
 export const TEAM = [
   {
-    name: 'Arnav',
-    role: 'Co-Founder & Developer',
+    name: 'Arnav Sharma',
+    role: 'Founder',
     phone: '+91 7876650437',
     href: 'https://wa.me/917876650437',
   },
   {
-    name: 'Varun',
-    role: 'Co-Founder & Operations',
+    name: 'Varun Choudhary',
+    role: 'Founder',
     phone: '+91 9418100803',
     href: 'https://wa.me/919418100803',
   },
   {
     name: 'Shubham Siyal',
-    role: 'Marketing & Growth',
-    phone: '+91 8091063803',
-    href: 'https://wa.me/918091063803',
+    role: 'Marketing & Social Media',
+  },
+  {
+    name: 'Komal Rana',
+    role: 'Marketing & Social Media',
+  },
+  {
+    name: 'Rakesh Kumar',
+    role: 'Angel Investor',
   },
 ] as const;
 

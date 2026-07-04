@@ -466,7 +466,7 @@ export default function AdminTeamPage() {
                     required
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    placeholder="Co-Founder & Developer"
+                    placeholder="Founder & Developer"
                     className="w-full rounded-xl px-3 py-2 bg-gray-50 dark:bg-[#0A0F0A] border border-gray-200 dark:border-[#1F2E1F] text-xs text-[#1A1A1A] dark:text-white focus:outline-none"
                   />
                 </div>

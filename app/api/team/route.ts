@@ -14,30 +14,20 @@ export async function GET(request: NextRequest) {
     const query = isAdmin && all ? {} : { isActive: true };
     let members = await TeamMember.find(query).sort({ order: 1 }).lean();
     
-    // Seed initial members if the collection is empty
+    // Seed/migrate team members if empty or containing old team data
+    const oldMemberExists = await TeamMember.findOne({ name: 'Arnav' });
     const totalCount = await TeamMember.countDocuments();
-    if (totalCount === 0) {
+    if (totalCount === 0 || oldMemberExists) {
+      await TeamMember.deleteMany({});
       const initialSeed = [
-        { name: 'Arnav', role: 'Co-Founder & Developer', category: 'core', order: 1, isActive: true },
-        { name: 'Varun', role: 'Co-Founder & Operations', category: 'core', order: 2, isActive: true },
-        { name: 'Shubham', role: 'Marketing & Growth', category: 'core', order: 3, isActive: true },
-        { name: 'Rakesh Kumar', role: 'Angel Investor', category: 'investor', order: 4, isActive: true }
+        { name: 'Arnav Sharma', role: 'Founder', category: 'core', order: 1, isActive: true },
+        { name: 'Varun Choudhary', role: 'Founder', category: 'core', order: 2, isActive: true },
+        { name: 'Shubham Siyal', role: 'Marketing & Social Media', category: 'core', order: 3, isActive: true },
+        { name: 'Komal Rana', role: 'Marketing & Social Media', category: 'core', order: 4, isActive: true },
+        { name: 'Rakesh Kumar', role: 'Angel Investor', category: 'investor', order: 5, isActive: true }
       ];
       await TeamMember.insertMany(initialSeed);
       members = await TeamMember.find(query).sort({ order: 1 }).lean();
-    } else {
-      // If team members are there but Rakesh Kumar is missing, add Rakesh Kumar
-      const rakesh = await TeamMember.findOne({ name: 'Rakesh Kumar' });
-      if (!rakesh) {
-        await TeamMember.create({
-          name: 'Rakesh Kumar',
-          role: 'Angel Investor',
-          category: 'investor',
-          order: 4,
-          isActive: true
-        });
-        members = await TeamMember.find(query).sort({ order: 1 }).lean();
-      }
     }
     
     return NextResponse.json({ success: true, data: members });

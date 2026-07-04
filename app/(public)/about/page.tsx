@@ -20,38 +20,67 @@ const diagonalPattern = {
 
 const fallbackCoreTeam = [
   {
-    _id: '1',
-    name: 'Arnav',
-    role: 'Co-Founder & Developer',
-    category: 'core',
-    image: null,
+    name: 'Arnav Sharma',
+    role: 'Founder',
+    category: 'core' as const,
+    image: null as string | null,
   },
   {
-    _id: '2', 
-    name: 'Varun',
-    role: 'Co-Founder & Operations',
-    category: 'core',
-    image: null,
+    name: 'Varun Choudhary',
+    role: 'Founder',
+    category: 'core' as const,
+    image: null as string | null,
+  }
+];
+
+const fallbackMarketingTeam = [
+  {
+    name: 'Shubham Siyal',
+    role: 'Marketing & Social Media',
+    category: 'core' as const,
+    image: null as string | null,
   },
   {
-    _id: '3',
-    name: 'Shubham',
-    role: 'Marketing & Growth',
-    category: 'core',
-    image: null,
+    name: 'Komal Rana',
+    role: 'Marketing & Social Media',
+    category: 'core' as const,
+    image: null as string | null,
   }
 ];
 
 const fallbackInvestor = {
-  _id: '4',
   name: 'Rakesh Kumar',
   role: 'Angel Investor',
-  category: 'investor',
-  image: null,
+  category: 'investor' as const,
+  image: null as string | null,
 };
 
 export default function AboutPage() {
-  const team = [...fallbackCoreTeam, fallbackInvestor];
+  const [members, setMembers] = useState<any[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/team')
+      .then((res) => res.json())
+      .then((json) => {
+        if (active && json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setMembers(json.data);
+        }
+      })
+      .catch((err) => console.error('Error loading team members:', err));
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const dbInvestors = members.filter((m) => m.category === 'investor' || m.role.toLowerCase().includes('investor'));
+  const dbFounders = members.filter((m) => m.category !== 'investor' && m.role.toLowerCase().includes('founder'));
+  const dbMarketing = members.filter((m) => m.category !== 'investor' && m.role.toLowerCase().includes('marketing'));
+
+  const founders = dbFounders.length > 0 ? dbFounders : fallbackCoreTeam;
+  const marketing = dbMarketing.length > 0 ? dbMarketing : fallbackMarketingTeam;
+  const investors = dbInvestors.length > 0 ? dbInvestors : [fallbackInvestor];
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -138,7 +167,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
+      {/* Team Section */}
       <section className="bg-[#F9F6EF] dark:bg-[#0D150D] py-20 px-6">
         <motion.div
           variants={staggerContainer(0.1)}
@@ -147,111 +176,161 @@ export default function AboutPage() {
           viewport={viewportOnce}
           className="container mx-auto max-w-4xl"
         >
-          <motion.h2
-            variants={fadeInUp}
-            className="font-display text-3xl sm:text-4xl text-center text-[#0F2E1E] dark:text-white mb-12"
-          >
-            The Team Behind MeraRoom
-          </motion.h2>
+          {/* Supported By (Angel Investors) */}
+          <div className="mb-20">
+            <motion.h2
+              variants={fadeInUp}
+              className="font-display text-3xl sm:text-4xl text-center text-[#0F2E1E] dark:text-white mb-4"
+            >
+              Supported By
+            </motion.h2>
+            <motion.p
+              variants={fadeInUp}
+              className="text-gray-500 dark:text-gray-400 text-center text-sm mb-12 max-w-md mx-auto"
+            >
+              Proudly backed by forward-thinking individuals who believe in our mission.
+            </motion.p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {team.filter((member) => member.category === 'core' || !member.category).map((member) => {
-              const initial = member.name.charAt(0).toUpperCase();
-              return (
-                <motion.div
-                  key={member._id || member.name}
-                  variants={fadeInUp}
-                  className="bg-white dark:bg-[#111A11] rounded-2xl p-8 text-center border border-gray-100 dark:border-[#1F2E1F] hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                >
-                  {/* Avatar */}
-                  <div className="w-28 h-28 md:w-32 md:h-32 mx-auto mb-4 rounded-full bg-[#0F2E1E] flex items-center justify-center text-[#D4AF37] text-4xl md:text-5xl font-bold font-serif relative overflow-hidden shrink-0">
-                    {member.image ? (
-                      <Image
-                        src={member.image}
-                        alt={member.name}
-                        width={128}
-                        height={128}
-                        className="rounded-full object-cover w-28 h-28 md:w-32 md:h-32"
-                        unoptimized
-                      />
-                    ) : (
-                      initial
-                    )}
-                  </div>
-                  
-                  {/* Name */}
-                  <h3 className="font-semibold text-lg text-[#0F2E1E] dark:text-white mb-1">
-                    {member.name}
-                  </h3>
-                  
-                  {/* Role */}
-                  <p className="text-[#16A34A] text-sm font-medium">
-                    {member.role}
-                  </p>
-                </motion.div>
-              );
-            })}
+            <div className="flex flex-wrap justify-center gap-6 max-w-xl mx-auto">
+              {investors.map((member: any) => {
+                const initial = member.name.charAt(0).toUpperCase();
+                return (
+                  <motion.div
+                    key={member._id || member.name}
+                    variants={fadeInUp}
+                    className="bg-white dark:bg-[#111A11] rounded-3xl p-8 text-center border-2 border-[#D4AF37] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group min-w-[260px] flex-1 sm:flex-initial"
+                  >
+                    {/* Premium Accent line */}
+                    <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#D4AF37] to-[#F5E6C4]" />
+                    
+                    {/* Avatar with Gold border */}
+                    <div className="w-24 h-24 mx-auto mb-3 rounded-full bg-[#0F2E1E] border-4 border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-4xl font-bold font-serif relative overflow-hidden shrink-0">
+                      {member.image ? (
+                        <Image
+                          src={member.image}
+                          alt={member.name}
+                          width={96}
+                          height={96}
+                          className="rounded-full object-cover w-24 h-24"
+                          unoptimized
+                        />
+                      ) : (
+                        initial
+                      )}
+                    </div>
+                    
+                    {/* Name */}
+                    <h3 className="font-semibold text-xl text-[#0F2E1E] dark:text-white mb-1">
+                      {member.name}
+                    </h3>
+                    
+                    {/* Role/Badge */}
+                    <span className="inline-block bg-[#D4AF37]/10 dark:bg-[#D4AF37]/20 border border-[#D4AF37]/35 text-[#D4AF37] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-1.5">
+                      {member.role}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Investors Category Section */}
-          {team.some((member) => member.category === 'investor') && (
-            <div className="mt-20">
-              <motion.h2
-                variants={fadeInUp}
-                className="font-display text-3xl sm:text-4xl text-center text-[#0F2E1E] dark:text-white mb-4"
-              >
-                Supported By
-              </motion.h2>
-              <motion.p
-                variants={fadeInUp}
-                className="text-gray-500 dark:text-gray-400 text-center text-sm mb-12 max-w-md mx-auto"
-              >
-                Proudly backed by forward-thinking individuals who believe in our mission.
-              </motion.p>
+          {/* Core Founders */}
+          <div className="mb-20">
+            <motion.h2
+              variants={fadeInUp}
+              className="font-display text-3xl sm:text-4xl text-center text-[#0F2E1E] dark:text-white mb-12"
+            >
+              The Team
+            </motion.h2>
 
-              <div className="flex flex-wrap justify-center gap-6 max-w-xl mx-auto">
-                {team.filter((member) => member.category === 'investor').map((member) => {
-                  const initial = member.name.charAt(0).toUpperCase();
-                  return (
-                    <motion.div
-                      key={member._id || member.name}
-                      variants={fadeInUp}
-                      className="bg-white dark:bg-[#111A11] rounded-3xl p-8 text-center border-2 border-[#D4AF37] hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group min-w-[260px] flex-1 sm:flex-initial"
-                    >
-                      {/* Premium Accent line */}
-                      <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#D4AF37] to-[#F5E6C4]" />
-                      
-                      {/* Avatar with Gold border */}
-                      <div className="w-24 h-24 mx-auto mb-3 rounded-full bg-[#0F2E1E] border-4 border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-4xl font-bold font-serif relative overflow-hidden shrink-0">
-                        {member.image ? (
-                          <Image
-                            src={member.image}
-                            alt={member.name}
-                            width={96}
-                            height={96}
-                            className="rounded-full object-cover w-24 h-24"
-                            unoptimized
-                          />
-                        ) : (
-                          initial
-                        )}
-                      </div>
-                      
-                      {/* Name */}
-                      <h3 className="font-semibold text-xl text-[#0F2E1E] dark:text-white mb-1">
-                        {member.name}
-                      </h3>
-                      
-                      {/* Role/Badge */}
-                      <span className="inline-block bg-[#D4AF37]/10 dark:bg-[#D4AF37]/20 border border-[#D4AF37]/35 text-[#D4AF37] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mt-1.5">
-                        {member.role}
-                      </span>
-                    </motion.div>
-                  );
-                })}
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {founders.map((member: any) => {
+                const initial = member.name.charAt(0).toUpperCase();
+                return (
+                  <motion.div
+                    key={member._id || member.name}
+                    variants={fadeInUp}
+                    className="bg-white dark:bg-[#111A11] rounded-2xl p-8 text-center border border-gray-100 dark:border-[#1F2E1F] hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    {/* Avatar */}
+                    <div className="w-28 h-28 md:w-32 md:h-32 mx-auto mb-4 rounded-full bg-[#0F2E1E] flex items-center justify-center text-[#D4AF37] text-4xl md:text-5xl font-bold font-serif relative overflow-hidden shrink-0">
+                      {member.image ? (
+                        <Image
+                          src={member.image}
+                          alt={member.name}
+                          width={128}
+                          height={128}
+                          className="rounded-full object-cover w-28 h-28 md:w-32 md:h-32"
+                          unoptimized
+                        />
+                      ) : (
+                        initial
+                      )}
+                    </div>
+                    
+                    {/* Name */}
+                    <h3 className="font-semibold text-lg text-[#0F2E1E] dark:text-white mb-1">
+                      {member.name}
+                    </h3>
+                    
+                    {/* Role */}
+                    <p className="text-[#16A34A] text-sm font-medium">
+                      {member.role}
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
-          )}
+          </div>
+
+          {/* Marketing Team */}
+          <div>
+            <motion.h2
+              variants={fadeInUp}
+              className="font-display text-3xl sm:text-4xl text-center text-[#0F2E1E] dark:text-white mb-12"
+            >
+              Marketing Team
+            </motion.h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {marketing.map((member: any) => {
+                const initial = member.name.charAt(0).toUpperCase();
+                return (
+                  <motion.div
+                    key={member._id || member.name}
+                    variants={fadeInUp}
+                    className="bg-white dark:bg-[#111A11] rounded-2xl p-8 text-center border border-gray-100 dark:border-[#1F2E1F] hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    {/* Avatar */}
+                    <div className="w-28 h-28 md:w-32 md:h-32 mx-auto mb-4 rounded-full bg-[#0F2E1E] flex items-center justify-center text-[#D4AF37] text-4xl md:text-5xl font-bold font-serif relative overflow-hidden shrink-0">
+                      {member.image ? (
+                        <Image
+                          src={member.image}
+                          alt={member.name}
+                          width={128}
+                          height={128}
+                          className="rounded-full object-cover w-28 h-28 md:w-32 md:h-32"
+                          unoptimized
+                        />
+                      ) : (
+                        initial
+                      )}
+                    </div>
+                    
+                    {/* Name */}
+                    <h3 className="font-semibold text-lg text-[#0F2E1E] dark:text-white mb-1">
+                      {member.name}
+                    </h3>
+                    
+                    {/* Role */}
+                    <p className="text-[#16A34A] text-sm font-medium">
+                      {member.role}
+                    </p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
         </motion.div>
       </section>
 
