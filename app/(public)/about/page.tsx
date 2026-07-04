@@ -26,7 +26,7 @@ const fallbackCoreTeam = [
     image: null as string | null,
   },
   {
-    name: 'Varun Choudhary',
+    name: 'Varun',
     role: 'Founder',
     category: 'core' as const,
     image: null as string | null,
@@ -240,7 +240,7 @@ export default function AboutPage() {
               variants={fadeInUp}
               className="font-display text-3xl sm:text-4xl text-center text-[#0F2E1E] dark:text-white mb-12"
             >
-              The Team
+              The Minds Behind MeraRoom
             </motion.h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
