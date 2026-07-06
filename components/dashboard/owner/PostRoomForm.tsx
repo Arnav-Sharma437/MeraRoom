@@ -70,6 +70,34 @@ export default function PostRoomForm() {
   const [photoItems, setPhotoItems] = useState<PhotoItem[]>([]);
   const { locations } = useLocations();
 
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customArea, setCustomArea] = useState('');
+
+  const handleAreaSelect = (value: string) => {
+    if (value === 'custom') {
+      setShowCustomInput(true);
+      update({ area: customArea });
+    } else {
+      setShowCustomInput(false);
+      update({ area: value });
+    }
+  };
+
+  const handleCustomAreaChange = (value: string) => {
+    setCustomArea(value);
+    update({ area: value });
+  };
+
+  useEffect(() => {
+    if (form.area && locations.length > 0) {
+      const isPredefined = locations.some((a) => a.name === form.area);
+      if (!isPredefined) {
+        setShowCustomInput(true);
+        setCustomArea(form.area);
+      }
+    }
+  }, [locations, form.area]);
+
   const inputCls =
     'w-full rounded-xl px-4 py-3 bg-gray-50 dark:bg-[#111A11] border border-gray-200 dark:border-[#1F2E1F] text-[#1A1A1A] dark:text-white focus:border-[#16A34A] focus:ring-2 focus:ring-[#16A34A]/20 focus:outline-none';
 
@@ -108,7 +136,11 @@ export default function PostRoomForm() {
       }
     }
     if (step === 1) {
-      if (!form.area) e.area = 'Area is required';
+      if (!form.area) {
+        e.area = 'Area is required';
+      } else if (showCustomInput && form.area.trim().length < 2) {
+        e.area = 'Area name must be at least 2 characters';
+      }
       if (!form.address.trim()) e.address = 'Address is required';
       
       const cleanWa = form.whatsappNumber.trim().replace(/\D/g, '');
@@ -376,17 +408,32 @@ export default function PostRoomForm() {
             <div>
               <label className="text-sm font-medium">Area</label>
               <select
-                value={form.area}
-                onChange={(e) => update({ area: e.target.value })}
+                value={showCustomInput ? 'custom' : (locations.some((a) => a.name === form.area) ? form.area : '')}
+                onChange={(e) => handleAreaSelect(e.target.value)}
                 className={cn(inputCls, 'mt-1')}
               >
-                <option value="">Select area</option>
+                <option value="">Select from list</option>
                 {locations.filter((a) => a.isActive !== false).map((a) => (
                   <option key={a.slug} value={a.name}>
                     {a.name}
                   </option>
                 ))}
+                <option value="custom">+ Type custom location</option>
               </select>
+              
+              {showCustomInput && (
+                <input
+                  type="text"
+                  placeholder="Type your area name..."
+                  value={customArea}
+                  onChange={(e) => handleCustomAreaChange(e.target.value)}
+                  className={cn(inputCls, 'mt-2')}
+                />
+              )}
+              
+              <p className="text-xs text-gray-400 mt-1">
+                {"Can't find your area? Select \"+ Type custom location\""}
+              </p>
               {errors.area && <p className="text-red-500 text-xs">{errors.area}</p>}
             </div>
             <div>

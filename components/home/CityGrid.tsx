@@ -11,6 +11,17 @@ export default function CityGrid({ customLocations }: { customLocations?: any[] 
   const router = useRouter();
   const [counts, setCounts] = useState<Record<string, number>>({});
 
+  const displayAreas = customLocations && customLocations.length > 0
+    ? customLocations.filter((a: any) => a.isActive !== false).map((a: any) => ({
+        name: a.name,
+        slug: a.slug,
+        isActive: a.isActive,
+        image: a.image
+      }))
+    : HOME_AREAS;
+
+  const areaNames = displayAreas.map((a: any) => a.name);
+
   useEffect(() => {
     async function loadCounts() {
       try {
@@ -26,6 +37,13 @@ export default function CityGrid({ customLocations }: { customLocations?: any[] 
     loadCounts();
   }, []);
 
+  useEffect(() => {
+    if (Object.keys(counts).length > 0) {
+      console.log('Area counts:', counts);
+      console.log('Area names in grid:', areaNames);
+    }
+  }, [counts, areaNames]);
+
   return (
     <section className="bg-white dark:bg-surface-dark py-16 md:py-20">
       <div className="container mx-auto px-4">
@@ -40,7 +58,7 @@ export default function CityGrid({ customLocations }: { customLocations?: any[] 
             Explore by Area in Dharamshala
           </h2>
           <p className="text-brand-gray dark:text-gray-400 text-base md:text-lg max-w-lg mx-auto">
-            Browse rooms across {(customLocations || HOME_AREAS).filter(a => a.isActive !== false).length} localities — from McLeod Ganj to Dharamkot
+            Browse rooms across {displayAreas.filter((a: any) => a.isActive !== false).length} localities — from McLeod Ganj to Dharamkot
           </p>
         </motion.div>
 
@@ -51,19 +69,9 @@ export default function CityGrid({ customLocations }: { customLocations?: any[] 
           viewport={viewportOnce}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4"
         >
-          {(() => {
-            let displayAreas: any[] = HOME_AREAS;
-            if (customLocations && customLocations.length > 0) {
-              displayAreas = customLocations.filter(a => a.isActive !== false).map(a => ({
-                name: a.name,
-                slug: a.slug,
-                isActive: a.isActive,
-                image: a.image
-              }));
-            }
-            return displayAreas.map((area: any) => {
-              const imageUrl = area.image ?? AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
-              const count = counts[area.name.toLowerCase().trim()] ?? 0;
+          {displayAreas.map((area: any) => {
+            const imageUrl = area.image ?? AREA_IMAGES[area.slug] ?? DEFAULT_AREA_IMAGE;
+            const count = counts[area.name] ?? 0;
 
               return (
                 <motion.button
@@ -93,8 +101,7 @@ export default function CityGrid({ customLocations }: { customLocations?: any[] 
                 </div>
               </motion.button>
               );
-            });
-          })()}
+            })}
         </motion.div>
       </div>
     </section>

@@ -4,28 +4,37 @@ import Room from '@/models/Room';
 
 export async function GET() {
   try {
-    await connectDB();
+    await connectDB()
     
-    // Aggregation to find approved room counts grouped by area name
-    const areaCounts = await Room.aggregate([
-      { $match: { status: 'approved' } },
-      { $group: { _id: '$area', count: { $sum: 1 } } }
-    ]);
-    
-    // Convert to a lowercase key map for easier lookup
-    const countsMap: Record<string, number> = {};
-    areaCounts.forEach((item) => {
-      if (item._id) {
-        countsMap[item._id.toLowerCase().trim()] = item.count;
+    const counts = await Room.aggregate([
+      { 
+        $match: { status: 'approved' } 
+      },
+      { 
+        $group: { 
+          _id: '$area', 
+          count: { $sum: 1 } 
+        } 
       }
-    });
-
-    return NextResponse.json({ success: true, data: countsMap });
+    ])
+    
+    // Convert to object: { "McLeod Ganj": 3 }
+    const countMap: Record<string, number> = {}
+    counts.forEach((item: any) => {
+      if (item._id) {
+        countMap[item._id] = item.count
+      }
+    })
+    
+    return NextResponse.json({
+      success: true,
+      data: countMap
+    })
+    
   } catch (error) {
-    console.error('Failed to get area room counts:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch counts' }, 
+      { success: false, error: String(error) },
       { status: 500 }
-    );
+    )
   }
 }
