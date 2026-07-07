@@ -126,12 +126,13 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
   const furnishLabel = FURNISHING_TYPES.find((f) => f.value === room.furnishing)?.label ?? room.furnishing;
   const genderLabel = GENDER_OPTIONS.find((g) => g.value === room.gender)?.label ?? 'Any';
   
-  const ownerWhatsapp = owner?.whatsappNumber || owner?.phone || room.whatsappNumber || '';
-  const whatsappMsg = `Hi, I found your room listing '${room.title}' on MeraRoom. Is it still available?`;
-  const whatsappHref = getWhatsAppLink(ownerWhatsapp, whatsappMsg);
+  // Alternate between Arnav's and Varun's contact numbers based on room ID
+  const isEven = parseInt(room._id.toString().slice(-1), 16) % 2 === 0;
+  const adminPhone = isEven ? '+91 7876650437' : '+91 9418100803';
   
-  const ownerPhone = owner?.phone || room.whatsappNumber || '';
-  const phoneHref = `tel:${ownerPhone.replace(/\D/g, '')}`;
+  const whatsappMsg = `Hi, I found your room listing '${room.title}' on MeraRoom. Is it still available?`;
+  const whatsappHref = getWhatsAppLink(adminPhone, whatsappMsg);
+  const phoneHref = `tel:${adminPhone.replace(/\D/g, '')}`;
   
   const landmarks = NEARBY_LANDMARKS[room.area] ?? NEARBY_LANDMARKS.default;
   const mapQuery = room.latitude && room.longitude

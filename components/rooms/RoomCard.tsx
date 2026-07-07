@@ -51,8 +51,12 @@ export default function RoomCard({
   const roomTypeLabel = ROOM_TYPES.find((t) => t.value === room.roomType)?.label ?? room.roomType;
   const chips = getAmenityChips(room.amenities, room.furnishing, view === 'list' ? 4 : 3);
   const imageUrl = room.images?.[0];
+  // Alternate between Arnav's and Varun's contact numbers based on room ID
+  const isEven = parseInt(room._id.toString().slice(-1), 16) % 2 === 0;
+  const adminPhone = isEven ? '+91 7876650437' : '+91 9418100803';
+
   const whatsappHref = getWhatsAppLink(
-    room.whatsappNumber,
+    adminPhone,
     `Hi, I saw your room "${room.title}" on MeraRoom. Is it still available?`
   );
 
