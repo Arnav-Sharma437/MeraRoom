@@ -120,7 +120,7 @@ export default function AdminRoomsPage() {
   const [formFurnishing, setFormFurnishing] = useState<Furnishing>('furnished');
   const [formGender, setFormGender] = useState<GenderPreference>('any');
   const [formAmenities, setFormAmenities] = useState<IRoomAmenities>({
-    wifi: false, ac: false, parking: false, attachedBath: false, kitchen: false,
+    wifi: false, ac: false, parking: false, parkingTwoWheeler: false, parkingFourWheeler: false, attachedBath: false, kitchen: false,
     laundry: false, tv: false, powerBackup: false, security: false, gym: false
   });
   const [formAllowedFor, setFormAllowedFor] = useState<IRoomAllowedFor>({
@@ -271,7 +271,7 @@ export default function AdminRoomsPage() {
     setFormFurnishing('furnished');
     setFormGender('any');
     setFormAmenities({
-      wifi: false, ac: false, parking: false, attachedBath: false, kitchen: false,
+      wifi: false, ac: false, parking: false, parkingTwoWheeler: false, parkingFourWheeler: false, attachedBath: false, kitchen: false,
       laundry: false, tv: false, powerBackup: false, security: false, gym: false
     });
     setFormAllowedFor({
@@ -363,7 +363,10 @@ export default function AdminRoomsPage() {
       roomType: formType,
       furnishing: formFurnishing,
       gender: formGender,
-      amenities: formAmenities,
+      amenities: {
+        ...formAmenities,
+        parking: formAmenities.parkingTwoWheeler || formAmenities.parkingFourWheeler,
+      },
       allowedFor: formAllowedFor,
       images: formImages,
       status: formStatus,

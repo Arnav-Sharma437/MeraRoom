@@ -16,6 +16,8 @@ export interface IRoomAmenities {
   wifi: boolean;
   ac: boolean;
   parking: boolean;
+  parkingTwoWheeler: boolean;
+  parkingFourWheeler: boolean;
   attachedBath: boolean;
   kitchen: boolean;
   laundry: boolean;
@@ -66,6 +68,8 @@ const AmenitiesSchema = new Schema<IRoomAmenities>(
     wifi: { type: Boolean, default: false },
     ac: { type: Boolean, default: false },
     parking: { type: Boolean, default: false },
+    parkingTwoWheeler: { type: Boolean, default: false },
+    parkingFourWheeler: { type: Boolean, default: false },
     attachedBath: { type: Boolean, default: false },
     kitchen: { type: Boolean, default: false },
     laundry: { type: Boolean, default: false },

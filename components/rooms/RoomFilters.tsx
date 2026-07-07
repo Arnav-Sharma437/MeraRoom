@@ -13,7 +13,8 @@ const AMENITY_OPTIONS = [
   { key: 'wifi' as const, label: 'WiFi', icon: 'Wifi' },
   { key: 'ac' as const, label: 'AC', icon: 'Wind' },
   { key: 'attachedBath' as const, label: 'Attached Bath', icon: 'Bath' },
-  { key: 'parking' as const, label: 'Parking', icon: 'Car' },
+  { key: 'parkingTwoWheeler' as const, label: '2-Wheeler Parking', icon: 'Bike' },
+  { key: 'parkingFourWheeler' as const, label: '4-Wheeler Parking', icon: 'Car' },
   { key: 'kitchen' as const, label: 'Kitchen', icon: 'ChefHat' },
   { key: 'powerBackup' as const, label: 'Power Backup', icon: 'Zap' },
 ];

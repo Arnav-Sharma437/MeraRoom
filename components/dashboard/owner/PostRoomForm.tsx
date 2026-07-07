@@ -189,7 +189,10 @@ export default function PostRoomForm() {
           whatsappNumber: normalizePhone(form.whatsappNumber),
           furnishing: form.furnishing,
           gender: form.gender,
-          amenities: form.amenities,
+          amenities: {
+            ...form.amenities,
+            parking: form.amenities.parkingTwoWheeler || form.amenities.parkingFourWheeler,
+          },
           allowedFor: form.allowedFor,
           images: imageUrls,
           status: 'pending',
