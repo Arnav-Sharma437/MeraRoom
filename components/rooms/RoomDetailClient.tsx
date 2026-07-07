@@ -151,10 +151,17 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
       {room.deposit > 0 && (
         <p className="hidden md:block text-sm text-gray-400 mt-1">+{formatRent(room.deposit)} deposit</p>
       )}
-      <span className="inline-flex items-center gap-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full px-3 py-1 text-sm mt-4 mb-4">
-        <CircleDot size={14} className="inline mr-1" />
-        Available Now
-      </span>
+      {room.isAvailable !== false ? (
+        <span className="inline-flex items-center gap-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full px-3 py-1 text-sm mt-4 mb-4">
+          <CircleDot size={14} className="inline mr-1" />
+          Available Now
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-full px-3 py-1 text-sm mt-4 mb-4">
+          <CircleDot size={14} className="inline mr-1 text-red-500" />
+          Sold Out
+        </span>
+      )}
       <div className="hidden md:flex items-center gap-3 mb-6 pb-6 border-b border-gray-100 dark:border-[#1F2E1F]">
         <div className="w-12 h-12 rounded-full bg-[#0F2E1E] text-[#D4AF37] flex items-center justify-center font-bold text-lg">
           {ownerName.charAt(0)}
@@ -234,8 +241,10 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                 <span className="text-xs bg-[#0F2E1E] text-white rounded-full px-3 py-1">{typeLabel}</span>
                 <span className="text-xs bg-[#F0FDF4] dark:bg-[#0F2E1E] text-[#16A34A] border border-[#D1FAE5] rounded-full px-3 py-1">{furnishLabel}</span>
                 <span className="text-xs bg-gray-100 dark:bg-[#1A2A1A] text-gray-600 dark:text-gray-300 rounded-full px-3 py-1">{genderLabel}</span>
-                {room.isAvailable && (
+                {room.isAvailable !== false ? (
                   <span className="text-xs bg-green-100 text-green-700 rounded-full px-3 py-1">Available</span>
+                ) : (
+                  <span className="text-xs bg-red-100 text-red-700 rounded-full px-3 py-1">Sold Out</span>
                 )}
               </div>
             </motion.section>

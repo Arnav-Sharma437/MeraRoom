@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { MoreVertical, Trash2, Eye, Home } from 'lucide-react';
+import { MoreVertical, Trash2, Eye, Home, Slash, CheckCircle } from 'lucide-react';
 import { CONTACTS } from '@/constants';
 import { formatRent } from '@/lib/utils';
 import { cn } from '@/lib/utils';
@@ -81,6 +81,29 @@ export default function OwnerListingsPage() {
     }
   };
 
+  const handleToggleAvailable = async (roomId: string, currentAvailable: boolean) => {
+    try {
+      const res = await fetch(`/api/rooms/${roomId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isAvailable: !currentAvailable }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        toast.success(currentAvailable ? 'Room marked as sold out' : 'Room marked as available');
+        setRooms((prev) =>
+          prev.map((r) => (r._id === roomId ? { ...r, isAvailable: !currentAvailable } : r))
+        );
+      } else {
+        toast.error(json.error ?? 'Update failed');
+      }
+    } catch {
+      toast.error('Update failed');
+    } finally {
+      setMenuOpen(null);
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -151,7 +174,14 @@ export default function OwnerListingsPage() {
                     <p className="font-semibold text-[#0F2E1E] dark:text-white truncate">{room.title}</p>
                     <p className="text-sm text-gray-500">{room.area}</p>
                   </div>
-                  <StatusBadge status={room.status} />
+                  <div className="flex flex-col items-end gap-1.5 shrink-0">
+                    <StatusBadge status={room.status} />
+                    {room.isAvailable === false && (
+                      <span className="text-[10px] font-bold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2 py-0.5 rounded">
+                        Sold Out
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <p className="text-[#16A34A] font-semibold mt-1">{formatRent(room.rent)}/mo</p>
                 <p className="text-xs text-gray-400 mt-1">{room.views ?? 0} views</p>
@@ -171,13 +201,30 @@ export default function OwnerListingsPage() {
                   <MoreVertical size={20} />
                 </button>
                 {menuOpen === room._id && (
-                  <div className="absolute right-0 top-10 bg-white dark:bg-[#111A11] rounded-xl shadow-lg border border-gray-100 dark:border-[#1F2E1F] py-1 z-10 min-w-[120px]">
+                  <div className="absolute right-0 top-10 bg-white dark:bg-[#111A11] rounded-xl shadow-lg border border-gray-100 dark:border-[#1F2E1F] py-1 z-10 min-w-[140px]">
                     <Link
                       href={`/rooms/${room._id}`}
                       className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#0F2E1E]/30"
                     >
                       <Eye size={16} /> View
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleAvailable(room._id, room.isAvailable !== false)}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#0F2E1E]/30 text-left"
+                    >
+                      {room.isAvailable !== false ? (
+                        <>
+                          <Slash size={16} className="text-red-500" />
+                          <span>Mark Sold Out</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle size={16} className="text-green-500" />
+                          <span>Mark Available</span>
+                        </>
+                      )}
+                    </button>
                     <button
                       type="button"
                       onClick={() => {

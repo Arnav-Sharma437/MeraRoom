@@ -47,6 +47,7 @@ interface Room {
   isFeatured: boolean;
   featuredUntil?: string;
   isVerified: boolean;
+  isAvailable?: boolean;
   verifiedAt?: string;
   views: number;
   createdAt: string;
@@ -128,6 +129,7 @@ export default function AdminRoomsPage() {
   });
   const [formImages, setFormImages] = useState<string[]>([]);
   const [formStatus, setFormStatus] = useState<'pending' | 'approved' | 'rejected'>('pending');
+  const [formAvailable, setFormAvailable] = useState(true);
   const [formFeatured, setFormFeatured] = useState(false);
   const [formVerified, setFormVerified] = useState(false);
   const [formFeaturedUntil, setFormFeaturedUntil] = useState('');
@@ -279,6 +281,7 @@ export default function AdminRoomsPage() {
     });
     setFormImages([]);
     setFormStatus('pending');
+    setFormAvailable(true);
     setFormFeatured(false);
     setFormVerified(false);
     setFormFeaturedUntil('');
@@ -301,6 +304,7 @@ export default function AdminRoomsPage() {
     setFormAllowedFor({ ...room.allowedFor });
     setFormImages([...(room.images ?? [])]);
     setFormStatus(room.status);
+    setFormAvailable(room.isAvailable !== false);
     setFormFeatured(room.isFeatured);
     setFormVerified(room.isVerified);
     setFormFeaturedUntil(room.featuredUntil ? room.featuredUntil.split('T')[0] : '');
@@ -370,6 +374,7 @@ export default function AdminRoomsPage() {
       allowedFor: formAllowedFor,
       images: formImages,
       status: formStatus,
+      isAvailable: formAvailable,
     };
 
     try {
@@ -1122,6 +1127,17 @@ export default function AdminRoomsPage() {
                         className="rounded text-[#16A34A] focus:ring-[#16A34A]"
                       />
                       <span>Mark as Verified</span>
+                    </label>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <label className="flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={!formAvailable}
+                        onChange={(e) => setFormAvailable(!e.target.checked)}
+                        className="rounded text-[#16A34A] focus:ring-[#16A34A]"
+                      />
+                      <span>Mark as Sold Out</span>
                     </label>
                   </div>
                 </div>

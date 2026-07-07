@@ -108,8 +108,18 @@ export default function RoomCard({
       <span className="absolute top-2 left-2 bg-[#0F2E1E]/80 backdrop-blur text-white text-xs rounded-full px-2.5 py-1">
         {roomTypeLabel}
       </span>
+      {room.isAvailable === false && (
+        <span className="absolute top-10 left-2 bg-red-600 text-white text-xs font-bold rounded-full px-2.5 py-0.5 z-10">
+          Sold Out
+        </span>
+      )}
       {room.isFeatured && (
-        <span className="absolute top-10 left-2 bg-[#D4AF37] text-[#0F2E1E] text-xs font-bold rounded-full px-2 py-0.5 flex items-center gap-1">
+        <span
+          className={cn(
+            'absolute left-2 bg-[#D4AF37] text-[#0F2E1E] text-xs font-bold rounded-full px-2 py-0.5 flex items-center gap-1 z-10',
+            room.isAvailable === false ? 'top-[68px]' : 'top-10'
+          )}
+        >
           <Star size={12} fill="currentColor" />
           Featured
         </span>
