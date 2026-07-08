@@ -172,14 +172,33 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
           <p className="text-xs text-gray-400">Member since 2024</p>
         </div>
       </div>
-      <WhatsAppButton href={whatsappHref} label="Chat on WhatsApp" size="lg" className="w-full mb-3" />
-      <motion.a
-        href={phoneHref}
-        whileTap={{ scale: 0.96 }}
-        className="flex items-center justify-center gap-2 border-2 border-[#0F2E1E] dark:border-white/20 text-[#0F2E1E] dark:text-white rounded-2xl py-3.5 w-full font-semibold min-h-[44px]"
-      >
-        <Phone size={20} /> Call Owner
-      </motion.a>
+      {room.isAvailable !== false ? (
+        <>
+          <WhatsAppButton href={whatsappHref} label="Chat on WhatsApp" size="lg" className="w-full mb-3" />
+          <motion.a
+            href={phoneHref}
+            whileTap={{ scale: 0.96 }}
+            className="flex items-center justify-center gap-2 border-2 border-[#0F2E1E] dark:border-white/20 text-[#0F2E1E] dark:text-white rounded-2xl py-3.5 w-full font-semibold min-h-[44px]"
+          >
+            <Phone size={20} /> Call Owner
+          </motion.a>
+        </>
+      ) : (
+        <>
+          <button
+            disabled
+            className="flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 rounded-2xl py-4 w-full font-semibold min-h-[44px] cursor-not-allowed mb-3"
+          >
+            WhatsApp Blocked
+          </button>
+          <button
+            disabled
+            className="flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-800 text-gray-400 dark:text-gray-500 rounded-2xl py-3.5 w-full font-semibold min-h-[44px] cursor-not-allowed"
+          >
+            <Phone size={20} /> Call Blocked
+          </button>
+        </>
+      )}
       <p className="hidden md:block bg-amber-50 dark:bg-amber-900/20 rounded-xl p-3 mt-4 text-xs text-amber-700 dark:text-amber-300">
         <AlertTriangle size={14} className="inline mr-1 shrink-0" />
         Always visit the property before making any payment.
@@ -378,19 +397,39 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
         </div>
       </div>
 
-      <div 
-        style={{ bottom: '64px' }} 
-        className="lg:hidden fixed left-0 right-0 h-20 z-40 px-4 py-3 bg-white/95 dark:bg-[#111A11]/95 backdrop-blur border-t border-gray-200 dark:border-[#1F2E1F] flex items-center justify-between gap-3"
-      >
-        <WhatsAppButton href={whatsappHref} label="WhatsApp Owner" size="md" className="flex-1 min-h-[44px]" showLabel />
-        <motion.a
-          href={phoneHref}
-          whileTap={{ scale: 0.96 }}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#16A34A] text-white rounded-xl py-2.5 font-semibold min-h-[44px]"
+      {room.isAvailable !== false ? (
+        <div 
+          style={{ bottom: '64px' }} 
+          className="lg:hidden fixed left-0 right-0 h-20 z-40 px-4 py-3 bg-white/95 dark:bg-[#111A11]/95 backdrop-blur border-t border-gray-200 dark:border-[#1F2E1F] flex items-center justify-between gap-3"
         >
-          <Phone size={18} /> Call Owner
-        </motion.a>
-      </div>
+          <WhatsAppButton href={whatsappHref} label="WhatsApp Owner" size="md" className="flex-1 min-h-[44px]" showLabel />
+          <motion.a
+            href={phoneHref}
+            whileTap={{ scale: 0.96 }}
+            className="flex-1 flex items-center justify-center gap-2 bg-[#16A34A] text-white rounded-xl py-2.5 font-semibold min-h-[44px]"
+          >
+            <Phone size={18} /> Call Owner
+          </motion.a>
+        </div>
+      ) : (
+        <div 
+          style={{ bottom: '64px' }} 
+          className="lg:hidden fixed left-0 right-0 h-20 z-40 px-4 py-3 bg-white/95 dark:bg-[#111A11]/95 backdrop-blur border-t border-gray-200 dark:border-[#1F2E1F] flex items-center justify-between gap-3"
+        >
+          <button
+            disabled
+            className="flex-1 flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 rounded-xl py-2.5 font-semibold min-h-[44px] cursor-not-allowed"
+          >
+            WhatsApp Blocked
+          </button>
+          <button
+            disabled
+            className="flex-1 flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-gray-800 text-gray-400 dark:text-gray-500 rounded-xl py-2.5 font-semibold min-h-[44px] cursor-not-allowed"
+          >
+            <Phone size={18} /> Call Blocked
+          </button>
+        </div>
+      )}
     </div>
   );
 }

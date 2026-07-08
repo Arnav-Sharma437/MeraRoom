@@ -154,17 +154,27 @@ export default function RoomCard({
           <span className="text-sm text-gray-400">/mo</span>
         </div>
         <div className="flex gap-2">
-          <motion.a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.05 }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-[#25D366] text-white rounded-xl p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center whatsapp-pulse"
-          >
-            <MessageCircle size={18} />
-          </motion.a>
+          {room.isAvailable !== false ? (
+            <motion.a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#25D366] text-white rounded-xl p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center whatsapp-pulse"
+            >
+              <MessageCircle size={18} />
+            </motion.a>
+          ) : (
+            <button
+              disabled
+              onClick={(e) => e.stopPropagation()}
+              className="bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 rounded-xl p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-not-allowed"
+            >
+              <MessageCircle size={18} />
+            </button>
+          )}
           <Link
             href={`/rooms/${room._id}`}
             className="bg-[#16A34A] text-white rounded-xl px-3 py-2 text-sm font-medium flex items-center gap-1 hover:bg-[#D4AF37] hover:text-[#0F2E1E] transition-colors duration-200 min-h-[44px]"
