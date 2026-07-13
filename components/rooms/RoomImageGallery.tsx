@@ -87,13 +87,28 @@ export default function RoomImageGallery({
         onClick={() => gallery.length && setLightbox(true)}
       >
         {gallery.length ? (
-          <Image
-            src={gallery[index]}
-            alt={title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
-            priority
-          />
+          <>
+            {/* Blurred background backdrop */}
+            <div className="absolute inset-0 bg-black/10 dark:bg-black/35 backdrop-blur-xl overflow-hidden pointer-events-none">
+              <Image
+                src={gallery[index]}
+                alt=""
+                fill
+                className="object-cover blur-2xl opacity-40 scale-110"
+                priority
+              />
+            </div>
+            {/* Main contained image */}
+            <div className="relative w-full h-full">
+              <Image
+                src={gallery[index]}
+                alt={title}
+                fill
+                className="object-contain transition-transform duration-500 group-hover:scale-[1.01]"
+                priority
+              />
+            </div>
+          </>
         ) : (
           fallback
         )}
