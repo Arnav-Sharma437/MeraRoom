@@ -64,10 +64,10 @@ export function useSavedRooms() {
       try {
         if (wasSaved) {
           await axios.delete('/api/rooms/saved', { data: { roomId } });
-          toast.success('Removed from saved');
+          toast.success('Removed from Wishlist');
         } else {
           await axios.post('/api/rooms/saved', { roomId });
-          toast.success('Room saved!');
+          toast.success('Added to Wishlist! View in Saved Rooms.');
         }
         return !wasSaved;
       } catch {
@@ -81,7 +81,7 @@ export function useSavedRooms() {
         return wasSaved;
       }
     },
-    [session, router]
+    [session, router, savedIds]
   );
 
   return { savedIds, isSaved, toggleSave, loaded };

@@ -63,7 +63,7 @@ export default function RoomImageGallery({
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       onClick={handleSaveClick}
       className={cn(
-        'rounded-full p-2 min-w-[44px] min-h-[44px] flex items-center justify-center',
+        'rounded-full p-2 min-w-[44px] min-h-[44px] flex items-center justify-center shadow-md',
         saved
           ? 'bg-red-500 text-white'
           : 'bg-white/80 backdrop-blur text-gray-600'
@@ -75,27 +75,37 @@ export default function RoomImageGallery({
   );
 
   return (
-    <>
+    <div className="w-full space-y-4">
+      {/* Main Image View */}
       <div
-        className="lg:hidden relative h-72 md:h-80 w-full overflow-hidden"
+        className="relative w-full h-[320px] md:h-[480px] rounded-2xl overflow-hidden bg-gray-100 dark:bg-[#111A11] group cursor-pointer shadow-sm"
         onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
         onTouchEnd={(e) => {
           const diff = touchStart - e.changedTouches[0].clientX;
           if (Math.abs(diff) > 50) go(diff > 0 ? 1 : -1);
         }}
+        onClick={() => gallery.length && setLightbox(true)}
       >
         {gallery.length ? (
-          <Image src={gallery[index]} alt={title} fill className="object-cover" priority />
+          <Image
+            src={gallery[index]}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+            priority
+          />
         ) : (
           fallback
         )}
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
-        <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 z-10">
+
+        {/* Floating Top Nav */}
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-10" />
+        <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 z-10" onClick={(e) => e.stopPropagation()}>
           <motion.button
             type="button"
             whileTap={{ scale: 0.9 }}
             onClick={() => router.back()}
-            className="bg-black/30 backdrop-blur rounded-full p-2 text-white min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="bg-black/30 backdrop-blur rounded-full p-2 text-white min-w-[44px] min-h-[44px] flex items-center justify-center shadow-sm"
           >
             <ArrowLeft size={22} />
           </motion.button>
@@ -104,60 +114,64 @@ export default function RoomImageGallery({
               type="button"
               whileTap={{ scale: 0.9 }}
               onClick={() => navigator.share?.({ title, url: window.location.href })}
-              className="bg-black/30 backdrop-blur rounded-full p-2 text-white min-w-[44px] min-h-[44px] flex items-center justify-center"
+              className="bg-black/30 backdrop-blur rounded-full p-2 text-white min-w-[44px] min-h-[44px] flex items-center justify-center shadow-sm"
             >
               <Share2 size={20} />
             </motion.button>
             {heartBtn}
           </div>
         </div>
+
+        {/* Hover Arrow Controls (Desktop) / Slide Controls (Mobile) */}
         {gallery.length > 1 && (
-          <>
-            <span className="absolute top-14 right-4 bg-black/50 text-white text-xs rounded-full px-2 py-1 z-10">
-              {index + 1} / {gallery.length}
-            </span>
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
-              {gallery.map((_, i) => (
-                <span
-                  key={i}
-                  className={`w-2 h-2 rounded-full ${i === index ? 'bg-white' : 'bg-white/40'}`}
-                />
-              ))}
-            </div>
-          </>
+          <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none z-10">
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); go(-1); }}
+              className="bg-white/90 dark:bg-black/50 text-gray-800 dark:text-white backdrop-blur rounded-full p-2.5 shadow-md pointer-events-auto hover:bg-white dark:hover:bg-black transition-all md:opacity-0 group-hover:opacity-100 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); go(1); }}
+              className="bg-white/90 dark:bg-black/50 text-gray-800 dark:text-white backdrop-blur rounded-full p-2.5 shadow-md pointer-events-auto hover:bg-white dark:hover:bg-black transition-all md:opacity-0 group-hover:opacity-100 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            >
+              <ChevronRight size={22} />
+            </button>
+          </div>
         )}
-        <button type="button" className="absolute inset-0 z-0" onClick={() => gallery.length && setLightbox(true)} aria-label="View fullscreen" />
+
+        {/* Counter Badge */}
+        {gallery.length > 1 && (
+          <span className="absolute bottom-4 right-4 bg-black/60 text-white text-xs font-medium rounded-full px-3 py-1 z-10">
+            {index + 1} / {gallery.length}
+          </span>
+        )}
       </div>
 
-      <div className="hidden lg:grid grid-cols-4 grid-rows-2 gap-2 h-96 rounded-2xl overflow-hidden">
-        <button
-          type="button"
-          className="col-span-2 row-span-2 relative rounded-l-2xl overflow-hidden"
-          onClick={() => gallery.length && setLightbox(true)}
-        >
-          {gallery[0] ? <Image src={gallery[0]} alt={title} fill className="object-cover" priority /> : fallback}
-        </button>
-        {[1, 2, 3].map((i) => (
-          <button
-            key={i}
-            type="button"
-            className="relative overflow-hidden"
-            onClick={() => { setIndex(i); setLightbox(true); }}
-          >
-            {gallery[i] ? (
-              <Image src={gallery[i]} alt={`${title} ${i + 1}`} fill className="object-cover" />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#0F2E1E] to-[#16A34A]" />
-            )}
-            {i === 3 && gallery.length > 4 && (
-              <span className="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-semibold">
-                +{gallery.length - 4} more photos
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
+      {/* Thumbnails Row */}
+      {gallery.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-200 hide-scrollbar" style={{ WebkitOverflowScrolling: 'touch' }}>
+          {gallery.map((img, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setIndex(i)}
+              className={cn(
+                "relative w-20 h-16 rounded-xl overflow-hidden flex-shrink-0 border-2 transition-all duration-200 shadow-sm",
+                i === index
+                  ? "border-[#16A34A] scale-95"
+                  : "border-transparent opacity-60 hover:opacity-100"
+              )}
+            >
+              <Image src={img} alt={`Thumbnail ${i + 1}`} fill className="object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
 
+      {/* Fullscreen Lightbox */}
       <AnimatePresence>
         {lightbox && gallery.length > 0 && (
           <motion.div
@@ -183,6 +197,6 @@ export default function RoomImageGallery({
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }

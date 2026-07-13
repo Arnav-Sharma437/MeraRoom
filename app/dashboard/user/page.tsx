@@ -73,7 +73,7 @@ export default function UserDashboardPage() {
       const json = await res.json();
       if (json.success) {
         setRooms((prev) => prev.filter((r) => r._id !== roomId));
-        toast.success('Removed from saved');
+        toast.success('Removed from Wishlist');
       }
     } catch {
       toast.error('Failed to remove');

@@ -377,7 +377,7 @@ export default function RoomDetailClient({ id }: RoomDetailClientProps) {
                 <h2 className="font-display text-xl text-[#0F2E1E] dark:text-white mb-4">Similar Rooms Nearby</h2>
                 <div className="flex gap-4 overflow-x-auto hide-scrollbar lg:grid lg:grid-cols-3 lg:overflow-visible pb-2" style={{ WebkitOverflowScrolling: 'touch' }}>
                   {similar.map((r, i) => (
-                    <div key={r._id} className="min-w-[280px] lg:min-w-0 flex-shrink-0 lg:flex-shrink">
+                    <div key={r._id} className="min-w-[305px] lg:min-w-0 flex-shrink-0 lg:flex-shrink">
                       <RoomCard room={r} index={i} />
                     </div>
                   ))}
